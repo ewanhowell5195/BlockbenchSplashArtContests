@@ -8,32 +8,37 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: process.env.DOMAIN.startsWith("https") },
-  store: new FileStore
+  cookie: {
+    secure: process.env.DOMAIN.startsWith("https"),
+    maxAge: 86400000
+  },
+  store: new FileStore({
+    logFn: () => {}
+  })
 }))
 app.use(passport.initialize())
 app.use(passport.session())
+app.set("trust proxy", 1)
 
 passport.use(new DiscordStrategy({
-    clientId: process.env.DISCORD_CLIENT_ID,
-    clientSecret: process.env.DISCORD_CLIENT_SECRET,
-    callbackUrl: `${process.env.DOMAIN}/auth/discord/callback`,
-    scope: ["identify"]
-  },
-  (accessToken, refreshToken, profile, done) => {
-    done(null, profile)
-  }
-))
+  clientId: process.env.DISCORD_CLIENT_ID,
+  clientSecret: process.env.DISCORD_CLIENT_SECRET,
+  callbackUrl: `${process.env.DOMAIN}/auth/discord/callback`,
+  scope: ["identify"]
+},
+(accessToken, refreshToken, profile, done) => {
+  done(null, profile)
+}))
 
 passport.serializeUser((user, done) => {
   user.avatarID = user.avatar
   user.avatar = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`
   done(null, user)
-});
+})
 
 passport.deserializeUser((user, done) => {
   done(null, user)
-});
+})
 
 passport.deserializeUser((user, done) => done(null, user))
 

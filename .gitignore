@@ -1,0 +1,8 @@
+*.db
+*.db-shm
+*.db-wal
+*.sublime-workspace
+*.sublime-project
+/node_modules/
+/sessions/
+.env

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title><%= config.title %></title>
+    <link rel="stylesheet" href="/assets/styles.css">
+    <% if (styles) { %>
+      <link rel="stylesheet" href="/src/<%= styles %>">
+    <% } %>
+  </head>
+  <body>
+    <main>
+      <%- include(content); %>
+    </main>
+    <script src="/assets/script.js"></script>
+    <% if (script) { %>
+      <script src="/src/<%= script %>"></script>
+    <% } %>
+  </body>
+</html>

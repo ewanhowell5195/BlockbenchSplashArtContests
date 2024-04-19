@@ -1,0 +1,1 @@
+<a v-for="contest of contests" :href="'/contests/' + contest.id">{{ contest.theme }}</a>

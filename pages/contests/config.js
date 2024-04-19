@@ -10,7 +10,7 @@ export default {
     const contest = db.contests.get(path[0])
     if (!contest) return
     return {
-      view: "contest.ejs",
+      view: "contest",
       context: {
         config: {
           title: `Splash Art Contest ${contest.id} - The ${contest.name} Update`

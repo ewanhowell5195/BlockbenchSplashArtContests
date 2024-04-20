@@ -6,6 +6,7 @@
   --color-text: #EEE;
   --color-text-light: #FFF;
   --color-accent: #1E93D9;
+  --color-background: #121212;
 }
 
 html {
@@ -14,15 +15,25 @@ html {
 
 body {
   margin: 0;
+  background-color: var(--color-background);
 }
 
 .spacer {
   flex: 1;
 }
 
+.hidden {
+  display: none;
+}
+
 header {
   background-color: var(--color-ui);
   height: var(--header-height);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
 }
 
 #header {
@@ -87,4 +98,122 @@ nav {
       border-radius: 50%;
     }
   }
+}
+
+main {
+  margin: var(--header-height) 0 64px;
+}
+
+.container {
+  max-width: var(--content-width);
+  padding: 0 20px;
+  margin: 0 auto;
+}
+
+.popupable {
+  cursor: pointer;
+}
+
+.popup {
+  position: fixed;
+  inset: 0;
+  background-color: #00000080;
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.25s forwards 1;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.popup-container {
+  position: relative;
+  user-select: none;
+  box-shadow: 0 8px 16px #000;
+  max-width: calc(100vw - 80px);
+  max-height: calc(100vh - 80px);
+  overflow: hidden;
+
+  &:hover {
+    #popup-image-close {
+      opacity: 1;
+      right: 0;
+    }
+
+    #popup-image-prev {
+      opacity: 1;
+      left: 0;
+    }
+
+    #popup-image-next {
+      opacity: 1;
+      right: 0;
+    }
+  }
+}
+
+#popup-image-close, #popup-image-next, #popup-image-prev {
+  position: absolute;
+  filter: drop-shadow(0 2px 3px #000);
+  cursor: pointer;
+  width: 48px;
+  height: 48px;
+  font-size: 48px;
+  line-height: 48px;
+}
+
+#popup-image-close {
+  top: 0;
+  right: -32px;
+  transition: right 0.15s, opacity 0.15s;
+  opacity: 0;
+  width: 32px;
+  height: 32px;
+  font-size: 32px;
+  line-height: 32px;
+  padding: 10px;
+}
+
+#popup-image-next, #popup-image-prev {
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  padding: 20px;
+  transition: left 0.15s, right 0.15s, opacity 0.15s, transform 0.15s;
+
+  &:hover {
+    transform: translateY(-50%) scale(1.4);
+  }
+}
+
+#popup-image-prev {
+  left: -60px;
+}
+
+#popup-image-next {
+  right: -60px;
+}
+
+.popup-image {
+  max-width: calc(100vw - 80px);
+  max-height: calc(100vh - 80px);
+  min-width: min(256px, 100vw - 80px);
+  display: block;
+  background-image: url("data:image/webp;base64,UklGRiYAAABXRUJQVlA4TBkAAAAvD8ADAAWRto2Te5h/fYXnEf2fgDj+cfwDAA==");
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+
+.icon {
+  font-family: "Material Symbols Outlined";
+  color: var(--color-text);
 }

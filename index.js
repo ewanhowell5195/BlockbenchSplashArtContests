@@ -44,9 +44,9 @@ async function loadPage(dir, parent) {
     obj.config = parent.config
   }
   for (const file of files) {
-    if (file.endsWith(".js")) {
+    if (file === "script.js") {
       obj.script = true
-    } else if (file.endsWith(".css")) {
+    } else if (file === "styles.css") {
       obj.styles = true
     } else if (!file.includes(".")) {
       obj.pages ??= {}
@@ -84,6 +84,17 @@ async function send404(req, res) {
   })))
 }
 
+const functions = {
+  numSuffix(i) {
+    const j = i % 10
+    const k = i % 100
+    if (j === 1 && k !== 11) return i + "st"
+    if (j === 2 && k !== 12) return i + "nd"
+    if (j === 3 && k !== 13) return i + "rd"
+    return i + "th"
+  }
+}
+
 const index = fs.readFileSync("views/index.vue", "utf-8")
 app.get("*", async (req, res) => {
   if (req.path.startsWith("/src") || req.path.startsWith("/assets")) return send404(req, res)
@@ -117,7 +128,8 @@ app.get("*", async (req, res) => {
     script: page.script ? parts[parts.length - 1] + "/script.js" : null,
     styles: page.styles ? parts[parts.length - 1] + "/styles.css" : null,
     user: req.user,
-    render
+    render,
+    f: functions
   }
 
   if (dynamic) {
@@ -130,6 +142,16 @@ app.get("*", async (req, res) => {
     }
     if (data.view) {
       context.content = path.join("pages", parts.slice(0, dynamic.length).join("/"), data.view + ".vue")
+    }
+    if (data.script) {
+      context.script = path.join(parts.slice(0, dynamic.length).join("/"), data.script + ".js")
+    } else {
+      context.script = null
+    }
+    if (data.styles) {
+      context.styles = path.join(parts.slice(0, dynamic.length).join("/"), data.styles + ".css")
+    } else {
+      context.styles = null
     }
   }
 

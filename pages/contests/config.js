@@ -1,6 +1,6 @@
 export default {
   config: {
-    "title": "Contests - Blockbench Splash Art Contests"
+    title: "Contests - Blockbench Splash Art Contests"
   },
   data: () => ({
     contests: db.contests.all()
@@ -11,6 +11,7 @@ export default {
     if (!contest) return
     return {
       view: "contest",
+      styles: "contest",
       context: {
         config: {
           title: `Splash Art Contest ${contest.id} - The ${contest.name} Update`

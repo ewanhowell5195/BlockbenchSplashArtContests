@@ -1,11 +1,12 @@
 database.exec(`
   CREATE TABLE IF NOT EXISTS submissions (
     id INTEGER,
-    contestId INTEGER,
+    contest INTEGER,
     artists TEXT DEFAULT '[]',
     votes INTEGER DEFAULT 0,
-    PRIMARY KEY (id, contestId),
-    FOREIGN KEY(contestId) REFERENCES contests(id)
+    image TEXT NOT NULL,
+    PRIMARY KEY (id, contest),
+    FOREIGN KEY(contest) REFERENCES contests(id)
   )
 `)
 
@@ -26,27 +27,44 @@ database.exec(`
       JOIN json_each(submissions.artists) as existing_artists
       JOIN json_each(NEW.artists) as new_artists
       ON existing_artists.value = new_artists.value
-      WHERE submissions.contestId = NEW.contestId
+      WHERE submissions.contest = NEW.contest
     );
   END
 `)
 
 export default {
   add: prepareDBAction(`
-    INSERT INTO submissions (id, contestId, artists, votes)
-    VALUES (COALESCE((SELECT MAX(id) + 1 FROM submissions WHERE contestId = ?), 0), ?, json(?), ?)
+    INSERT INTO submissions (id, contest, artists, votes)
+    VALUES (COALESCE((SELECT MAX(id) + 1 FROM submissions WHERE contest = ?), 0), ?, json(?), ?)
   `, "run", (id, artists, votes) => [id, id, JSON.stringify(artists), votes]),
   latest: prepareDBAction(`
     SELECT *
     FROM submissions
-    WHERE contestId = ?
+    WHERE contest = ?
     ORDER BY id DESC
     LIMIT 1
   `, "get"),
   contest: prepareDBAction(`
-    SELECT *
-    FROM submissions
-    WHERE contestId = ?
-    ORDER BY votes DESC
-  `, "all")
+    SELECT
+      s.id,
+      s.contest,
+      json_group_array(
+        json_object(
+          'id', a.id,
+          'name', a.name,
+          'socialMedia', a.socialMedia
+        )
+      ) as artists,
+      s.votes,
+      s.image
+    FROM submissions s,
+    json_each(s.artists) j
+    JOIN artists a ON a.id = j.value
+    WHERE s.contest = ?
+    GROUP BY s.id, s.contest, s.votes, s.image
+    ORDER BY s.votes DESC
+  `, "all", null, o => o.map(e => {
+    e.artists = JSON.parse(e.artists)
+    return e
+  }))
 }

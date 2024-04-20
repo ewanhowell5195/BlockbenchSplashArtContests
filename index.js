@@ -6,7 +6,9 @@ import { config } from "dotenv"
 import express from "express"
 import path from "node:path"
 import url from "node:url"
+import https from "https"
 import fs from "node:fs"
+import cors from "cors"
 
 config()
 
@@ -18,6 +20,14 @@ const __dirname = url.fileURLToPath(new URL(".", import.meta.url))
 globalThis.app = express()
 app.use(express.json())
 app.use(cookieParser())
+
+const corsMiddleware = cors({
+  origin(origin, cb) {
+    cb(null, origin === process.env.DOMAIN)
+  }
+})
+app.use(corsMiddleware)
+app.options("*", corsMiddleware)
 
 await import("./auth.js")
 
@@ -165,4 +175,13 @@ app.get("*", async (req, res) => {
   })))
 })
 
-app.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`))
+if (process.argv.includes("-dev")) {
+  app.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`))
+} else {
+  const server = https.createServer({
+    cert: fs.readFileSync("private/ewanhowell.com.pem"),
+    key: fs.readFileSync("private/ewanhowell.com.key")
+  }, app)
+
+  server.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`))
+}

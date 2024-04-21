@@ -10,6 +10,7 @@
     <meta property="og:description" :content="config.description">
     <meta property="og:image" :content="`${domain}/${config.image}`">
     <meta property="twitter:image" :content="`${domain}/${config.image}`">
+    <meta property="twitter:card" content="summary_large_image">
     <meta name="theme-color" :content="config.colour">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

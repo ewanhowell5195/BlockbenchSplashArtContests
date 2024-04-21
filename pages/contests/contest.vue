@@ -1,4 +1,4 @@
-<div id="contest-header" :style="{ backgroundImage: `url('/assets/images/submissions/${contest.id}/${submissions[0].image}.png')` }">
+<div id="contest-header" :style="{ backgroundImage: `linear-gradient(transparent, var(--color-background)), url('/assets/images/submissions/${contest.id}/${submissions[0]?.image}.png')` }">
   <div></div>
   <h1>Splash Art Contest {{ contest.id }}</h1>
   <h2>"{{ contest.theme }}"</h2>

@@ -21,29 +21,14 @@ database.exec(`
       FROM json_each(NEW.artists)
       WHERE json_each.value IN (SELECT id FROM artists)
     );
-    SELECT RAISE(ABORT, 'An artist in the list already exists in another submission for this contest')
-    WHERE EXISTS (
-      SELECT 1 FROM submissions
-      JOIN json_each(submissions.artists) as existing_artists
-      JOIN json_each(NEW.artists) as new_artists
-      ON existing_artists.value = new_artists.value
-      WHERE submissions.contest = NEW.contest
-    );
   END
 `)
 
 export default {
   add: prepareDBAction(`
-    INSERT INTO submissions (id, contest, artists, votes)
-    VALUES (COALESCE((SELECT MAX(id) + 1 FROM submissions WHERE contest = ?), 0), ?, json(?), ?)
-  `, "run", (id, artists, votes) => [id, id, JSON.stringify(artists), votes]),
-  latest: prepareDBAction(`
-    SELECT *
-    FROM submissions
-    WHERE contest = ?
-    ORDER BY id DESC
-    LIMIT 1
-  `, "get"),
+    INSERT INTO submissions (id, contest, artists, votes, image)
+    VALUES (COALESCE((SELECT MAX(id) + 1 FROM submissions WHERE contest = ?), 0), ?, json(?), ?, ?)
+  `, "run", (id, artists, votes, image) => [id, id, JSON.stringify(artists), votes, image]),
   contest: prepareDBAction(`
     SELECT
       s.id,

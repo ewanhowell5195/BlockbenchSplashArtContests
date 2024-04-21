@@ -23,7 +23,6 @@
     inset: 0;
     backdrop-filter: blur(4px);
     max-width: initial;
-    background: linear-gradient(transparent, var(--color-background));
   }
 
   > h1 {

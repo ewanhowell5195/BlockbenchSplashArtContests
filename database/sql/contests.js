@@ -4,14 +4,15 @@ database.exec(`
     date INTEGER NOT NULL,
     version TEXT NOT NULL,
     name TEXT NOT NULL,
-    theme TEXT NOT NULL
+    theme TEXT NOT NULL,
+    description TEXT
   )
 `)
 
 export default {
   add: prepareDBAction(`
-    INSERT INTO contests (id, date, version, name, theme)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO contests (id, date, version, name, theme, description)
+    VALUES (?, ?, ?, ?, ?, ?)
   `),
   all: prepareDBAction(`
     SELECT *

@@ -5,6 +5,7 @@
   <h3>For Blockbench {{ contest.version }} - The {{ contest.name }} Update</h3>
 </div>
 <div class="container">
+  <p v-if="contest.description">{{ contest.description }}</p>
   <h1 style="margin-bottom: 0;">Submissions:</h1>
 </div>
 <div id="submissions" class="container">

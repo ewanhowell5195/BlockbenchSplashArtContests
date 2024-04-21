@@ -1,7 +1,3 @@
-function disableScroll(e) {
-  e.preventDefault()
-}
-
 document.addEventListener("click", e => {
   let element = e.target
   while (element && !element.classList.contains("popupable")) {
@@ -9,11 +5,26 @@ document.addEventListener("click", e => {
     element = element.parentElement
   }
   if (element) {
-    document.addEventListener("wheel", disableScroll, { passive: false })
-    document.addEventListener("touchmove", disableScroll, { passive: false })
+    function nextImage() {
+      const all = Array.from(document.querySelectorAll(".popupable"))
+      const next = all[all.indexOf(element) + 1]
+      if (next) {
+        element = next
+        loadImage(img, element)
+      }
+    }
 
-    const popup = document.createElement("div");
-    popup.className = "popup";
+    function prevImage() {
+      const all = Array.from(document.querySelectorAll(".popupable"))
+      const prev = all[all.indexOf(element) - 1]
+      if (prev) {
+        element = prev
+        loadImage(img, element)
+      }
+    }
+
+    const popup = document.createElement("div")
+    popup.className = "popup"
     popup.innerHTML = `
       <div class="popup-container">
         <img class="popup-image">
@@ -23,35 +34,33 @@ document.addEventListener("click", e => {
       </div>
     `
 
-    const img = popup.querySelector(".popup-image")
-
     function close()  {
-      popup.remove()
-      document.removeEventListener("wheel", disableScroll, { passive: false })
-      document.removeEventListener("touchmove", disableScroll, { passive: false })
+      document.removeEventListener("keydown", keyHandler)
+      popup.classList.remove("popup-visible")
+      setTimeout(() => popup.remove(), 200)
     }
+
+    function keyHandler(evt) {
+      if (evt.code === "ArrowLeft" || evt.code === "KeyA") prevImage()
+      else if (evt.code === "ArrowRight" || evt.code === "KeyD") nextImage()
+      else if (evt.code === "Escape") close()
+    }
+
+    document.addEventListener("keydown", keyHandler)
+
+    const img = popup.querySelector(".popup-image")
 
     popup.querySelector("#popup-image-close").addEventListener("click", close)
     popup.addEventListener("click", e => {
-      if (e.target === popup) {
-        close()
-      }
+      if (e.target === popup) close()
     })
 
-    popup.querySelector("#popup-image-prev").addEventListener("click", e => {
-      const all = Array.from(document.querySelectorAll(".popupable"))
-      element = all[all.indexOf(element) - 1]
-      loadImage(img, element)
-    })
-
-    popup.querySelector("#popup-image-next").addEventListener("click", () => {
-      const all = Array.from(document.querySelectorAll(".popupable"))
-      element = all[all.indexOf(element) + 1]
-      loadImage(img, element)
-    })
+    popup.querySelector("#popup-image-next").addEventListener("click", nextImage)
+    popup.querySelector("#popup-image-prev").addEventListener("click", prevImage)
 
     document.body.append(popup)
     loadImage(img, element)
+    setTimeout(() => popup.classList.add("popup-visible"), 0)
   }
 });
 

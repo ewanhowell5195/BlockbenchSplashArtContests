@@ -1,0 +1,72 @@
+#contests {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(475px, 1fr));
+  gap: 20px;
+  padding: 20px 20px;
+}
+
+.contest {
+  border-radius: 14px;
+  background-color: var(--color-panel);
+  text-shadow: var(--text-shadow);
+  color: var(--color-text);
+  overflow: hidden;
+  border: var(--panel-border);
+
+  & * {
+    margin: 0;
+  }
+
+  & h1 {
+    font-size: 2.5rem;
+  }
+
+  & h2 {
+    font-size: 1.75rem;
+  }
+
+  & h3 {
+    font-size: 1.25rem;
+  }
+}
+
+.contest-header {
+  background-size: cover;
+  background-position: 50% 50%;
+  height: 192px;
+  display: block;
+  overflow: hidden;
+  text-decoration: none;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px);
+    height: 100%;
+  }
+}
+
+.contest-details {
+  padding: 20px;
+
+  > :first-child {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+
+    > :last-child {
+      opacity: 0.5;
+    }
+  }
+
+  > table {
+    margin: 16px 0;
+
+    & td:first-child {
+      padding-right: 16px;
+      font-weight: 600;
+    }
+  }
+}

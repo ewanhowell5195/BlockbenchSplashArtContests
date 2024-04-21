@@ -42,16 +42,14 @@ app.use("/assets", express.static("assets"))
 
 async function loadPage(dir, parent) {
   const files = fs.readdirSync(dir)
-  const obj = {}
+  const obj = { config: parent.config }
   if (fs.existsSync(path.join(dir, "config.json"))) {
-    obj.config = JSON.parse(fs.readFileSync(path.join(dir, "config.json")))
+    obj.config = Object.assign({ ...obj.config }, JSON.parse(fs.readFileSync(path.join(dir, "config.json"))))
   } else if (fs.existsSync(path.join(dir, "config.js"))) {
     const config = (await import("./" + path.join("./", dir, "config.js"))).default
-    obj.config = config.config
+    obj.config = Object.assign({ ...obj.config }, config.config)
     obj.data = config.data
     obj.get = config.get
-  } else {
-    obj.config = parent.config
   }
   for (const file of files) {
     if (file === "script.js") {
@@ -86,7 +84,8 @@ async function send404(req, res) {
     content: path.join("views", "404.vue"),
     script: null,
     styles: null,
-    user: req.user
+    user: req.user,
+    domain: process.env.DOMAIN
   }
   res.status(404).send(await renderToString(createSSRApp({
     data: () => context,
@@ -94,7 +93,7 @@ async function send404(req, res) {
   })))
 }
 
-const functions = {
+globalThis.f = {
   numSuffix(i) {
     const j = i % 10
     const k = i % 100
@@ -133,13 +132,14 @@ app.get("*", async (req, res) => {
   }
 
   const context = {
-    config: page.config,
+    config: { ...page.config },
     content: path.join("pages", parts.join("/"), "index.vue"),
     script: page.script ? parts[parts.length - 1] + "/script.js" : null,
     styles: page.styles ? parts[parts.length - 1] + "/styles.css" : null,
     user: req.user,
+    domain: process.env.DOMAIN,
     render,
-    f: functions
+    f
   }
 
   if (dynamic) {
@@ -148,6 +148,9 @@ app.get("*", async (req, res) => {
       return send404(req, res)
     }
     if (data.context) {
+      if (data.context.config) {
+        data.context.config = Object.assign({ ...context.config }, data.context.config)
+      }
       Object.assign(context, data.context)
     }
     if (data.view) {
@@ -167,6 +170,12 @@ app.get("*", async (req, res) => {
 
   if (page.data) {
     Object.assign(context, page.data())
+  }
+
+  for (const key in context.config) {
+    if (typeof context.config[key] === "function") {
+      context.config[key] = context.config[key]()
+    }
   }
 
   res.send(await renderToString(createSSRApp({

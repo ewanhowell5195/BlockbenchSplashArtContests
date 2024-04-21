@@ -15,9 +15,21 @@ export default {
     VALUES (?, ?, ?, ?, ?, ?)
   `),
   all: prepareDBAction(`
-    SELECT *
+    SELECT
+      contests.*, 
+      COUNT(submissions.contest) AS submissions,
+      SUM(submissions.votes) AS votes,
+      (
+        SELECT submissions.image
+        FROM submissions
+        WHERE submissions.contest = contests.id
+        ORDER BY submissions.votes DESC
+        LIMIT 1
+      ) AS image
     FROM contests
-    ORDER BY id DESC
+    JOIN submissions ON contests.id = submissions.contest
+    GROUP BY contests.id
+    ORDER BY contests.id DESC
   `, "all"),
   get: prepareDBAction(`
     SELECT *

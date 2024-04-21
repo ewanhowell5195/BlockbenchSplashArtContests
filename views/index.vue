@@ -5,10 +5,17 @@
     <meta name="viewport" content="width=device-width">
     <title>{{ config.title }}</title>
     <link rel="icon" type="image/svg+xml" href="/assets/images/branding/favicon.svg">
+    <meta property="og:type" content="website">
+    <meta property="og:title" :content="config.title">
+    <meta property="og:description" :content="config.description">
+    <meta property="og:image" :content="domain + config.image">
+    <meta property="twitter:image" :content="domain + config.image">
+    <meta name="theme-color" :content="config.colour">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/brands.min.css" />
     <link rel="stylesheet" href="/assets/styles.css">
     <link v-if="styles" rel="stylesheet" :href="'/src/' + styles">
   </head>

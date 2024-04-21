@@ -2,7 +2,7 @@
   <div></div>
   <h1>Splash Art Contest {{ contest.id }}</h1>
   <h2>"{{ contest.theme }}"</h2>
-  <h3>For Blockbench {{ contest.version }} - The {{ contest.name }} Update</h3>
+  <h3>For Blockbench v{{ contest.version }} - The {{ contest.name }} Update</h3>
 </div>
 <div class="container">
   <p v-if="contest.description">{{ contest.description }}</p>
@@ -23,9 +23,9 @@
     </div>
   </div>
 </div>
-<div class="container">
-  <p>Contest date: {{ new Date(contest.date).toLocaleString().split(",")[0] }}</p>
-  <p>Submissions: {{ submissions.length.toLocaleString() }}</p>
-  <p>Participants: {{ submissions.reduce((a, e) => a + e.artists.length, 0).toLocaleString() }}</p>
-  <p>Total votes: {{ submissions.reduce((a, e) => a + e.votes, 0).toLocaleString() }}</p>
+<div id="contest-stats" class="container">
+  <span>Contest date: {{ new Date(contest.date).toLocaleString().split(",")[0] }}</span>
+  <span>Submissions: {{ submissions.length.toLocaleString() }}</span>
+  <span>Participants: {{ submissions.reduce((a, e) => a + e.artists.length, 0).toLocaleString() }}</span>
+  <span>Total votes: {{ submissions.reduce((a, e) => a + e.votes, 0).toLocaleString() }}</span>
 </div>

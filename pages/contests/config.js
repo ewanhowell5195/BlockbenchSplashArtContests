@@ -16,7 +16,7 @@ export default {
       styles: "contest",
       context: {
         config: {
-          title: `Splash Art Contest ${contest.id} - The ${contest.name} Update`,
+          title: `Splash Art Contest ${contest.id} - ${contest.theme}`,
           description: `The ${f.numSuffix(contest.id)} splash art contest! For Blockbench v${contest.version} - The ${contest.name} Update. Theme: ${contest.theme}`,
           image: `assets/images/submissions/${contest.id}/${submissions[0].image}.png`
         },

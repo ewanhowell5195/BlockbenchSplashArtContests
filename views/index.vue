@@ -8,8 +8,8 @@
     <meta property="og:type" content="website">
     <meta property="og:title" :content="config.title">
     <meta property="og:description" :content="config.description">
-    <meta property="og:image" :content="domain + config.image">
-    <meta property="twitter:image" :content="domain + config.image">
+    <meta property="og:image" :content="`${domain}/${config.image}`">
+    <meta property="twitter:image" :content="`${domain}/${config.image}`">
     <meta name="theme-color" :content="config.colour">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

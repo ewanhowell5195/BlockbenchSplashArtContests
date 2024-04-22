@@ -82,16 +82,17 @@ for await (const f of getFiles("api")) {
     data.path = `/api${path}`
     if (data.parameter) data.path += `/:${data.parameter}`
     async function execute(req, res) {
-      if (Object.keys(req.body).length && !data.arguments) return res.status(400).send({ error: "Unexpected body. This endpoint expects no body." })
+      if (Object.keys(req.body).length && !data.arguments) return res.sendStatus(400)
       for (const arg of Object.keys(req.body)) {
-        if (!data.arguments[arg])  return res.status(400).send({ error: `Unexpected argument. This endpoint expects was not expecting the "${arg}" argument.` })
+        if (!data.arguments[arg])  return res.sendStatus(400)
       }
-      if (data.upload && !req.file) return res.status(400).send("No file uploaded or wrong file type.")
+      if (data.upload && !req.file) return res.sendStatus(400)
       data.execute(req, res)
     }
     let parts = [data.path]
     if (data.ratelimit !== false) parts.push(ratelimit)
     if (!data.public) parts.push(authenticate)
+    if (data.check) parts.push(data.check)
     if (data.upload) parts.push(multer({
       storage: multer.diskStorage({
         destination: data.upload.destination,

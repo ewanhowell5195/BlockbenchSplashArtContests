@@ -1,5 +1,9 @@
 export default {
   post: {
+    check(req, res, next) {
+      if (db.contests.latest().status !== "submissions") return res.sendStatus(403)
+      next()
+    },
     upload: {
       field: "submission",
       destination: async (req, file, next) => {
@@ -20,7 +24,6 @@ export default {
       }
     },
     async execute(req, res) {
-      console.log(createHash)
       const hash = createHash("sha256")
       const buffer = await fs.promises.readFile(req.file.path)
       hash.update(buffer)

@@ -5,6 +5,8 @@ import { createSSRApp } from "vue"
 import { config } from "dotenv"
 import express from "express"
 import path from "node:path"
+import multer from "multer"
+import crypto from "crypto"
 import url from "node:url"
 import https from "https"
 import fs from "node:fs"
@@ -12,11 +14,13 @@ import cors from "cors"
 
 config()
 
-globalThis.database = new Database("database.db")
-globalThis.db = (await import("./database/db.js")).default
-
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url))
 
+globalThis.database = new Database("database.db")
+globalThis.db = (await import("./database/db.js")).default
+globalThis.createHash = crypto.createHash
+globalThis.fs = fs
+globalThis.path = path
 globalThis.app = express()
 app.use(express.json())
 app.use(cookieParser())
@@ -39,6 +43,65 @@ app.get("/logout", (req, res) => {
 
 app.use("/src", express.static("pages"))
 app.use("/assets", express.static("assets"))
+
+function authenticate(req, res, next) {
+  if (!req.user) return res.sendStatus(401)
+  next()
+}
+
+const ratelimitCache = {}
+function ratelimit(req, res, next) {
+  const ip = req.headers["x-forwarded-for"] ?? req.socket.remoteAddress 
+  ratelimitCache[req.url] ??= {}
+  if (ratelimitCache[req.url][ip]) {
+    if (ratelimitCache[req.url][ip] >= 5) return res.sendStatus(429)
+    ratelimitCache[req.url][ip]++
+  } else {
+    ratelimitCache[req.url][ip] = 1
+    setTimeout(() => delete ratelimitCache[req.url][ip], 5000)
+  }
+  next()
+}
+
+const getFiles = async function*(dir) {
+  const dirents = await fs.promises.readdir(dir, { withFileTypes: true })
+  for (const dirent of dirents) {
+    const res = path.resolve(dir, dirent.name)
+    if (dirent.isDirectory()) {
+      yield* getFiles(res)
+    } else {
+      yield res
+    }
+  }
+}
+
+for await (const f of getFiles("api")) {
+  const api = (await import("./" + path.relative("./", f).replace(/\\/g, "/"))).default
+  for (const [method, data] of Object.entries(api)) {
+    const path = f.split("api")[1].replace(/\\/g, "/").slice(0, -3)
+    data.path = `/api${path}`
+    if (data.parameter) data.path += `/:${data.parameter}`
+    async function execute(req, res) {
+      if (Object.keys(req.body).length && !data.arguments) return res.status(400).send({ error: "Unexpected body. This endpoint expects no body." })
+      for (const arg of Object.keys(req.body)) {
+        if (!data.arguments[arg])  return res.status(400).send({ error: `Unexpected argument. This endpoint expects was not expecting the "${arg}" argument.` })
+      }
+      if (data.upload && !req.file) return res.status(400).send("No file uploaded or wrong file type.")
+      data.execute(req, res)
+    }
+    let parts = [data.path]
+    if (data.ratelimit !== false) parts.push(ratelimit)
+    if (!data.public) parts.push(authenticate)
+    if (data.upload) parts.push(multer({
+      storage: multer.diskStorage({
+        destination: data.upload.destination,
+        filename: data.upload.name
+      }),
+      fileFilter: data.upload.filter
+    }).single(data.upload.field))
+    app[method](...parts, execute)
+  }
+}
 
 async function loadPage(dir, parent) {
   const files = fs.readdirSync(dir)
@@ -125,7 +188,7 @@ globalThis.f = {
 
 const index = fs.readFileSync("views/index.vue", "utf-8")
 app.get("*", async (req, res) => {
-  if (req.path.startsWith("/src") || req.path.startsWith("/assets")) return send404(req, res)
+  if (req.path.startsWith("/src") || req.path.startsWith("/assets") || req.path.startsWith("/api")) return send404(req, res)
   
   const parts = (req.path === "/" ? "index" : req.path.slice(1)).split("/")
   let dynamic

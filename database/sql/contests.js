@@ -4,6 +4,7 @@ database.exec(`
     date INTEGER NOT NULL,
     open INTEGER,
     close INTEGER,
+    vote INTEGER,
     finish INTEGER,
     version TEXT NOT NULL,
     name TEXT NOT NULL,
@@ -80,5 +81,16 @@ export default {
       ORDER BY max_votes DESC
       LIMIT 1
     ) s ON c.id = s.contest
-  `, "get")
+  `, "get"),
+  progress: prepareDBAction(`
+    UPDATE contests
+    SET status = CASE
+      WHEN status = 'upcoming' THEN 'submissions'
+      WHEN status = 'submissions' THEN 'reviewing'
+      WHEN status = 'reviewing' THEN 'voting'
+      WHEN status = 'voting' THEN 'finished'
+      ELSE status
+    END
+    WHERE status != 'finished'
+  `)
 }

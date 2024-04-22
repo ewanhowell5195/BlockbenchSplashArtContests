@@ -2,17 +2,30 @@ database.exec(`
   CREATE TABLE IF NOT EXISTS contests (
     id INTEGER PRIMARY KEY,
     date INTEGER NOT NULL,
+    open INTEGER,
+    close INTEGER,
+    finish INTEGER,
     version TEXT NOT NULL,
     name TEXT NOT NULL,
     theme TEXT NOT NULL,
-    description TEXT
+    description TEXT,
+    status TEXT DEFAULT 'upcoming'
   )
+`)
+
+database.exec(`
+  CREATE TRIGGER IF NOT EXISTS contest_check
+  BEFORE INSERT ON contests
+  BEGIN
+    SELECT RAISE(ABORT, 'An unfinished contest already exists.')
+    WHERE EXISTS (SELECT 1 FROM contests WHERE status != 'finished');
+  END
 `)
 
 export default {
   add: prepareDBAction(`
-    INSERT INTO contests (id, date, version, name, theme, description)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO contests (date, open, close, finish, version, name, theme, description)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `),
   all: prepareDBAction(`
     SELECT
@@ -27,7 +40,7 @@ export default {
         LIMIT 1
       ) AS image
     FROM contests
-    JOIN submissions ON contests.id = submissions.contest
+    LEFT JOIN submissions ON contests.id = submissions.contest
     GROUP BY contests.id
     ORDER BY contests.id DESC
   `, "all"),
@@ -35,5 +48,37 @@ export default {
     SELECT *
     FROM contests
     WHERE id = ?
+  `, "get"),
+  latest: prepareDBAction(`
+    SELECT *
+    FROM contests
+    ORDER BY id DESC
+    LIMIT 1
+  `, "get"),
+  mainImage: prepareDBAction(`
+    WITH LatestContest AS (
+      SELECT id, status
+      FROM contests
+      ORDER BY id DESC
+      LIMIT 1
+    )
+    SELECT
+      CASE
+        WHEN c.status <> 'finished' THEN c.id
+        ELSE s.contest
+      END AS contest,
+      CASE
+        WHEN c.status = 'finished' THEN s.image
+        ELSE NULL
+      END AS image
+    FROM LatestContest c
+    LEFT JOIN (
+      SELECT contest, image, MAX(votes) as max_votes
+      FROM submissions
+      WHERE contest = (SELECT id FROM LatestContest)
+      GROUP BY contest, image
+      ORDER BY max_votes DESC
+      LIMIT 1
+    ) s ON c.id = s.contest
   `, "get")
 }

@@ -1,5 +1,5 @@
 <div id="contests" class="container">
-  <div v-for="contest of contests" class="contest">
+  <div v-for="contest of contests.filter(e => e.status === 'finished')" class="contest">
     <a class="contest-header" :href="'/contests/' + contest.id" :style="{ backgroundImage: `url('assets/images/submissions/${contest.id}/${contest.image}.png')` }">
       <div>
         <h1>{{ contest.theme }}</h1>
@@ -23,7 +23,7 @@
       </table>
       <div class="button-row">
         <a class="button secondary" :href="`https://github.com/JannisX11/blockbench/releases/tag/v${contest.version}.0`" target="_blank"><span class="fa fa-github"></span><span>Blockbench <span style="text-transform: lowercase;">v</span>{{ contest.version }}</span></a>
-        <a class="button" :href="'/contests/' + contest.id">View results</a>
+        <a class="button" :href="'contests/' + contest.id">View results</a>
       </div>
     </div>
   </div>

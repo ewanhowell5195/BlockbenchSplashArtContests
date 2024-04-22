@@ -18,7 +18,7 @@ export default {
         config: {
           title: `Splash Art Contest ${contest.id} - ${contest.theme}`,
           description: `The ${f.numSuffix(contest.id)} splash art contest! For Blockbench v${contest.version} - The ${contest.name} Update. Theme: ${contest.theme}`,
-          image: `assets/images/submissions/${contest.id}/${submissions[0].image}.png`
+          image: contest.status === "finished" ? `assets/images/submissions/${contest.id}/${submissions[0].image}.png` : `assets/images/contests/concept_${contest.id}.png`
         },
         contest,
         submissions

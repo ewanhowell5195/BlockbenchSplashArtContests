@@ -51,15 +51,5 @@ export default {
   `, "all", null, o => o.map(e => {
     e.artists = JSON.parse(e.artists)
     return e
-  })),
-  latestWinner: prepareDBAction(`
-    SELECT *
-    FROM submissions
-    WHERE contest = (SELECT MAX(contest) FROM submissions)
-    AND votes = (
-      SELECT MAX(votes)
-      FROM submissions
-      WHERE contest = (SELECT MAX(contest) FROM submissions)
-    )
-  `, "get")
+  }))
 }

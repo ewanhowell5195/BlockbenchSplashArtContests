@@ -103,7 +103,7 @@ for await (const f of getFiles("api")) {
             arg = arg.trim()
           }
           if (arg === undefined) {
-            if (conf.optional) continue
+            if (!conf.required) continue
             return res.sendStatus(400)
           }
           if (conf.type === "url") {

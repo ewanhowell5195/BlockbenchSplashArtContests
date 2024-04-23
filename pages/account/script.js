@@ -29,7 +29,7 @@ if (register) {
   saveChanges.addEventListener("click", async e => {
     if (processing) return
     if (displayName.value.trim().length < 2) return shakeError(displayName, "Display Name too short")
-    if (!urlTest.test(socialMedia.value.trim())) return shakeError(socialMedia, "Invalid Social Media URL")
+    if (socialMedia.value.trim() && !urlTest.test(socialMedia.value.trim())) return shakeError(socialMedia, "Invalid Social Media URL")
     processing = true
     const r = await fetch("/api/artists/update", {
       method: "PATCH",

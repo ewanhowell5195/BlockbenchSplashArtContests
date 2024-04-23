@@ -13,7 +13,7 @@
   </div>
   <div class="panel" v-if="artist">
     <div class="panel-group">
-      <h2>Dispay Name</h2>
+      <h2>Display Name</h2>
       <label for="display-name">The name that appears on your submissions and on your artist page.</label>
       <input id="display-name" type="text" maxlength="32" :data-original="artist.name" :value="artist.name">
     </div>

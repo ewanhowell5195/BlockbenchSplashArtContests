@@ -10,12 +10,16 @@ export default {
   add: prepareDBAction(`
     INSERT INTO artists (id, name, socialMedia)
     VALUES (?, ?, ?)
-    ON CONFLICT (id) DO UPDATE
-    SET name = EXCLUDED.name, socialMedia = EXCLUDED.socialMedia
+    ON CONFLICT (id) DO NOTHING
   `),
   get: prepareDBAction(`
     SELECT *
     FROM artists
     WHERE id = ?
-  `, "get")
+  `, "get"),
+  update: prepareDBAction(`
+    UPDATE artists
+    SET name = ?, socialMedia = ?
+    WHERE id = ?
+  `, "run", (id, name, socialMedia) => [name, socialMedia, id])
 }

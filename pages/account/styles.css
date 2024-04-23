@@ -1,0 +1,18 @@
+#account-header {
+  flex-direction: row;
+
+  > img {
+    border-radius: 50%;
+  }
+
+  > div {
+    justify-content: center;
+  }
+}
+
+.container {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

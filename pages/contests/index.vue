@@ -1,5 +1,5 @@
 <div id="contests" class="container">
-  <div v-for="contest of contests.filter(e => e.status === 'finished')" class="contest">
+  <div v-for="contest of contests.filter(e => e.status === 'finished')" class="contest panel">
     <a class="contest-header" :href="'/contests/' + contest.id" :style="{ backgroundImage: `url('assets/images/submissions/${contest.id}/${contest.image}.png')` }">
       <div>
         <h1>{{ contest.theme }}</h1>
@@ -8,7 +8,7 @@
     <div class="contest-details">
       <div>
         <h2>Contest #{{ contest.id }}</h2>
-        <span>{{ new Date(contest.date).toLocaleString().split(",")[0] }}</span>
+        <span class="subtle">{{ new Date(contest.date).toLocaleString().split(",")[0] }}</span>
       </div>
       <h3>The {{ contest.name }} Update</h3>
       <table>

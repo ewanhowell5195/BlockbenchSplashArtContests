@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@1" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/brands.min.css" />
-    <link rel="stylesheet" href="/assets/styles.css">
+    <link rel="stylesheet" href="/src/styles.css">
     <link v-if="styles" rel="stylesheet" :href="'/src/' + styles">
   </head>
   <body>
@@ -29,11 +29,11 @@
         </a>
         <div class="spacer"></div>
         <nav>
-          <a href="https://blockbench.net/" target="_blank">Blockbench</a>
+          <a href="https://blockbench.net/" target="_blank">Blockbench <span class="icon">open_in_new</span></a>
           <a href="/contests">Contests</a>
           <a href="/vote">Vote</a>
           <a v-if="user" href="/account">
-            <img :src="user.avatar" width="32" height="32" alt="Avatar">
+            <img :src="user.avatar + '?size=32'" width="32" height="32" alt="Avatar">
             <span>{{ user.global_name }}</span>
           </a>
           <a v-else href="/account">
@@ -46,7 +46,8 @@
     <main>
       <render>content</render>
     </main>
-    <script src="/assets/script.js"></script>
+    <div id="notification-container"></div>
+    <script src="/src/script.js"></script>
     <script v-if="script" :src="'/src/' + script"></script>
   </body>
 </html>

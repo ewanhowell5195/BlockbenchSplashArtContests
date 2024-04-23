@@ -41,7 +41,16 @@ app.get("/logout", (req, res) => {
   res.redirect("/")
 })
 
-app.use("/src", express.static("pages"))
+app.use("/src", (req, res, next) => {
+  const extname = path.extname(req.path)
+  const basename = path.basename(req.path)
+  if (
+    extname === ".json" ||
+    extname === ".vue" ||
+    basename === "config.js"
+  ) return send404(req, res)
+  next()
+}, express.static("pages"))
 app.use("/assets", express.static("assets"))
 
 function authenticate(req, res, next) {
@@ -75,18 +84,50 @@ const getFiles = async function*(dir) {
   }
 }
 
+const urlTest = /^https?:\/\/(?:[-a-z0-9@:%._\+~#=]{1,256}\.[a-z0-9()]{1,6}\b|\[[:0-9]{2,}\])([-a-z0-9()@:%_\+.~#?&\/=]*)$/i
 for await (const f of getFiles("api")) {
   const api = (await import("./" + path.relative("./", f).replace(/\\/g, "/"))).default
   for (const [method, data] of Object.entries(api)) {
     const path = f.split("api")[1].replace(/\\/g, "/").slice(0, -3)
     data.path = `/api${path}`
-    if (data.parameter) data.path += `/:${data.parameter}`
     async function execute(req, res) {
       if (Object.keys(req.body).length && !data.arguments) return res.sendStatus(400)
       for (const arg of Object.keys(req.body)) {
         if (!data.arguments[arg])  return res.sendStatus(400)
       }
       if (data.upload && !req.file) return res.sendStatus(400)
+      if (data.arguments) {
+        for (const [id, conf] of Object.entries(data.arguments)) {
+          let arg = req.body?.[id]
+          if (typeof arg === "string") {
+            arg = arg.trim()
+          }
+          if (arg === undefined) {
+            if (conf.optional) continue
+            return res.sendStatus(400)
+          }
+          if (conf.type === "url") {
+            if (typeof arg !== "string" || !urlTest.test(arg)) return res.status(400).send({
+              error: `Invalid "${id}"`,
+              key: id
+            })
+            if (arg.length > 250) return res.status(400).send({
+              error: `"${id}" too long`,
+              key: id
+            })
+          } else {
+            if (typeof arg !== "string") return res.sendStatus(400)
+            if (conf.minLength && arg.length < conf.minLength) return res.status(400).send({
+              error: `"${id}" too short`,
+              key: id
+            })
+            if (conf.maxLength && arg.length > conf.maxLength) return res.status(400).send({
+              error: `"${id}" too long`,
+              key: id
+            })
+          }
+        }
+      }
       data.execute(req, res)
     }
     let parts = [data.path]
@@ -189,7 +230,11 @@ globalThis.f = {
 
 const index = fs.readFileSync("views/index.vue", "utf-8")
 app.get("*", async (req, res) => {
-  if (req.path.startsWith("/src") || req.path.startsWith("/assets") || req.path.startsWith("/api")) return send404(req, res)
+  if (
+    req.path.startsWith("/src") ||
+    req.path.startsWith("/assets") ||
+    req.path.startsWith("/api")
+  ) return send404(req, res)
   
   const parts = (req.path === "/" ? "index" : req.path.slice(1)).split("/")
   let dynamic
@@ -251,7 +296,7 @@ app.get("*", async (req, res) => {
     }
   }
   if (page.data) {
-    Object.assign(context, page.data())
+    Object.assign(context, page.data(req))
   }
 
   for (const key in context.config) {

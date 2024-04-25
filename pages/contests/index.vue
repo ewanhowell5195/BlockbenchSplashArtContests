@@ -1,6 +1,6 @@
 <div id="contests" class="container">
   <div v-for="contest of contests" class="contest panel">
-    <a class="contest-header" :href="'/contests/' + contest.id" :style="{ backgroundImage: `url('${contest.status === 'finished' ? `/assets/images/submissions/${contest.id}/${contest.image}.png` : `/assets/images/contests/concept_${contest.id}.png`}')` }">
+    <a class="contest-header" :href="'/contests/' + contest.id" :style="{ backgroundImage: `url('${contest.status === 'finished' && contest.image ? `/assets/images/submissions/${contest.id}/${contest.image}.png` : `/assets/images/contests/concept_${contest.id}.png`}')` }">
       <div>
         <h1>{{ contest.theme }}</h1>
       </div>

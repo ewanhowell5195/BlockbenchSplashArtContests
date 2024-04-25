@@ -3,11 +3,7 @@ export default {
     auth: true,
     title: "Submit your splash art!"
   },
-  data: req => {
-    const contest = db.contests.latest()
-    return {
-      contest,
-      submission: db.artists.submission(contest.id, req.user.id)
-    }
-  }
+  data: (req, context) => ({
+    submission: db.artists.submission(context.contest.id, req.user.id)
+  })
 }

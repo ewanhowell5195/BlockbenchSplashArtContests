@@ -1,4 +1,4 @@
-<div id="contest-header" :style="{ backgroundImage: `linear-gradient(transparent, var(--color-background)), url('${contest.status === 'finished' ? `/assets/images/submissions/${contest.id}/${submissions[0]?.image}.png` : `/assets/images/contests/concept_${contest.id}.png`}')` }">
+<div id="contest-header" :style="{ backgroundImage: `linear-gradient(transparent, var(--color-background)), url('${contest.status === 'finished' && submissions.length ? `/assets/images/submissions/${contest.id}/${submissions[0].image}.png` : `/assets/images/contests/concept_${contest.id}.png`}')` }">
   <div></div>
   <h1>Splash Art Contest {{ contest.id }}</h1>
   <h2>"{{ contest.theme }}"</h2>

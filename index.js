@@ -200,7 +200,8 @@ async function send404(req, res) {
     script: null,
     styles: null,
     user: req.user,
-    domain: process.env.DOMAIN
+    domain: process.env.DOMAIN,
+    contest: db.contests.latest()
   }
   res.status(404).send(await renderToString(createSSRApp({
     data: () => context,
@@ -276,9 +277,11 @@ app.get("*", async (req, res) => {
     styles: page.styles ? parts[parts.length - 1] + "/styles.css" : null,
     user: req.user,
     domain: process.env.DOMAIN,
+    contest: db.contests.latest(),
     settings,
     render,
-    f
+    f,
+    setTimeout
   }
 
   if (dynamic) {
@@ -307,12 +310,12 @@ app.get("*", async (req, res) => {
     }
   }
   if (page.data) {
-    Object.assign(context, page.data(req))
+    Object.assign(context, page.data(req, context))
   }
 
   for (const key in context.config) {
     if (typeof context.config[key] === "function") {
-      context.config[key] = context.config[key]()
+      context.config[key] = context.config[key](req, context)
     }
   }
 
@@ -323,6 +326,18 @@ app.get("*", async (req, res) => {
       isCustomElement: tag => tag === 'file-input'
     }
   })))
+})
+
+process.on("unhandledRejection", error => {
+  console.error("Unhandled rejection at", new Date())
+  console.error(error.message)
+  console.error(error.stack)
+})
+
+process.on("uncaughtException", error => {
+  console.error("Uncaught exception at", new Date())
+  console.error(error.message)
+  console.error(error.stack)
 })
 
 if (process.argv.includes("-dev")) {

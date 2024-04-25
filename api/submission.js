@@ -57,7 +57,7 @@ export default {
       const hex = hash.digest("hex")
       db.submissions.add(contest.id, [req.user.id], hex)
       await fs.promises.writeFile(`${folder}/${hex}.png`, req.file.buffer)
-      res.sendStatus(200)
+      res.sendStatus(201)
     }
   },
   delete: {

@@ -110,6 +110,6 @@ function showNotification(text) {
 
 function shakeError(element, message) {
   element.classList.add("shake-error")
-  setTimeout(() => element.classList.remove("shake-error"), 200)
+  setTimeout(() => element.classList.remove("shake-error"), 500)
   showNotification(message)
 }

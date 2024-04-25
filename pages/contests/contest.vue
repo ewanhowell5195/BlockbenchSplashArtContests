@@ -8,7 +8,7 @@
 </div>
 <div v-if="contest.status !== 'finished'" class="container">
   <button v-if="contest.status === 'upcoming'" disabled>Submit your splash art!</button>
-  <a v-if="contest.status === 'submissions'" class="button" :href="'/submit'">Submit your splash art!</a>
+  <a v-if="contest.status === 'submissions'" class="button" :href="'/submission'">Submit your splash art!</a>
   <h2>Welcome to the {{ f.numSuffix(contest.id) }} Blockbench Splash Art Contest!</h2>
   <p>This is the contest for the upcoming Blockbench update {{ contest.version }}!</p>
   <h2>Prizes</h2>

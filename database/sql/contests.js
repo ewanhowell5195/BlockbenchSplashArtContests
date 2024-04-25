@@ -32,7 +32,7 @@ export default {
     SELECT
       contests.*, 
       COUNT(submissions.contest) AS submissions,
-      SUM(submissions.votes) AS votes,
+      COALESCE(SUM(submissions.votes), 0) AS votes,
       (
         SELECT submissions.image
         FROM submissions

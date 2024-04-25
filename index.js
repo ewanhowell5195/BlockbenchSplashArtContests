@@ -1,3 +1,4 @@
+import settings from "./settings.json" assert { type: "json" }
 import { renderToString } from "vue/server-renderer"
 import cookieParser from "cookie-parser"
 import Database from "better-sqlite3"
@@ -19,9 +20,11 @@ const __dirname = url.fileURLToPath(new URL(".", import.meta.url))
 globalThis.database = new Database("database.db")
 globalThis.db = (await import("./database/db.js")).default
 globalThis.createHash = crypto.createHash
-globalThis.fs = fs
-globalThis.path = path
+globalThis.settings = settings
 globalThis.app = express()
+globalThis.path = path
+globalThis.fs = fs
+
 app.use(express.json())
 app.use(cookieParser())
 
@@ -58,20 +61,6 @@ function authenticate(req, res, next) {
   next()
 }
 
-const ratelimitCache = {}
-function ratelimit(req, res, next) {
-  const ip = req.headers["x-forwarded-for"] ?? req.socket.remoteAddress 
-  ratelimitCache[req.url] ??= {}
-  if (ratelimitCache[req.url][ip]) {
-    if (ratelimitCache[req.url][ip] >= 5) return res.sendStatus(429)
-    ratelimitCache[req.url][ip]++
-  } else {
-    ratelimitCache[req.url][ip] = 1
-    setTimeout(() => delete ratelimitCache[req.url][ip], 5000)
-  }
-  next()
-}
-
 const getFiles = async function*(dir) {
   const dirents = await fs.promises.readdir(dir, { withFileTypes: true })
   for (const dirent of dirents) {
@@ -84,6 +73,7 @@ const getFiles = async function*(dir) {
   }
 }
 
+const ratelimitCache = {}
 const urlTest = /^https?:\/\/(?:[-a-z0-9@:%._\+~#=]{1,256}\.[a-z0-9()]{1,6}\b|\[[:0-9]{2,}\])([-a-z0-9()@:%_\+.~#?&\/=]*)$/i
 for await (const f of getFiles("api")) {
   const api = (await import("./" + path.relative("./", f).replace(/\\/g, "/"))).default
@@ -91,6 +81,7 @@ for await (const f of getFiles("api")) {
     const path = f.split("api")[1].replace(/\\/g, "/").slice(0, -3)
     data.path = `/api${path}`
     async function execute(req, res) {
+      if (req.error) return res.status(400).send({ error: req.error })
       if (Object.keys(req.body).length && !data.arguments) return res.sendStatus(400)
       for (const arg of Object.keys(req.body)) {
         if (!data.arguments[arg])  return res.sendStatus(400)
@@ -131,16 +122,35 @@ for await (const f of getFiles("api")) {
       data.execute(req, res)
     }
     let parts = [data.path]
-    if (data.ratelimit !== false) parts.push(ratelimit)
+    if (data.ratelimit !== false) parts.push((req, res, next) => {
+      const ip = req.headers["x-forwarded-for"] ?? req.socket.remoteAddress 
+      ratelimitCache[req.url] ??= {}
+      if (ratelimitCache[req.url][ip]) {
+        if (ratelimitCache[req.url][ip] >= (data.ratelimit ?? 5)) return res.sendStatus(429)
+        ratelimitCache[req.url][ip]++
+      } else {
+        ratelimitCache[req.url][ip] = 1
+        setTimeout(() => delete ratelimitCache[req.url][ip], 5000)
+      }
+      next()
+    })
     if (!data.public) parts.push(authenticate)
     if (data.check) parts.push(data.check)
-    if (data.upload) parts.push(multer({
-      storage: multer.diskStorage({
-        destination: data.upload.destination,
-        filename: data.upload.name
-      }),
-      fileFilter: data.upload.filter
-    }).single(data.upload.field))
+    if (data.upload) parts.push(
+      multer({
+        limits: { fileSize: settings.maxFileSize },
+        storage: multer.memoryStorage(),
+        fileFilter: data.upload.filter
+      }).single(data.upload.field),
+      (err, req, res, next) => {
+        if (err?.code === "LIMIT_FILE_SIZE") {
+          return res.status(400).send({ error: `File size too large. The maximum file size is ${settings.maxFileSize / 1024 / 1024} MB` })
+        } else if (err) {
+          return res.status(500).send({ error: "An error occurred during the upload process" })
+        }
+      }
+    )
+    parts.push(execute)
     app[method](...parts, execute)
   }
 }
@@ -266,6 +276,7 @@ app.get("*", async (req, res) => {
     styles: page.styles ? parts[parts.length - 1] + "/styles.css" : null,
     user: req.user,
     domain: process.env.DOMAIN,
+    settings,
     render,
     f
   }
@@ -307,7 +318,10 @@ app.get("*", async (req, res) => {
 
   res.send(await renderToString(createSSRApp({
     data: () => context,
-    template: await render("views/index.vue", context)
+    template: await render("views/index.vue", context),
+    compilerOptions: {
+      isCustomElement: tag => tag === 'file-input'
+    }
   })))
 })
 

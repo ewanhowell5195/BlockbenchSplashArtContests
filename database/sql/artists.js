@@ -21,5 +21,15 @@ export default {
     UPDATE artists
     SET name = ?, socialMedia = ?
     WHERE id = ?
-  `, "run", (id, name, socialMedia) => [name, socialMedia, id])
+  `, "run", (id, name, socialMedia) => [name, socialMedia, id]),
+  submission: prepareDBAction(`
+    SELECT *
+    FROM submissions
+    WHERE contest = ?
+    AND EXISTS (
+      SELECT 1
+      FROM json_each(submissions.artists) as artist
+      WHERE artist.value = ?
+    )
+  `, "get")
 }

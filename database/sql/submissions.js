@@ -26,9 +26,13 @@ database.exec(`
 
 export default {
   add: prepareDBAction(`
-    INSERT INTO submissions (id, contest, artists, votes, image)
-    VALUES (COALESCE((SELECT MAX(id) + 1 FROM submissions WHERE contest = ?), 0), ?, json(?), ?, ?)
-  `, "run", (id, artists, votes, image) => [id, id, JSON.stringify(artists), votes, image]),
+    INSERT INTO submissions (id, contest, artists, image)
+    VALUES (COALESCE((SELECT MAX(id) + 1 FROM submissions WHERE contest = ?), 0), ?, json(?), ?)
+  `, "run", (id, artists, image) => [id, id, JSON.stringify(artists), image]),
+  delete: prepareDBAction(`
+    DELETE FROM submissions
+    WHERE id = ? AND contest = ?
+  `),
   contest: prepareDBAction(`
     SELECT
       s.id,

@@ -13,9 +13,10 @@
   --color-danger: #D91F39;
   --color-danger-transparent: #D91F3940;
   --text-shadow: 0 2px 3px #000, 0 -1px 3px #0004;
+  --transparency: url("data:image/webp;base64,UklGRiYAAABXRUJQVlA4TBkAAAAvD8ADAAWRto2Te5h/fYXnEf2fgDj+cfwDAA==");
 }
 
-html {
+* {
   font-family: "Nunito Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -118,7 +119,7 @@ main {
 
 .container {
   max-width: var(--content-width);
-  padding: 0 20px;
+  padding: 20px 20px 0;
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -224,7 +225,7 @@ main {
   max-height: calc(100vh - 80px);
   min-width: min(256px, 100vw - 80px);
   display: block;
-  background-image: url("data:image/webp;base64,UklGRiYAAABXRUJQVlA4TBkAAAAvD8ADAAWRto2Te5h/fYXnEf2fgDj+cfwDAA==");
+  background-image: var(--transparency);
   image-rendering: pixelated;
   object-fit: contain;
 }
@@ -262,23 +263,24 @@ main {
 /* Shake Error */
 
 .shake-error {
-  animation: shake .2s ease-in-out
+  animation: shake .5s ease-in-out;
 }
 
 @keyframes shake {
-  0% {
+  0%, 100% {
     transform: translateX(0);
+    outline: 0 solid transparent;
   }
-  25% {
+  12.5%, 62.5% {
     transform: translateX(10px);
+    outline: 4px solid var(--color-danger);
   }
-  75% {
+  37.5%, 87.5% {
     transform: translateX(-10px);
-  }
-  100% {
-    transform: translateX(0);
+    outline: 4px solid var(--color-danger);
   }
 }
+
 
 /* End Shake Error */
 

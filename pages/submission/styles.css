@@ -1,0 +1,12 @@
+table {
+  align-self: flex-start;
+}
+
+td:first-child {
+  padding-right: 16px; 
+}
+
+.panel img {
+  width: 100%;
+  border-radius: 8px;
+}

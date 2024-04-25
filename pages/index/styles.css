@@ -24,6 +24,7 @@ main {
   background: radial-gradient(closest-side, #0006, transparent);
   padding: 20px;
   height: 100%;
+  text-align: center;
 
   > * {
     margin: 0;
@@ -39,7 +40,6 @@ main {
   }
 
   > div h3 {
-    text-align: center;
     font-size: 1.5rem;
     margin-bottom: 0;
   }

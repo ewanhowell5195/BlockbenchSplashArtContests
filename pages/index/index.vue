@@ -7,6 +7,7 @@
         <p><strong>Welcome to the {{ f.numSuffix(contest.id) }} Blockbench Splash Art Contest!</strong></p>
         <h3 v-if="contest.status === 'upcoming'">Submissions open {{ f.relativeTime(contest.open) }}</h3>
         <h3 v-if="contest.status === 'submissions'">Submissions close {{ f.relativeTime(contest.close) }}</h3>
+        <p>This website is in the testing phase, uploaded submissions will not be treated as real submissions.</p>
       </div>
       <div v-if="contest.status === 'finished'">
         <p>The splash art contest has concluded and the results are in!</p>

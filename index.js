@@ -332,6 +332,5 @@ if (process.argv.includes("-dev")) {
     cert: fs.readFileSync("private/ewanhowell.com.pem"),
     key: fs.readFileSync("private/ewanhowell.com.key")
   }, app)
-
   server.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`))
 }

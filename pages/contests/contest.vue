@@ -1,16 +1,16 @@
-<div id="contest-header" :style="{ backgroundImage: `linear-gradient(transparent, var(--color-background)), url('${contest.status === 'finished' && submissions.length ? `/assets/images/submissions/${contest.id}/${submissions[0].image}_thumbnail_large.webp` : `/assets/images/contests/concept_${contest.id}_thumbnail_large.webp`}')` }">
+<div id="contest-header" :style="{ backgroundImage: `linear-gradient(transparent, var(--color-background)), url('${currentContest.status === 'finished' && submissions.length ? `/assets/images/submissions/${currentContest.id}/${submissions[0].image}_thumbnail_large.webp` : `/assets/images/contests/concept_${currentContest.id}_thumbnail_large.webp`}')` }">
   <div></div>
-  <h1>Splash Art Contest {{ contest.id }}</h1>
-  <h2>"{{ contest.theme }}"</h2>
-  <h3 v-if="contest.status === 'upcoming'">Submissions open {{ f.relativeTime(contest.open) }}</h3>
-  <h3 v-if="contest.status === 'submissions'">Submissions close {{ f.relativeTime(contest.close) }}</h3>
-  <h3 v-if="contest.status === 'finished'">For Blockbench v{{ contest.version }} - The {{ contest.name }} Update</h3>
+  <h1>Splash Art Contest {{ currentContest.id }}</h1>
+  <h2>"{{ currentContest.theme }}"</h2>
+  <h3 v-if="currentContest.status === 'upcoming'">Submissions open {{ f.relativeTime(currentContest.open) }}</h3>
+  <h3 v-if="currentContest.status === 'submissions'">Submissions close {{ f.relativeTime(currentContest.close) }}</h3>
+  <h3 v-if="currentContest.status === 'finished'">For Blockbench v{{ currentContest.version }} - The {{ currentContest.name }} Update</h3>
 </div>
-<div v-if="contest.status !== 'finished'" class="container">
-  <button v-if="contest.status === 'upcoming'" disabled>Submit your splash art!</button>
-  <a v-if="contest.status === 'submissions'" class="button" :href="'/submission'">Submit your splash art!</a>
-  <h2>Welcome to the {{ f.numSuffix(contest.id) }} Blockbench Splash Art Contest!</h2>
-  <p>This is the contest for the upcoming Blockbench update {{ contest.version }}!</p>
+<div v-if="currentContest.status !== 'finished'" class="container">
+  <button v-if="currentContest.status === 'upcoming'" disabled>Submit your splash art!</button>
+  <a v-if="currentContest.status === 'submissions'" class="button" :href="'/submission'">Submit your splash art!</a>
+  <h2>Welcome to the {{ f.numSuffix(currentContest.id) }} Blockbench Splash Art Contest!</h2>
+  <p>This is the contest for the upcoming Blockbench update {{ currentContest.version }}!</p>
   <h2>Prizes</h2>
   <ul>
     <li>The <strong>top voted 20%</strong> of submissions (max 5) will be featured in order as a slide show on the Blockbench splash screen</li>
@@ -31,13 +31,13 @@
   </ol>
   <h2>Good luck and enjoy!</h2>
 </div>
-<div v-if="contest.status === 'finished'" class="container">
-  <p v-if="contest.description">{{ contest.description }}</p>
+<div v-if="currentContest.status === 'finished'" class="container">
+  <p v-if="currentContest.description">{{ currentContest.description }}</p>
   <h1 style="margin-bottom: 0;">Submissions:</h1>
   <div id="submissions">
     <div class="submission" v-for="(submission, i) of submissions">
-      <img :src="`/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_large.webp`" :alt="'Splash art by ' + submission.artists.map(e => e.name).join(' & ')" loading="lazy">
-      <div class="popupable" :src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`">
+      <img :src="`/assets/images/submissions/${currentContest.id}/${submission.image}_thumbnail_large.webp`" :alt="'Splash art by ' + submission.artists.map(e => e.name).join(' & ')" loading="lazy">
+      <div class="popupable" :src="`/assets/images/submissions/${currentContest.id}/${submission.image}.webp`">
         <div class="submission-position">{{ f.numSuffix(i + 1) }} Place</div>
         <div class="submission-votes">{{ submission.votes.toLocaleString() }} Vote<span v-if="submission.votes < 1 || submission.votes > 1">s</span></div>
         <div class="submission-artists">
@@ -50,7 +50,7 @@
     </div>
   </div>
   <div id="contest-stats">
-    <span>Contest date: {{ new Date(contest.date).toLocaleString().split(",")[0] }}</span>
+    <span>Contest date: {{ new Date(currentContest.date).toLocaleString().split(",")[0] }}</span>
     <span>Submissions: {{ submissions.length.toLocaleString() }}</span>
     <span>Participants: {{ submissions.reduce((a, e) => a + e.artists.length, 0).toLocaleString() }}</span>
     <span>Total votes: {{ submissions.reduce((a, e) => a + e.votes, 0).toLocaleString() }}</span>

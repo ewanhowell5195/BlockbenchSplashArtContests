@@ -20,7 +20,7 @@ export default {
           description: `The ${f.numSuffix(contest.id)} splash art contest! For Blockbench v${contest.version} - The ${contest.name} Update. Theme: ${contest.theme}`,
           image: contest.status === "finished" && submissions.length ? `assets/images/submissions/${contest.id}/${submissions[0].image}_thumbnail_small.webp` : `assets/images/contests/concept_${contest.id}_thumbnail_small.webp`
         },
-        contest,
+        currentContest: contest,
         submissions
       }
     }

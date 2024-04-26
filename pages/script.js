@@ -31,6 +31,7 @@ document.addEventListener("click", e => {
       <div class="popup-container">
         <img class="popup-image">
         <div id="popup-image-close" class="icon">close</div>
+        <a id="popup-image-open" class="icon" target="_blank">open_in_new</a>
         <div id="popup-image-prev" class="icon">chevron_left</div>
         <div id="popup-image-next" class="icon">chevron_right</div>
       </div>
@@ -64,17 +65,18 @@ document.addEventListener("click", e => {
     loadImage(img, element)
     setTimeout(() => popup.classList.add("popup-visible"), 0)
   }
-});
+})
 
 function loadImage(img, element) {
-  const url = element.getAttribute("src")
-
-  img.src = url
-
   const all = Array.from(document.querySelectorAll(".popupable"))
   const index = all.indexOf(element)
+  const openImage = img.parentNode.querySelector("#popup-image-open")
   const prevIcon = img.parentNode.querySelector("#popup-image-prev")
   const nextIcon = img.parentNode.querySelector("#popup-image-next")
+  
+  const url = element.dataset.popupSrc ?? element.getAttribute("src")
+  img.src = url
+  openImage.href = url
 
   if (index === 0) {
     prevIcon.classList.add("hidden")

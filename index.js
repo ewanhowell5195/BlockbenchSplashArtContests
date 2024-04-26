@@ -203,7 +203,7 @@ async function send404(req, res) {
     domain: process.env.DOMAIN,
     contest: db.contests.latest()
   }
-  res.status(404).send(await renderToString(createSSRApp({
+  res.status(404).send("<!DOCTYPE html>" + await renderToString(createSSRApp({
     data: () => context,
     template: await render("views/index.vue", context)
   })))
@@ -319,11 +319,11 @@ app.get("*", async (req, res) => {
     }
   }
 
-  res.send(await renderToString(createSSRApp({
+  res.send("<!DOCTYPE html>" + await renderToString(createSSRApp({
     data: () => context,
     template: await render("views/index.vue", context),
     compilerOptions: {
-      isCustomElement: tag => tag === 'file-input'
+      isCustomElement: tag => tag === "file-input"
     }
   })))
 })

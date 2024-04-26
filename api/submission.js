@@ -57,6 +57,7 @@ export default {
       const hex = hash.digest("hex")
       db.submissions.add(contest.id, [req.user.id], hex)
       await fs.promises.writeFile(`${folder}/${hex}.png`, req.file.buffer)
+      await spawn("ffmpeg", ["-i", `${folder}/${hex}.png`, "-lavfi", "split=3[a][b][c];[a]scale=w='min(iw,1280)':h=-1:flags=full_chroma_int[a];[b]scale=w='min(iw,480)':h=-1:flags=full_chroma_int[b]", "-map", "[a]", `${folder}/${hex}_thumbnail_large.webp`, "-map", "[b]", `${folder}/${hex}_thumbnail_small.webp`, "-map", "[c]", "-q:v", "95", `${folder}/${hex}.webp`]).promise
       res.sendStatus(201)
     }
   },
@@ -71,6 +72,9 @@ export default {
       const contest = db.contests.latest()
       const submission = db.artists.submission(contest.id, req.user.id)
       fs.promises.unlink(`assets/images/submissions/${contest.id}/${submission.image}.png`).catch(() => {})
+      fs.promises.unlink(`assets/images/submissions/${contest.id}/${submission.image}.webp`).catch(() => {})
+      fs.promises.unlink(`assets/images/submissions/${contest.id}/${submission.image}_thumbnail_small.webp`).catch(() => {})
+      fs.promises.unlink(`assets/images/submissions/${contest.id}/${submission.image}_thumbnail_large.webp`).catch(() => {})
       db.submissions.delete(submission.id, submission.contest)
       res.sendStatus(200)
     }

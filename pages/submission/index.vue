@@ -21,14 +21,14 @@
         <td>{{ settings.aspectRatio.join(":") }}</td>
       </tr>
     </table>
-    <file-input accept="image/png" :data-maxfilesize="settings.maxFileSize" :data-aspectratio="settings.aspectRatio.join(':')" :data-minwidth="settings.minWidth" :data-maxwidth="settings.maxWidth"></file-input>
+    <file-input accept="image/png" :data-max-file-size="settings.maxFileSize" :data-aspect-ratio="settings.aspectRatio.join(':')" :data-min-width="settings.minWidth" :data-max-width="settings.maxWidth"></file-input>
     <button id="submit">Create Submission</button>
   </div>
 </div>
 <div v-else-if="contest.status === 'submissions' && submission" class="container">
   <div class="panel">
     <h2>Your Submission</h2>
-    <img :src="`/assets/images/submissions/${contest.id}/${submission.image}.png`" class="popupable" loading="lazy">
+    <img :src="`/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_large.webp`" :data-popup-src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`" class="popupable" alt="Your submission" loading="lazy">
     <button id="retract" class="danger secondary">Retract Submission</button>
   </div>
 </div>

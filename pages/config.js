@@ -6,10 +6,10 @@ export default {
     image(req, context) {
       const image = db.contests.mainImage()
       if (image.contest) {
-        if (image.image) return `assets/images/submissions/${image.contest}/${image.image}.png`
-        else return `assets/images/contests/concept_${image.contest}.png`
+        if (image.image) return `assets/images/submissions/${image.contest}/${image.image}_thumbnail_small.webp`
+        else return `assets/images/contests/concept_${image.contest}_thumbnail_small.webp`
       }
-      return `assets/images/contests/concept_${context.contest.id}.png`
+      return `assets/images/contests/concept_${context.contest.id}_thumbnail_small.webp`
     }
   }
 }

@@ -1,4 +1,4 @@
-<div id="contest-header" :style="{ backgroundImage: `linear-gradient(transparent, var(--color-background)), url('${contest.status === 'finished' && submissions.length ? `/assets/images/submissions/${contest.id}/${submissions[0].image}.png` : `/assets/images/contests/concept_${contest.id}.png`}')` }">
+<div id="contest-header" :style="{ backgroundImage: `linear-gradient(transparent, var(--color-background)), url('${contest.status === 'finished' && submissions.length ? `/assets/images/submissions/${contest.id}/${submissions[0].image}_thumbnail_large.webp` : `/assets/images/contests/concept_${contest.id}_thumbnail_large.webp`}')` }">
   <div></div>
   <h1>Splash Art Contest {{ contest.id }}</h1>
   <h2>"{{ contest.theme }}"</h2>
@@ -36,8 +36,8 @@
   <h1 style="margin-bottom: 0;">Submissions:</h1>
   <div id="submissions">
     <div class="submission" v-for="(submission, i) of submissions">
-      <img :src="`/assets/images/submissions/${contest.id}/${submission.image}.png`" loading="lazy">
-      <div class="popupable" :src="`/assets/images/submissions/${contest.id}/${submission.image}.png`">
+      <img :src="`/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_large.webp`" :alt="'Splash art by ' + submission.artists.map(e => e.name).join(' & ')" loading="lazy">
+      <div class="popupable" :src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`">
         <div class="submission-position">{{ f.numSuffix(i + 1) }} Place</div>
         <div class="submission-votes">{{ submission.votes.toLocaleString() }} Vote<span v-if="submission.votes < 1 || submission.votes > 1">s</span></div>
         <div class="submission-artists">

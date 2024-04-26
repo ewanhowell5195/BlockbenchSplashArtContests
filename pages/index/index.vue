@@ -1,4 +1,4 @@
-<div id="home-container" :style="{ backgroundImage: `url('${contest.status === 'finished' ? config.image : `assets/images/contests/concept_${contest.id}.png`}')` }">
+<div id="home-container" :style="{ backgroundImage: `url('${contest.status === 'finished' ? config.image.slice(0, -21) + '_thumbnail_large.webp' : `assets/images/contests/concept_${contest.id}_thumbnail_large.webp`}')` }">
   <div>
     <div class="container">
       <h1>Splash Art Contest {{ contest.id }}</h1>

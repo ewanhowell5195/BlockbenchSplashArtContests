@@ -32,7 +32,7 @@ passport.use(new DiscordStrategy({
 
 passport.serializeUser((user, done) => {
   user.avatarID = user.avatar
-  user.avatar = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`
+  user.avatar = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp`
   done(null, user)
 })
 

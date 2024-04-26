@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -7,6 +6,7 @@
     <link rel="icon" type="image/svg+xml" href="/assets/images/branding/favicon.svg">
     <meta property="og:type" content="website">
     <meta property="og:title" :content="config.title">
+    <meta name="description" :content="config.description">
     <meta property="og:description" :content="config.description">
     <meta property="og:image" :content="`${domain}/${config.image}`">
     <meta property="twitter:image" :content="`${domain}/${config.image}`">
@@ -49,6 +49,11 @@
     <main>
       <render>content</render>
     </main>
+    <footer>
+      <div id="footer">
+        <a href="https://ewanhowell.com/" target="_blank">Site by Ewan Howell</a>
+      </div>
+    </footer>
     <div id="notification-container"></div>
     <script src="/src/script.js"></script>
     <script v-if="script" :src="'/src/' + script"></script>

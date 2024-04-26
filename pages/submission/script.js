@@ -2,10 +2,10 @@ const input = document.querySelector("file-input")
 if (input) {
   let processing
   const prefix = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
-  const maxFileSize = Number(input.dataset.maxfilesize)
-  const aspectRatio = input.dataset.aspectratio.split(":").map(e => Number(e))
-  const minWidth = Number(input.dataset.minwidth)
-  const maxWidth = Number(input.dataset.maxwidth)
+  const maxFileSize = Number(input.dataset.maxFileSize)
+  const aspectRatio = input.dataset.aspectRatio.split(":").map(e => Number(e))
+  const minWidth = Number(input.dataset.minWidth)
+  const maxWidth = Number(input.dataset.maxWidth)
   document.getElementById("submit").addEventListener("click", async e => {
     if (processing) return
     if (!input.files[0]) {

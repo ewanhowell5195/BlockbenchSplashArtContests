@@ -11,7 +11,7 @@ app.use(session({
   cookie: {
     secure: process.env.DOMAIN.startsWith("https"),
     maxAge: 86400000,
-    sameSite: "Strict"
+    sameSite: "Lax"
   },
   store: new FileStore({
     logFn: () => {}

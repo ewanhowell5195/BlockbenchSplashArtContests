@@ -10,3 +10,13 @@ td:first-child {
   width: 100%;
   border-radius: 8px;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#delete-invite {
+  max-width: 46px;
+}

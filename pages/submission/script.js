@@ -70,12 +70,52 @@ if (input) {
     location.reload()
   })
 } else {
-  document.getElementById("retract")?.addEventListener("click", async e => {
-    if (confirm("Are you sure you want to retract your submission?")) {
-      await fetch("/api/submission", {
+  const inviteButton = document.getElementById("invite")
+  if (inviteButton) {
+    const deleteInvite = document.getElementById("delete-invite")
+    let processing
+    inviteButton.addEventListener("click", async e => {
+      if (processing) return
+      processing = true
+      if (!inviteButton.dataset.invite) {
+        const r = await fetch("/api/invite", {
+          method: "POST"
+        })
+        if (!r.ok) {
+          processing = false
+          return showNotification("Failed to generate invite link")
+        }
+        inviteButton.dataset.invite = await r.text()
+      }
+      inviteButton.textContent = "Copied!"
+      navigator.clipboard.writeText(`${location.origin}/api/invite/${inviteButton.dataset.invite}`)
+      deleteInvite.classList.remove("hidden")
+      setTimeout(() => {
+        inviteButton.innerHTML = `<span class="icon">link</span> Copy Invite Link`
+        processing = false
+      }, 2000)
+    })
+    deleteInvite.addEventListener("click", async e => {
+      if (processing) return
+      processing = true
+      delete inviteButton.dataset.invite
+      await fetch("/api/invite", {
         method: "DELETE"
       })
-    location.reload()
-    }
-  })
+      deleteInvite.classList.add("hidden")
+      inviteButton.innerHTML = `<span class="icon">person_add</span> Generate Invite Link`
+      processing = false
+    })
+    document.getElementById("retract").addEventListener("click", async e => {
+      if (processing) return
+      processing = true
+      if (confirm("Are you sure you want to retract your submission?")) {
+        await fetch("/api/submission", {
+          method: "DELETE"
+        })
+        location.reload()
+      }
+      processing = false
+    })
+  }
 }

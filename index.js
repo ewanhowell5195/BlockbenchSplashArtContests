@@ -3,6 +3,7 @@ import { renderToString } from "vue/server-renderer"
 import cookieParser from "cookie-parser"
 import Database from "better-sqlite3"
 import { createSSRApp } from "vue"
+import "./modules/eventHandler.js"
 import { config } from "dotenv"
 import express from "express"
 import path from "node:path"
@@ -80,6 +81,7 @@ for await (const f of getFiles("api")) {
   for (const [method, data] of Object.entries(api)) {
     const path = f.split("api")[1].replace(/\\/g, "/").slice(0, -3)
     data.path = `/api${path}`
+    if (data.parameter) data.path += `/:${data.parameter}`
     async function execute(req, res) {
       if (req.error) return res.status(400).send({ error: req.error })
       if (Object.keys(req.body).length && !data.arguments) return res.sendStatus(400)
@@ -236,7 +238,8 @@ globalThis.f = {
     if (monthDelta < 12 && monthDelta > -12) return monthDelta >= 0 ? monthDelta + " months ago" : "in " + -monthDelta + " months";
     const yearDelta = currentYear - epochYear
     return yearDelta < 2 && yearDelta > -2 ? yearDelta >= 0 ? "a year ago" : "in a year" : yearDelta >= 0 ? yearDelta + " years ago" : "in " + -yearDelta + " years"
-  }
+  },
+  randomString: l => Array.from(crypto.getRandomValues(new Uint32Array(l))).map(n => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"[n%62]).join("")
 }
 
 const index = fs.readFileSync("views/index.vue", "utf-8")
@@ -340,12 +343,17 @@ process.on("uncaughtException", error => {
   console.error(error.stack)
 })
 
+function ready() {
+  console.log(`Listening on port ${process.env.PORT}`)
+  eventHandler()
+}
+
 if (process.argv.includes("-dev")) {
-  app.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`))
+  app.listen(process.env.PORT, ready)
 } else {
   const server = https.createServer({
     cert: fs.readFileSync("private/ewanhowell.com.pem"),
     key: fs.readFileSync("private/ewanhowell.com.key")
   }, app)
-  server.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`))
+  server.listen(process.env.PORT, ready)
 }

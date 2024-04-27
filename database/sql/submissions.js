@@ -55,5 +55,44 @@ export default {
   `, "all", null, o => o.map(e => {
     e.artists = JSON.parse(e.artists)
     return e
-  }))
+  })),
+  invites: {
+    get: prepareDBAction(`
+      SELECT json_extract(data, '$.invite') as invite
+      FROM events
+      WHERE type = 'invite'
+        AND json_extract(data, '$.submission') = ?
+        AND json_extract(data, '$.contest') = ?
+    `, "get", null, o => o?.invite),
+    getCode: prepareDBAction(`
+      SELECT data
+      FROM events
+      WHERE type = 'invite'
+        AND json_extract(data, '$.invite') = ?
+    `, "get", null, o => {
+      if (o) o = JSON.parse(o.data)
+      return o
+    }),
+    getAllowed: prepareDBAction(`
+      SELECT s.*
+      FROM submissions s
+      JOIN contests c ON s.contest = c.id
+      WHERE json_extract(s.artists, '$[0]') = ?
+        AND json_array_length(s.artists) = 1
+        AND c.status = 'submissions'
+        AND NOT EXISTS (
+          SELECT 1
+          FROM events e
+          WHERE e.type = 'invite'
+            AND json_extract(e.data, '$.submission') = s.id
+            AND json_extract(e.data, '$.contest') = s.contest
+        )
+    `, "get"),
+    delete: prepareDBAction(`
+      DELETE FROM events
+      WHERE type = 'invite'
+        AND json_extract(data, '$.submission') = ?
+        AND json_extract(data, '$.contest') = ?
+    `)
+  }
 }

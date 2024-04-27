@@ -3,7 +3,11 @@ export default {
     auth: true,
     title: "Submit your splash art!"
   },
-  data: (req, context) => ({
-    submission: db.artists.submission(context.contest.id, req.user.id)
-  })
+  data: (req, context) => {
+    const submission = db.artists.submission(context.contest.id, req.user.id)
+    return {
+      submission,
+      invite: submission ? db.submissions.invites.get(submission.id, submission.contest) : undefined
+    }
+  }
 }

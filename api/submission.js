@@ -62,15 +62,11 @@ export default {
     }
   },
   delete: {
-    check(req, res, next) {
-      const contest = db.contests.latest()
-      if (contest.status !== "submissions") return res.sendStatus(403)
-      if (!db.artists.submission(contest.id, req.user.id)) return res.sendStatus(404)
-      next()
-    },
     execute(req, res) {
       const contest = db.contests.latest()
+      if (contest.status !== "submissions") return res.sendStatus(403)
       const submission = db.artists.submission(contest.id, req.user.id)
+      if (!submission) return res.sendStatus(404)
       fs.promises.unlink(`assets/images/submissions/${contest.id}/${submission.image}.png`).catch(() => {})
       fs.promises.unlink(`assets/images/submissions/${contest.id}/${submission.image}.webp`).catch(() => {})
       fs.promises.unlink(`assets/images/submissions/${contest.id}/${submission.image}_thumbnail_small.webp`).catch(() => {})

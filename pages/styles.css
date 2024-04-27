@@ -400,6 +400,10 @@ button, .button {
       filter: grayscale() brightness(.75);
     }
   }
+
+  .icon, .fa {
+    font-size: 22px;
+  }
 }
 
 .button-row {

@@ -22,14 +22,24 @@
       </tr>
     </table>
     <file-input accept="image/png" :data-max-file-size="settings.maxFileSize" :data-aspect-ratio="settings.aspectRatio.join(':')" :data-min-width="settings.minWidth" :data-max-width="settings.maxWidth"></file-input>
-    <button id="submit">Create Submission</button>
+    <button id="submit"><span class="icon">publish</span>Create Submission</button>
   </div>
 </div>
 <div v-else-if="contest.status === 'submissions' && submission" class="container">
   <div class="panel">
     <h2>Your Submission</h2>
-    <img :src="`/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_large.webp`" :data-popup-src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`" class="popupable" alt="Your submission" loading="lazy">
-    <button id="retract" class="danger secondary">Retract Submission</button>
+    <img :src="`/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_large.webp`" :data-popup-src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`" class="popupable" alt="Your submission" loading="lazy">    
+  </div>
+  <div class="panel">
+    <h2>Invite Collaborator</h2>
+    <div class="button-row">
+      <button v-if="invite" id="invite" :data-invite="invite"><span class="icon">link</span>Copy Invite Link</button>
+      <button v-else id="invite"><span class="icon">person_add</span>Generate Invite Link</button>
+      <button id="delete-invite" class="danger secondary" :class="{ hidden: !invite }"><span class="icon">delete</span></button>
+    </div>
+  </div>
+  <div class="panel">
+    <button id="retract" class="danger secondary"><span class="icon">delete</span>Retract Submission</button>
   </div>
 </div>
 <div v-else class="container">Submissions are not open at this time</div>

@@ -10,7 +10,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     secure: process.env.DOMAIN.startsWith("https"),
-    maxAge: 86400000
+    maxAge: 86400000,
+    sameSite: "Strict"
   },
   store: new FileStore({
     logFn: () => {}

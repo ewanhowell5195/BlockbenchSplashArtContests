@@ -2,6 +2,10 @@ table {
   align-self: flex-start;
 }
 
+td {
+  padding: 0;
+}
+
 td:first-child {
   padding-right: 16px; 
 }

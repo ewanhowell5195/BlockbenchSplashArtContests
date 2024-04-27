@@ -38,14 +38,14 @@ export default {
         return res.status(400).send({ error: "Error reading PNG file" })
       }
       if (size[0] < settings.minWidth) {
-        return res.status(400).send({ error: `Image too small. The minimum width is ${settings.minWidth}px` })
+        return res.status(400).send({ error: `Image too small. The minimum width is ${settings.minWidth.toLocaleString()}px` })
       }
       if (size[0] > settings.maxWidth) {
-        return res.status(400).send({ error: `Image too large. The maximum width is ${settings.maxWidth}px` })
+        return res.status(400).send({ error: `Image too large. The maximum width is ${settings.maxWidth.toLocaleString()}px` })
       }
       const targetRatio = settings.aspectRatio[0] / settings.aspectRatio[1]
       const imgRatio = size[0] / size[1]
-      if (Math.abs(targetRatio - imgRatio) > 0.005) {
+      if (Math.abs(targetRatio - imgRatio) > 0.04) {
         return res.status(400).send({ error: `Aspect ratio not met. The aspect ratio should be ${settings.aspectRatio.join(":")}` })
       }
       db.artists.add(req.user.id, req.user.global_name, null)
@@ -72,6 +72,7 @@ export default {
       fs.promises.unlink(`assets/images/submissions/${contest.id}/${submission.image}_thumbnail_small.webp`).catch(() => {})
       fs.promises.unlink(`assets/images/submissions/${contest.id}/${submission.image}_thumbnail_large.webp`).catch(() => {})
       db.submissions.delete(submission.id, submission.contest)
+      db.submissions.invites.delete(submission.id, contest.id)
       res.sendStatus(200)
     }
   }

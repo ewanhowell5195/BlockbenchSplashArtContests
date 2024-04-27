@@ -96,12 +96,21 @@ class FileInput extends HTMLElement {
           display: flex;
           gap: 10px;
           flex-wrap: wrap;
-        }
 
-        .file-drop-images > img {
-          height: 192px;
-          border-radius: 8px;
-          background-image: var(--transparency);
+          > div {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.8rem;
+            color: var(--color-text-subtle);
+            align-items: center;
+            gap: 4px;
+          }
+
+          & img {
+            height: 192px;
+            border-radius: 8px;
+            background-image: var(--transparency);
+          }
         }
       `
       const fileDrop = document.createElement("div")
@@ -132,39 +141,49 @@ class FileInput extends HTMLElement {
       ["dragenter", "focus", "click", "mouseenter"].forEach(e => fileDropInput.addEventListener(e, () => activeClass(true)));
       ["dragleave", "blur", "drop", "mouseleave"].forEach(e => fileDropInput.addEventListener(e, () => activeClass(false)))
   
-      const fileChange = input => {
+      const fileChange = async input => {
         if (input.files.length === 1) textContainer.textContent = input.files[0].name.split("\\").pop()
         else if (input.files.length === 0) textContainer.textContent = `or drag and drop ${fileLimit ? `up to ${fileLimit}` : ""} ${multiple ? "files" : "a file"} here`
         else textContainer.textContent = `${input.files.length} files selected`
         const images = this.#files.filter(e => e.type.startsWith("image/"))
         imageContainer.innerHTML = ""
+        imageContainer.classList.add("file-drop-hidden")
         if (images.length) {
           for (const image of images) {
-            const img = document.createElement("img")
             const reader = new FileReader()
-            reader.onload = e => img.src = e.target.result
+            reader.onload = e => {
+              const img = new Image()
+              img.onload = e => {
+                const div = document.createElement("div")
+                div.innerHTML = `
+                  <img src="${reader.result}">
+                  <div>${img.width.toLocaleString()}x${img.height.toLocaleString()} - ${formatBytes(image.size)}</div>
+                `
+                imageContainer.append(div)
+                imageContainer.classList.remove("file-drop-hidden")
+              }
+              img.src = reader.result
+            }
             reader.readAsDataURL(image)
-            imageContainer.append(img)
           }
-          imageContainer.classList.remove("file-drop-hidden")
-        } else {
-          imageContainer.classList.add("file-drop-hidden")
         }
         input.dispatchEvent(new Event("change"))
       }
-  
+
       this.addEventListener("drop", evt => {
         evt.preventDefault()
         let files = Array.from(evt.dataTransfer.items).filter(e => e.kind === "file").map(e => e.getAsFile()).slice(0, !multiple ? 1 : fileLimit || Infinity)
-        if (types.length) {
-          files = files.filter(e => types.includes(e.type))
-          if (!files.length) {
-            textContainer.textContent = `Unsupported format. Must be of: ${accept}`
-            return
+        if (files.length) {
+          if (types.length) {
+            files = files.filter(e => types.includes(e.type))
+            if (!files.length) {
+              textContainer.textContent = `Unsupported format. Must be of: ${accept}`
+              return
+            }
           }
+          this.#files = files
+          fileChange(this)
         }
-        this.#files = files
-        fileChange(this)
       })
   
       this.addEventListener("dragover", evt => {
@@ -172,10 +191,12 @@ class FileInput extends HTMLElement {
       })
   
       fileDropInput.addEventListener("change", e => {
-        this.#files = Array.from(e.currentTarget.files).slice(0, fileLimit || Infinity)
-        fileChange(this)
+        if (e.currentTarget.files.length) {
+          this.#files = Array.from(e.currentTarget.files).slice(0, fileLimit || Infinity)
+          fileChange(this)
+        }
       })
-  
+
       this.#pasteHandler = e => {
         this.#files = Array.from(e.clipboardData.files)
         if (!this.#files.length) return
@@ -185,7 +206,9 @@ class FileInput extends HTMLElement {
   }
 
   connectedCallback() {
-    window.addEventListener("paste", this.#pasteHandler)
+    setTimeout(() => {
+      window.addEventListener("paste", this.#pasteHandler)
+    }, 0)
   }
 
   disconnectedCallback() {
@@ -195,6 +218,14 @@ class FileInput extends HTMLElement {
   get files() {
     return this.#files
   }
+}
+
+const sizes = ["B", "KB", "MB", "GB", "TB"]
+
+function formatBytes(bytes) {
+  if (bytes === 0) return "0 B"
+  const i = Math.floor(Math.log(bytes) / Math.log(1024))
+  return parseFloat((bytes / Math.pow(1024, i)).toFixed(1)) + " " + sizes[i]
 }
 
 customElements.define("file-input", FileInput)

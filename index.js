@@ -58,7 +58,17 @@ app.use("/src", (req, res, next) => {
 app.use("/assets", express.static("assets"))
 
 function authenticate(req, res, next) {
-  if (!req.user) return res.sendStatus(401)
+  if (!req.user) {
+    if (req.method === "GET") {
+      res.cookie("authRedirect", req.originalUrl, {
+        httpOnly: true,
+        secure: process.env.DOMAIN.startsWith("https"),
+        maxAge: 300000
+      })
+      return res.status(401).redirect("/auth/discord")
+    }
+    return res.sendStatus(401)
+  }
   next()
 }
 
@@ -270,7 +280,7 @@ app.get("*", async (req, res) => {
       secure: process.env.DOMAIN.startsWith("https"),
       maxAge: 300000
     })
-    return res.redirect("/auth/discord")
+    return res.status(401).redirect("/auth/discord")
   }
 
   const context = {

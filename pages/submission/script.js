@@ -19,12 +19,7 @@ if (input) {
     try {
       const buffer = await new Promise((fulfil, reject) => {
         const reader = new FileReader()
-        reader.onloadend = () => {
-          if (reader.readyState === FileReader.DONE) {
-            return fulfil(new Uint8Array(reader.result))
-          }
-          reject()
-        }
+        reader.onload = e => fulfil(new Uint8Array(reader.result))
         reader.onerror = reject
         reader.readAsArrayBuffer(input.files[0])
       })
@@ -39,15 +34,15 @@ if (input) {
       URL.revokeObjectURL(url)
       if (img.width < minWidth) {
         processing = false
-        return shakeError(input, `Image too small. The minimum width is ${minWidth}px`)
+        return shakeError(input, `Image too small. The minimum width is ${minWidth.toLocaleString()}px`)
       }
       if (img.width > maxWidth) {
         processing = false
-        return shakeError(input, `Image too large. The maximum width is ${maxWidth}px`)
+        return shakeError(input, `Image too large. The maximum width is ${maxWidth.toLocaleString()}px`)
       }
       const targetRatio = aspectRatio[0] / aspectRatio[1]
       const imgRatio = img.width / img.height
-      if (Math.abs(targetRatio - imgRatio) > 0.005) {
+      if (Math.abs(targetRatio - imgRatio) > 0.04) {
         processing = false
         return shakeError(input, `Aspect ratio not met. The aspect ratio should be ${aspectRatio.join(":")}`)
       }

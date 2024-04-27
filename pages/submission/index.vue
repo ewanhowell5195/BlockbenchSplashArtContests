@@ -22,7 +22,7 @@
       </tr>
     </table>
     <file-input accept="image/png" :data-max-file-size="settings.maxFileSize" :data-aspect-ratio="settings.aspectRatio.join(':')" :data-min-width="settings.minWidth" :data-max-width="settings.maxWidth"></file-input>
-    <button id="submit"><span class="icon">publish</span>Create Submission</button>
+    <button id="submit"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z"></path></svg>Create Submission</button>
   </div>
 </div>
 <div v-else-if="contest.status === 'submissions' && submission" class="container">

@@ -17,12 +17,9 @@ main {
 }
 
 .container {
-  display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
   text-shadow: var(--text-shadow);
-  gap: 20px;
   background: radial-gradient(closest-side, #0006, transparent);
   padding: 80px 20px;
   text-align: center;

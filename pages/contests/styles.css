@@ -1,7 +1,6 @@
 #contests {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(475px, 1fr));
-  gap: 20px;
 }
 
 .contest {

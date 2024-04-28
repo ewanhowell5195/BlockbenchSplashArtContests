@@ -4,6 +4,7 @@ export default {
     title: "Submit your splash art!"
   },
   data: (req, context) => {
+    if (context.contest.status !== "submissions") return
     const submission = db.submissions.artist(context.contest.id, req.user.id)
     return {
       submission,

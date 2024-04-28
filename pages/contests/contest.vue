@@ -3,12 +3,16 @@
   <h1>Splash Art Contest {{ currentContest.id }}</h1>
   <h2>"{{ currentContest.theme }}"</h2>
   <h3 v-if="currentContest.status === 'upcoming'">Submissions open {{ f.relativeTime(currentContest.open) }}</h3>
-  <h3 v-if="currentContest.status === 'submissions'">Submissions close {{ f.relativeTime(currentContest.close) }}</h3>
-  <h3 v-if="currentContest.status === 'finished'">For Blockbench v{{ currentContest.version }} - The {{ currentContest.name }} Update</h3>
+  <h3 v-else-if="currentContest.status === 'submissions'">Submissions close {{ f.relativeTime(currentContest.close) }}</h3>
+  <h3 v-else-if="currentContest.status === 'reviewing'">Voting opens {{ f.relativeTime(currentContest.vote) }}</h3>
+  <h3 v-else-if="currentContest.status === 'voting'">Voting closes {{ f.relativeTime(currentContest.finish) }}</h3>
+  <h3 v-else-if="currentContest.status === 'finished'">For Blockbench v{{ currentContest.version }} - The {{ currentContest.name }} Update</h3>
 </div>
 <div v-if="currentContest.status !== 'finished'" class="container">
   <button v-if="currentContest.status === 'upcoming'" disabled>Submit your splash art!</button>
-  <a v-if="currentContest.status === 'submissions'" class="button" :href="'/submission'">Submit your splash art!</a>
+  <a v-else-if="currentContest.status === 'submissions'" class="button" :href="'/submission'">Submit your splash art!</a>
+  <button v-else-if="currentContest.status === 'reviewing'" disabled>Vote now!</button>
+  <a v-else-if="currentContest.status === 'voting'" class="button" :href="'/vote'">Vote now!</a>
   <h2>Welcome to the {{ f.numSuffix(currentContest.id) }} Blockbench Splash Art Contest!</h2>
   <p>This is the contest for the upcoming Blockbench update {{ currentContest.version }}!</p>
   <h2>Prizes</h2>
@@ -33,7 +37,7 @@
 </div>
 <div v-if="currentContest.status === 'finished'" class="container">
   <p v-if="currentContest.description">{{ currentContest.description }}</p>
-  <h1 style="margin-bottom: 0;">Submissions:</h1>
+  <h1>Submissions:</h1>
   <div id="submissions">
     <div class="submission" v-for="(submission, i) of submissions">
       <img :src="`/assets/images/submissions/${currentContest.id}/${submission.image}_thumbnail_large.webp`" :alt="'Splash art by ' + submission.artists.map(e => e.name).join(' & ')" loading="lazy">

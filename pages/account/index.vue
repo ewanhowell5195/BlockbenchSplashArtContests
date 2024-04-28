@@ -25,6 +25,6 @@
     <button id="save-changes" disabled>Save changes</button>
   </div>
   <div class="panel">
-    <a class="button secondary danger" href="/logout">Log Out</a>
+    <a class="button secondary danger" href="/logout"><span class="icon">logout</span>Log Out</a>
   </div>
 </div>

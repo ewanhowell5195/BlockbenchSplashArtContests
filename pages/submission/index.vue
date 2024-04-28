@@ -30,16 +30,29 @@
     <h2>Your Submission</h2>
     <img :src="`/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_large.webp`" :data-popup-src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`" class="popupable" alt="Your submission" loading="lazy">    
   </div>
-  <div class="panel">
+  <div v-if="submission.artists.length === 1" class="panel">
     <h2>Invite Collaborator</h2>
     <div class="button-row">
       <button v-if="invite" id="invite" :data-invite="invite"><span class="icon">link</span>Copy Invite Link</button>
       <button v-else id="invite"><span class="icon">person_add</span>Generate Invite Link</button>
-      <button id="delete-invite" class="danger secondary" :class="{ hidden: !invite }"><span class="icon">delete</span></button>
+      <button id="delete-invite" class="danger secondary square" :class="{ hidden: !invite }"><span class="icon">delete</span></button>
+    </div>
+  </div>
+  <div v-else class="panel">
+    <h2>Collaborators</h2>
+    <div v-for="[i, artist] of submission.artists.entries()" class="collaborator subpanel">
+      <a :href="'/artists/' + artist.id" class="button secondary square"><span class="icon">person</span></a>
+      <a :href="'https://discord.com/users/' + artist.id" class="button secondary square" target="_blank"><span class="fa fa-discord"></span></a>
+      <div class="name">{{ artist.name }}</div>
+      <div class="spacer"></div>
+      <button v-if="i !== 0 && user.id !== artist.id" class="danger secondary square remove-collaborator" :data-id="artist.id"><span class="icon">delete</span></button>
+      <div v-else-if="user.id === artist.id" class="subtle">You</div>
+      <div v-else-if="i === 0 && user.id !== artist.id" class="subtle">Owner</div>
     </div>
   </div>
   <div class="panel">
-    <button id="retract" class="danger secondary"><span class="icon">delete</span>Retract Submission</button>
+    <button v-if="submission.artists[0].id === user.id" id="retract" class="danger secondary"><span class="icon">delete</span>Retract Submission</button>
+    <button v-else id="leave" class="danger secondary" :data-id="user.id"><span class="icon">logout</span>Leave Submission</button>
   </div>
 </div>
 <div v-else class="container">Submissions are not open at this time</div>

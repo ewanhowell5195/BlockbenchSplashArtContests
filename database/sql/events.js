@@ -20,6 +20,10 @@ export default {
     FROM events
     WHERE end < ?
   `, "all"),
+  delete: prepareDBAction(`
+    DELETE FROM events
+    WHERE id = ?
+  `),
   deleteFinished: prepareDBAction(`
     DELETE FROM events
     WHERE end < ?

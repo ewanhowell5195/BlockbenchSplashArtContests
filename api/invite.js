@@ -3,8 +3,12 @@ export default {
     parameter: "invite",
     execute(req, res) {
       const invite = db.submissions.invites.getCode(req.params.invite)
-      if (invite) return res.redirect("/submission")
-      res.status(404).redirect("/")
+      if (!invite) return res.status(404).redirect("/")
+      if (!db.submissions.invites.acceptAllowed(invite.data.contest, req.user.id)) return res.status(403).redirect("/")
+      db.artists.add(req.user.id, req.user.global_name, null)
+      db.submissions.invites.accept(invite.data.submission, invite.data.contest, req.user.id)
+      db.events.delete(invite.id)
+      return res.redirect("/submission")
     }
   },
   post: {
@@ -24,7 +28,7 @@ export default {
     execute(req, res) {
       const contest = db.contests.latest()
       if (contest.status !== "submissions") return res.sendStatus(403)
-      const submission = db.artists.submission(contest.id, req.user.id)
+      const submission = db.submissions.artist(contest.id, req.user.id)
       if (!submission) return res.sendStatus(404)
       db.submissions.invites.delete(submission.id, contest.id)
       res.sendStatus(200)

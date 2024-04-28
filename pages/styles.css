@@ -5,6 +5,7 @@
   --footer-height: 42px;
   --color-ui: #212e3c;
   --color-panel: #1D2125;
+  --color-subpanel: #262C33;
   --panel-border: 1px solid #cdf2;
   --color-text: #EEE;
   --color-text-light: #FFF;
@@ -409,6 +410,35 @@ button, .button {
     filter: drop-shadow(0 2px 1.5px #000) drop-shadow(0 -1px 1.5px #0004);
     fill: var(--color-text);
   }
+
+  &.loading {
+    font-size: 0;
+    
+    & * {
+      display: none;
+    }
+
+    &::after {
+      content: "progress_activity";
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38"><defs><linearGradient x1="8.042%" y1="0%" x2="65.682%" y2="23.865%" id="A"><stop stop-color="%23fff" stop-opacity="0" offset="0%"/><stop stop-color="%23fff" stop-opacity=".631" offset="63.146%"/><stop stop-color="%23fff" offset="100%"/></linearGradient></defs><g fill="none" fill-rule="evenodd" transform="scale(0.578947368)"><g transform="translate(1 1)"><path d="M36 18c0-9.94-8.06-18-18-18" stroke="url(%23A)" stroke-width="2"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="0.9s" repeatCount="indefinite"/></path><circle fill="%23fff" cx="36" cy="18" r="1"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="0.9s" repeatCount="indefinite"/></circle></g></g></svg>');
+      width: 22px;
+      height: 22px;
+      filter: drop-shadow(0 2px 1.5px #000) drop-shadow(0 -1px 1.5px #0004);
+    }
+  }
+
+  &.square {
+    max-width: 46px;
+  }
+}
+
+@keyframes spin {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: 360deg;
+  }
 }
 
 .button-row {
@@ -468,6 +498,16 @@ input:is([type="text"], [type="url"]) {
   display: flex;
   gap: 10px;
   flex-direction: column;
+}
+
+.subpanel {
+  background-color: var(--color-subpanel);
+  border: var(--panel-border);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .subtle {

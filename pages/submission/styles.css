@@ -21,6 +21,24 @@ td:first-child {
   gap: 20px;
 }
 
-#delete-invite {
-  max-width: 46px;
+.collaborator {
+  background-color: var(--color-subpanel);
+  align-items: center;
+  height: 46px;
+  border: var(--panel-border);
+
+  .name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 8px;
+  }
+
+  > a {
+    text-decoration: none;
+    color: var(--color-text);
+  }
+
+  > div:last-child {
+    padding: 0 12px;
+  }
 }

@@ -56,6 +56,33 @@ export default {
     e.artists = JSON.parse(e.artists)
     return e
   })),
+  artist: prepareDBAction(`
+    SELECT
+      submissions.id,
+      submissions.contest,
+      (
+        SELECT json_group_array(json_object('id', artists.id, 'name', artists.name))
+        FROM json_each(submissions.artists)
+        JOIN artists ON artists.id = json_each.value
+      ) AS artists,
+      submissions.votes,
+      submissions.image
+    FROM submissions
+    WHERE submissions.contest = ?
+      AND EXISTS (
+        SELECT 1
+        FROM json_each(submissions.artists)
+        WHERE json_each.value = ?
+      )
+  `, "get", null, o => {
+    if (o) o.artists = JSON.parse(o.artists)
+    return o
+  }),
+  removeArtist: prepareDBAction(`
+    UPDATE submissions
+    SET artists = json_remove(artists, '$[' || ? || ']')
+    WHERE id = ? AND contest = ?
+  `, "run", (id, contest, index) => [index.toString(), id, contest]),
   invites: {
     get: prepareDBAction(`
       SELECT json_extract(data, '$.invite') as invite
@@ -65,12 +92,12 @@ export default {
         AND json_extract(data, '$.contest') = ?
     `, "get", null, o => o?.invite),
     getCode: prepareDBAction(`
-      SELECT data
+      SELECT id, data
       FROM events
       WHERE type = 'invite'
         AND json_extract(data, '$.invite') = ?
     `, "get", null, o => {
-      if (o) o = JSON.parse(o.data)
+      if (o) o.data = JSON.parse(o.data)
       return o
     }),
     getAllowed: prepareDBAction(`
@@ -93,6 +120,18 @@ export default {
       WHERE type = 'invite'
         AND json_extract(data, '$.submission') = ?
         AND json_extract(data, '$.contest') = ?
-    `)
+    `),
+    acceptAllowed: prepareDBAction(`
+      SELECT NOT EXISTS (
+        SELECT 1
+        FROM submissions, json_each(artists)
+        WHERE contest = ? AND json_each.value = ?
+      ) AS allowed
+    `, "get", null, o => !!o),
+    accept: prepareDBAction(`
+      UPDATE submissions
+      SET artists = json_insert(artists, '$[#]', ?)
+      WHERE id = ? AND contest = ?
+    `, "run", (id, contest, artist) => [artist, id, contest])
   }
 }

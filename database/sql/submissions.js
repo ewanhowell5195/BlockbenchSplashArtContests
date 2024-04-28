@@ -122,12 +122,10 @@ export default {
         AND json_extract(data, '$.contest') = ?
     `),
     acceptAllowed: prepareDBAction(`
-      SELECT NOT EXISTS (
-        SELECT 1
-        FROM submissions, json_each(artists)
-        WHERE contest = ? AND json_each.value = ?
-      ) AS allowed
-    `, "get", null, o => !!o),
+      SELECT 1
+      FROM submissions, json_each(artists)
+      WHERE contest = ? AND json_each.value = ?
+    `, "get", null, o => !o),
     accept: prepareDBAction(`
       UPDATE submissions
       SET artists = json_insert(artists, '$[#]', ?)

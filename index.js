@@ -249,7 +249,7 @@ globalThis.f = {
     const yearDelta = currentYear - epochYear
     return yearDelta < 2 && yearDelta > -2 ? yearDelta >= 0 ? "a year ago" : "in a year" : yearDelta >= 0 ? yearDelta + " years ago" : "in " + -yearDelta + " years"
   },
-  randomString: l => Array.from(crypto.getRandomValues(new Uint32Array(l))).map(n => "abcdefghijklmnopqrstuvwxyz0123456789"[n%36]).join("")
+  randomString: l => Array.from(crypto.getRandomValues(new Uint32Array(l))).map(n => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"[n%62]).join("")
 }
 
 const index = fs.readFileSync("views/index.vue", "utf-8")

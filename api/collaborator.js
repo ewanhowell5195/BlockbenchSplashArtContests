@@ -9,7 +9,9 @@ export default {
       if ((req.params.id === req.user.id && submission.artists[0].id === req.user.id) || (req.params.id !== req.user.id && submission.artists[0].id !== req.user.id)) {
         return res.sendStatus(403)
       }
-      db.submissions.removeArtist(submission.id, submission.contest, submission.artists.findIndex(e => e.id === req.params.id))
+      const index = submission.artists.findIndex(e => e.id === req.params.id)
+      if (index === -1) return res.sendStatus(400)
+      db.submissions.removeArtist(submission.id, submission.contest, index)
       res.sendStatus(200)
     }
   }

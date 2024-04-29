@@ -4,7 +4,7 @@ if (submissions) {
   const preview = document.getElementById("submission-preview")
   document.getElementById("start").addEventListener("click", e => {
     document.getElementById("vote-start").classList.add("hidden")
-    let currentIndex = 13
+    let currentIndex = 0
     const back = preview.querySelector("button:first-child")
     const next = preview.querySelector("button:last-child")
     const img = preview.querySelector("img")

@@ -128,8 +128,6 @@ if (submissions) {
       })
     })
   }
-  document.getElementById("vote-start").classList.add("hidden")
-  loadVoting()
 }
 
 function shuffle(arr) {

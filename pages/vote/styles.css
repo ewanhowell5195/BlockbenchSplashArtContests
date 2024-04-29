@@ -60,13 +60,6 @@
     justify-content: space-between;
     z-index: 2;
 
-    > :first-child {
-      font-size: 2.1rem;
-      font-weight: 700;
-      color: var(--color-text-light);
-      text-shadow: var(--text-shadow);
-    }
-
     > :last-child {
       display: flex;
       justify-content: space-between;
@@ -83,5 +76,91 @@
   > img {
     scale: 0.9;
     opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.step-heading {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--color-text-light);
+  text-shadow: var(--text-shadow);
+  display: flex;
+  justify-content: space-between;
+}
+
+#submission-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+
+  > div {
+    flex-direction: row;
+    position: absolute;
+    left: 0;
+    right: 0;
+    transition: top .25s;
+
+    > :first-child {
+      font-weight: 700;
+      font-size: 1.75rem;
+    }
+
+    > img {
+      max-width: 384px;
+      border-radius: 8px;
+      background-image: var(--transparency);
+      box-shadow: 0 4px 4px #0008;
+    }
+
+    > :last-child {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      margin: -20px -20px -20px 0;
+      user-select: none;
+
+      > * {
+        padding: 20px;
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: font-size .15s;
+
+        &:hover {
+          font-size: 60px;
+        }
+      }
+    }
+
+    &:last-child .move-up, &:first-child .move-down {
+      visibility: hidden;
+    }
+
+    &:last-child {
+      border-color: gold;
+      box-shadow: 0 0 5px gold;
+    }
+
+    &:nth-last-child(2) {
+      border-color: silver;
+      box-shadow: 0 0 5px silver;
+    }
+
+    &:nth-last-child(3) {
+      border-color: var(--color-bronze);
+      box-shadow: 0 0 5px var(--color-bronze);
+    }
+
+    &.selected {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 15px var(--color-accent);
+      z-index: 1;
+    }
   }
 }

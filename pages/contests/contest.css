@@ -81,7 +81,7 @@
   }
 
   &:nth-child(3) .submission-position::before {
-    color: #CD7F32;
+    color: var(--color-bronze);
   }
 }
 

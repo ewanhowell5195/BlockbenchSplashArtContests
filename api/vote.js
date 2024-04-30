@@ -12,7 +12,8 @@ export default {
       if (contest.status !== "voting") return res.sendStatus(403)
       if (db.submissions.voted(contest.id, req.user.id)) return res.sendStatus(403)
       const submissions = db.submissions.contest(contest.id)
-      if (req.body.votes.every(e => submissions.some(s => s.id === e))) return res.sendStatus(400)
+      if (req.body.votes.length !== submissions.length) return res.sendStatus(400)
+      if (!req.body.votes.every(e => submissions.some(s => s.id === e))) return res.sendStatus(400)
       const votes = Math.ceil(submissions.length * 0.2)
       for (let x = 0; x < votes; x++) {
         db.submissions.vote(req.body.votes[x], contest.id, req.user.id)

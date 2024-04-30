@@ -370,12 +370,13 @@ process.on("uncaughtException", error => {
 function ready() {
   console.log(`Listening on port ${process.env.PORT}`)
   eventHandler()
+  startWs()
 }
 
 if (process.argv.includes("-dev")) {
   app.listen(process.env.PORT, ready)
 } else {
-  const server = https.createServer({
+  globalThis.server = https.createServer({
     cert: fs.readFileSync("private/ewanhowell.com.pem"),
     key: fs.readFileSync("private/ewanhowell.com.key")
   }, app)

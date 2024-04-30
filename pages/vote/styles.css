@@ -275,7 +275,7 @@
   & a {
     color: var(--color-text);
 
-    &:hover {
+    &[href]:hover {
       color: var(--color-text-light);
     }
   }

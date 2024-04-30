@@ -6,6 +6,7 @@ if (input) {
   const minWidth = Number(input.dataset.minWidth)
   const maxWidth = Number(input.dataset.maxWidth)
   const submit = document.getElementById("submit")
+  document.getElementById("required").addEventListener("change", e => submit.disabled = !submit.disabled)
   submit.addEventListener("click", async e => {
     if (submit.classList.contains("loading")) return
     if (!input.files[0]) {
@@ -53,6 +54,7 @@ if (input) {
     }
     const formData = new FormData()
     formData.append("submission", input.files[0])
+    formData.append("optional", document.getElementById("optional").checked)
     const r = await fetch("/api/submission", {
       method: "POST",
       body: formData

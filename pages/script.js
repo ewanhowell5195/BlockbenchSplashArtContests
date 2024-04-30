@@ -1,5 +1,14 @@
 // Popups
 
+const getPopupable = () => Array.from(document.querySelectorAll(".popupable")).filter(e => {
+  while (e) {
+    const style = window.getComputedStyle(e)
+    if (style.display === "none") return false
+    e = e.parentElement
+  }
+  return true
+})
+
 document.addEventListener("click", e => {
   let element = e.target
   while (element && !element.classList.contains("popupable")) {
@@ -8,7 +17,7 @@ document.addEventListener("click", e => {
   }
   if (element) {
     function nextImage() {
-      const all = Array.from(document.querySelectorAll(".popupable"))
+      const all = getPopupable()
       const next = all[all.indexOf(element) + 1]
       if (next) {
         element = next
@@ -17,7 +26,7 @@ document.addEventListener("click", e => {
     }
 
     function prevImage() {
-      const all = Array.from(document.querySelectorAll(".popupable"))
+      const all = getPopupable()
       const prev = all[all.indexOf(element) - 1]
       if (prev) {
         element = prev
@@ -68,7 +77,7 @@ document.addEventListener("click", e => {
 })
 
 function loadImage(img, element) {
-  const all = Array.from(document.querySelectorAll(".popupable"))
+  const all = getPopupable()
   const index = all.indexOf(element)
   const openImage = img.parentNode.querySelector("#popup-image-open")
   const prevIcon = img.parentNode.querySelector("#popup-image-prev")

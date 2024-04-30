@@ -3,7 +3,6 @@ import { renderToString } from "vue/server-renderer"
 import cookieParser from "cookie-parser"
 import Database from "better-sqlite3"
 import { createSSRApp } from "vue"
-import "./modules/eventHandler.js"
 import { config } from "dotenv"
 import express from "express"
 import path from "node:path"
@@ -36,6 +35,10 @@ const corsMiddleware = cors({
 })
 app.use(corsMiddleware)
 app.options("*", corsMiddleware)
+
+for (const file of fs.readdirSync("modules")) {
+  await import("./modules/" + path.basename(file))
+}
 
 await import("./auth.js")
 
@@ -118,6 +121,17 @@ for await (const f of getFiles("api")) {
               error: `"${id}" too long`,
               key: id
             })
+          } else if (conf.type === "array") {
+            if (!Array.isArray(arg)) return res.sendStatus(400)
+            if (conf.validate) {
+              for (const item of arg) {
+                if (!conf.validate(item)) return res.sendStatus(400)
+              }
+            }
+          } else if (conf.type === "boolean") {
+            if (arg === "true") arg = true
+            else if (arg === "false") arg = false
+            if (typeof arg !== "boolean") return res.sendStatus(400)
           } else {
             if (typeof arg !== "string") return res.sendStatus(400)
             if (conf.minLength && arg.length < conf.minLength) return res.status(400).send({

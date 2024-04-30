@@ -101,6 +101,9 @@
     left: 0;
     right: 0;
     transition: top .25s;
+    overflow: hidden;
+    background-size: cover;
+    background-position: 50% 50%;
 
     > :first-child {
       font-weight: 700;
@@ -112,47 +115,24 @@
       border-radius: 8px;
       background-image: var(--transparency);
       box-shadow: 0 4px 4px #0008;
+      object-fit: contain;
     }
 
-    > :last-child {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      margin: -20px -20px -20px 0;
-      user-select: none;
-
-      > * {
-        padding: 20px;
-        font-size: 48px;
-        width: 48px;
-        height: 48px;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transition: font-size .15s;
-
-        &:hover {
-          font-size: 60px;
-        }
-      }
-    }
-
-    &:last-child .move-up, &:first-child .move-down {
+    &:first-child .move-up, &:last-child .move-down {
       visibility: hidden;
     }
 
-    &:last-child {
+    &:first-child {
       border-color: gold;
       box-shadow: 0 0 5px gold;
     }
 
-    &:nth-last-child(2) {
+    &:nth-child(2) {
       border-color: silver;
       box-shadow: 0 0 5px silver;
     }
 
-    &:nth-last-child(3) {
+    &:nth-child(3) {
       border-color: var(--color-bronze);
       box-shadow: 0 0 5px var(--color-bronze);
     }
@@ -162,5 +142,152 @@
       box-shadow: 0 0 15px var(--color-accent);
       z-index: 1;
     }
+
+    &.sliding {
+      z-index: 1;
+    }
+
+    > .icon {
+      position: absolute;
+      inset: 0;
+      right: initial;
+      background-color: var(--color-subpanel);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      width: 32px;
+      font-size: 32px;
+      text-shadow: none;
+      color: var(--color-text-subtle);
+    }
+
+    &:has(> .icon) {
+      padding-left: 52px;
+    }
   }
+}
+
+.submission-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-start;
+}
+
+.your-vote {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.25rem;
+
+  .icon {
+    font-size: 1.75rem;
+    color: #2BD975;
+  }
+}
+
+.position-controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: -20px -20px -20px 0;
+  user-select: none;
+
+  > * {
+    padding: 20px;
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: font-size .15s;
+
+    &:hover {
+      font-size: 60px;
+    }
+  }
+}
+
+.divider {
+  display: flex;
+  font-size: 1.5rem;
+  gap: 20px;
+  align-items: center;
+  margin: 40px 0 20px;
+
+  &::before, &::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background-color: var(--color-text-subtle);
+  }
+}
+
+#contest-header {
+  height: 512px;
+  background-position: 50% 50%;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  text-shadow: var(--text-shadow);
+  text-align: center;
+
+  > * {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    max-width: calc(100vw - 40px);
+  }
+
+  > :first-child {
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(4px);
+    max-width: initial;
+  }
+
+  > h1 {
+    font-size: 4rem;
+  }
+
+  > h2 {
+    font-size: 2.25rem;
+  }
+
+  > h3 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    position: absolute;
+    bottom: 8px;
+  }
+}
+
+.submission-artists {
+  font-size: 1.5rem;
+  font-weight: 600;
+
+  & a {
+    color: var(--color-text);
+
+    &:hover {
+      color: var(--color-text-light);
+    }
+  }
+}
+
+.submission-votes {
+  font-size: 1.25rem;
+  transition: filter 1s, scale 1s;
+}
+
+.votes-changed {
+  transition: initial;
+  filter: drop-shadow(0 0 10px var(--color-accent)) drop-shadow(0 0 5px var(--color-accent));
+  scale: 1.5;
 }

@@ -57,6 +57,7 @@
     width: 100%;
     user-select: none;
     display: flex;
+    background-image: var(--transparency);
   }
 
   > div {

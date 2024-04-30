@@ -22,6 +22,11 @@ export default {
         }
       }
     },
+    arguments: {
+      optional: {
+        type: "boolean"
+      }
+    },
     async execute(req, res) {
       if (!req.file.buffer.slice(0, prefix.length).equals(prefix)) {
         return res.status(400).send({ error: "The provided file was not a PNG file" })
@@ -55,7 +60,11 @@ export default {
       const hash = createHash("sha256")
       hash.update(req.file.buffer)
       const hex = hash.digest("hex")
-      db.submissions.add(contest.id, [req.user.id], hex)
+      try {
+        await fs.promises.access(`${folder}/${hex}.png`, fs.constants.F_OK)
+        return res.status(400).send({ error: `Already submit by another artist. If you are working with them, ask them to send you an invite link` })
+      } catch {}
+      db.submissions.add(contest.id, [req.user.id], hex, req.body.optional)
       await fs.promises.writeFile(`${folder}/${hex}.png`, req.file.buffer)
       await spawn("ffmpeg", ["-i", `${folder}/${hex}.png`, "-lavfi", "split=3[a][b][c];[a]scale=w='min(iw,1280)':h=-1:flags=full_chroma_int[a];[b]scale=w='min(iw,480)':h=-1:flags=full_chroma_int[b]", "-map", "[a]", `${folder}/${hex}_thumbnail_large.webp`, "-map", "[b]", `${folder}/${hex}_thumbnail_small.webp`, "-map", "[c]", "-q:v", "95", `${folder}/${hex}.webp`]).promise
       res.sendStatus(201)

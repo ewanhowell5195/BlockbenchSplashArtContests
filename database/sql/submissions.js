@@ -4,7 +4,9 @@ database.exec(`
     contest INTEGER,
     artists TEXT DEFAULT '[]',
     votes INTEGER DEFAULT 0,
+    voters TEXT DEFAULT '[]',
     image TEXT NOT NULL,
+    agreed INTEGER,
     PRIMARY KEY (id, contest),
     FOREIGN KEY(contest) REFERENCES contests(id)
   )
@@ -26,9 +28,9 @@ database.exec(`
 
 export default {
   add: prepareDBAction(`
-    INSERT INTO submissions (id, contest, artists, image)
-    VALUES (COALESCE((SELECT MAX(id) + 1 FROM submissions WHERE contest = ?), 0), ?, json(?), ?)
-  `, "run", (id, artists, image) => [id, id, JSON.stringify(artists), image]),
+    INSERT INTO submissions (id, contest, artists, image, agreed)
+    VALUES (COALESCE((SELECT MAX(id) + 1 FROM submissions WHERE contest = ?), 0), ?, json(?), ?, ?)
+  `, "run", (id, artists, image, agreed) => [id, id, JSON.stringify(artists), image, agreed ? 1 : null]),
   delete: prepareDBAction(`
     DELETE FROM submissions
     WHERE id = ? AND contest = ?
@@ -45,6 +47,7 @@ export default {
         )
       ) as artists,
       s.votes,
+      s.voters,
       s.image
     FROM submissions s,
     json_each(s.artists) j
@@ -54,6 +57,7 @@ export default {
     ORDER BY s.votes DESC
   `, "all", null, o => o.map(e => {
     e.artists = JSON.parse(e.artists)
+    e.voters = JSON.parse(e.voters)
     return e
   })),
   artist: prepareDBAction(`
@@ -131,5 +135,20 @@ export default {
       SET artists = json_insert(artists, '$[#]', ?)
       WHERE id = ? AND contest = ?
     `, "run", (id, contest, artist) => [artist, id, contest])
-  }
+  },
+  vote: prepareDBAction(`
+    UPDATE submissions
+    SET votes = votes + 1, voters = json_insert(voters, '$[#]', ?)
+    WHERE id = ? AND contest = ?
+  `, "run", (id, contest, user) => [user, id, contest]),
+  voted: prepareDBAction(`
+    SELECT 1
+    FROM submissions, json_each(voters)
+    WHERE contest = ? AND json_each.value = ?
+  `, "get", null, o => !!o),
+  votes: prepareDBAction(`
+    SELECT id, votes
+    FROM submissions
+    WHERE contest = ?
+  `, "all")
 }

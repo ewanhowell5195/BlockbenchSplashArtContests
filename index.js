@@ -36,6 +36,11 @@ const corsMiddleware = cors({
 app.use(corsMiddleware)
 app.options("*", corsMiddleware)
 
+globalThis.server = https.createServer({
+  cert: fs.readFileSync("private/ewanhowell.com.pem"),
+  key: fs.readFileSync("private/ewanhowell.com.key")
+}, app)
+
 for (const file of fs.readdirSync("modules")) {
   await import("./modules/" + path.basename(file))
 }
@@ -370,15 +375,10 @@ process.on("uncaughtException", error => {
 function ready() {
   console.log(`Listening on port ${process.env.PORT}`)
   eventHandler()
-  startWs()
 }
 
 if (process.argv.includes("-dev")) {
   app.listen(process.env.PORT, ready)
 } else {
-  globalThis.server = https.createServer({
-    cert: fs.readFileSync("private/ewanhowell.com.pem"),
-    key: fs.readFileSync("private/ewanhowell.com.key")
-  }, app)
   server.listen(process.env.PORT, ready)
 }

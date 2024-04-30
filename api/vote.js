@@ -45,4 +45,10 @@ async function updateVotes(id) {
   }, 5000)
 }
 
-setInterval(() => updateVotes(17), 6000)
+setInterval(() => {
+  sendWs({
+    type: "test",
+    data: "HELLO!"
+  })
+  console.log("send")
+}, 6000)

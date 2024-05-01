@@ -570,7 +570,7 @@ label:has([type="checkbox"]) {
     opacity: 1;
   }
   50% {
-    opacity: 0;
+    opacity: .25;
   }
   100% {
     opacity: 1;

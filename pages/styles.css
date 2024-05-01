@@ -656,13 +656,13 @@ label:has([type="checkbox"]) {
   }
 }
 
-@media screen and (width < 600px) {
+@media screen and (width < 625px) {
   nav > [target="_blank"] {
     display: none;
   }
 }
 
-@media screen and (width < 465px) {
+@media screen and (width < 500px) {
   #home-link::after {
     content: "Blockbench Splash Art Contests";
     font-size: .9rem;
@@ -670,13 +670,13 @@ label:has([type="checkbox"]) {
   } 
 }
 
-@media screen and (width < 420px) {
+@media screen and (width < 440px) {
   #home-link::after {
     content: "Splash Art Contests";
   } 
 }
 
-@media screen and (width < 375px) {
+@media screen and (width < 400px) {
   #current-contest {
     display: none;
   }

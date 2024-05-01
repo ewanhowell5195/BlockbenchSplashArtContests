@@ -24,7 +24,7 @@
     <file-input accept="image/png" :data-max-file-size="settings.maxFileSize" :data-aspect-ratio="settings.aspectRatio.join(':')" :data-min-width="settings.minWidth" :data-max-width="settings.maxWidth"></file-input>
     <label for="required">
       <input type="checkbox" id="required">
-      <span>I agree that my submission can be used for the Blockbench splash screen, the gallery on <a href="https://blockbench.net/" target="_blank">blockbench.net</a>,  and for update posts on social media, such as Discord, Twitter, Reddit, etc.</span>
+      <span>I agree that my submission can be used for the Blockbench splash screen, the gallery on <a href="https://blockbench.net/" target="_blank">blockbench.net</a>, the <a href="/contests" target="_blank">previous contests archive</a>, and for update posts on social media, such as Discord, Twitter, Reddit, etc.</span>
     </label>
     <label for="optional">
       <input type="checkbox" id="optional">

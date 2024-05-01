@@ -29,7 +29,17 @@ main {
   }
 
   > h1 {
-    font-size: 4rem;
+    font-size: 5rem;
+    font-family: Montserrat;
+    font-weight: 900;
+    color: transparent;
+    text-shadow: none;
+    background-clip: text;
+    -webkit-background-clip: text;
+    background-position: 50% 50%;
+    background-size: cover;
+    filter: drop-shadow(0 2px 1.5px #000) drop-shadow(0 -1px 1.5px #0004);
+    line-height: 110%;
   }
 
   > h2 {
@@ -52,4 +62,16 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+@media screen and (width < 768px) {
+  .container {
+    > h1 {
+      font-size: 3rem;
+    }
+
+    > h2 {
+      font-size: 1.5rem;
+    }
+  }
 }

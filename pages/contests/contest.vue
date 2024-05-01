@@ -1,7 +1,7 @@
 <div id="contest-header" :style="{ backgroundImage: `linear-gradient(transparent, var(--color-background)), url('${currentContest.status === 'finished' && submissions.length ? `/assets/images/submissions/${currentContest.id}/${submissions[0].image}_thumbnail_large.webp` : `/assets/images/contests/concept_${currentContest.id}_thumbnail_large.webp`}')` }">
   <div></div>
   <h2>Splash Art Contest {{ currentContest.id }}</h2>
-  <h1>{{ currentContest.theme }}</h1>
+  <h1 :style="{ backgroundImage: f.blurImageSVG(currentContest.status === 'finished' && submissions.length ? `assets/images/submissions/${currentContest.id}/${submissions[0].image}_thumbnail_small.webp` : `assets/images/contests/concept_${currentContest.id}_thumbnail_small.webp`) }">{{ currentContest.theme }}</h1>
 </div>
 <div v-if="currentContest.status !== 'finished'" class="container">
   <div class="panel">

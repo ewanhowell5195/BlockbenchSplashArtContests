@@ -24,6 +24,23 @@
     align-items: center;
     backdrop-filter: blur(2px);
     height: 100%;
+    padding: 40px;
+    box-sizing: border-box;
+  }
+
+  & h1 {
+    font-size: 3rem;
+    font-family: Montserrat;
+    font-weight: 900;
+    color: transparent;
+    text-shadow: none;
+    background-clip: text;
+    -webkit-background-clip: text;
+    background-position: 50% 50%;
+    background-size: cover;
+    filter: drop-shadow(0 2px 1.5px #000) drop-shadow(0 -1px 1.5px #0004) drop-shadow(0 0 30px black);
+    line-height: 110%;
+    text-align: center;
   }
 }
 
@@ -52,6 +69,14 @@
 
 #live-contest > .panel {
   animation: glow linear infinite 2.5s;
+
+  .contest-header {
+    height: 256px;
+  }
+
+  & h1 {
+    font-size: 4rem;
+  }
 }
 
 @keyframes glow {
@@ -73,6 +98,10 @@
 
   .contest-header {
     height: 128px;
+
+    & h1 {
+      font-size: 2rem !important;
+    }
   }
 
   .contest-details {
@@ -84,7 +113,7 @@
   }
 
   #live-contest .contest-header {
-    height: 256px;
+    height: 192px !important;
   }
 }
 

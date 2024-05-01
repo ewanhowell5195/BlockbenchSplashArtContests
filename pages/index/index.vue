@@ -1,8 +1,8 @@
 <div id="home-container" :style="{ backgroundImage: `url('${contest.status === 'finished' ? config.image.slice(0, -21) + '_thumbnail_large.webp' : `assets/images/contests/concept_${contest.id}_thumbnail_large.webp`}')` }">
   <div>
     <div class="container">
-      <h1>Splash Art Contest {{ contest.id }}</h1>
-      <h2>"{{ contest.theme }}"</h2>
+      <h2>Splash Art Contest {{ contest.id }}</h2>
+      <h1 :style="{ backgroundImage: f.blurImageSVG(contest.status === 'finished' ? config.image.slice(0, -21) + '_thumbnail_small.webp' : `assets/images/contests/concept_${contest.id}_thumbnail_small.webp`) }">{{ contest.theme }}</h1>
       <div v-if="contest.status !== 'finished'" class="live-details">
         <div class="live">Live</div>
         <p><strong>Welcome to the {{ f.numSuffix(contest.id) }} Blockbench Splash Art Contest!</strong></p>

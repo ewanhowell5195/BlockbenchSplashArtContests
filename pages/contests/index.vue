@@ -1,8 +1,8 @@
 <div id="live-contest" v-if="contest.status !== 'finished'" class="container">
   <div class="contest panel">
-    <a class="contest-header" :href="'/contests/' + contest.id" :style="{ backgroundImage: `url('${contest.status === 'finished' && contest.image ? `/assets/images/submissions/${contest.id}/${contest.image}_thumbnail_small.webp` : `/assets/images/contests/concept_${contest.id}_thumbnail_small.webp`}')` }">
+    <a class="contest-header" :href="'/contests/' + contest.id" :style="{ backgroundImage: `linear-gradient(#0003, #0003), url('${contest.status === 'finished' && contest.image ? `/assets/images/submissions/${contest.id}/${contest.image}_thumbnail_small.webp` : `/assets/images/contests/concept_${contest.id}_thumbnail_small.webp`}')` }">
       <div>
-        <h1>{{ contest.theme }}</h1>
+        <h1 :style="{ backgroundImage: f.blurImageSVG(contest.status === 'finished' && contest.image ? `assets/images/submissions/${contest.id}/${contest.image}_thumbnail_small.webp` : `assets/images/contests/concept_${contest.id}_thumbnail_small.webp`, 4, 1) }">{{ contest.theme }}</h1>
       </div>
     </a>
     <div class="contest-details">
@@ -22,9 +22,9 @@
 </div>
 <div id="contests" class="container">
   <div v-for="contest of contests.filter(e => e.status === 'finished')" class="contest panel">
-    <a class="contest-header" :href="'/contests/' + contest.id" :style="{ backgroundImage: `url('${contest.status === 'finished' && contest.image ? `/assets/images/submissions/${contest.id}/${contest.image}_thumbnail_small.webp` : `/assets/images/contests/concept_${contest.id}_thumbnail_small.webp`}')` }">
+    <a class="contest-header" :href="'/contests/' + contest.id" :style="{ backgroundImage: `linear-gradient(#0003, #0003), url('${contest.status === 'finished' && contest.image ? `/assets/images/submissions/${contest.id}/${contest.image}_thumbnail_small.webp` : `/assets/images/contests/concept_${contest.id}_thumbnail_small.webp`}')` }">
       <div>
-        <h1>{{ contest.theme }}</h1>
+        <h1 :style="{ backgroundImage: f.blurImageSVG(contest.status === 'finished' && contest.image ? `assets/images/submissions/${contest.id}/${contest.image}_thumbnail_small.webp` : `assets/images/contests/concept_${contest.id}_thumbnail_small.webp`, 4, 1) }">{{ contest.theme }}</h1>
       </div>
     </a>
     <div class="contest-details">

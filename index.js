@@ -240,6 +240,8 @@ async function send404(req, res) {
   })))
 }
 
+const thumbnailCache = {}
+
 globalThis.f = {
   numSuffix(i) {
     const j = i % 10
@@ -269,7 +271,31 @@ globalThis.f = {
     const yearDelta = currentYear - epochYear
     return yearDelta < 2 && yearDelta > -2 ? yearDelta >= 0 ? "a year ago" : "in a year" : yearDelta >= 0 ? yearDelta + " years ago" : "in " + -yearDelta + " years"
   },
-  randomString: l => Array.from(crypto.getRandomValues(new Uint32Array(l))).map(n => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"[n%62]).join("")
+  randomString: l => Array.from(crypto.getRandomValues(new Uint32Array(l))).map(n => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"[n%62]).join(""),
+  blurImageSVG: (url, brightness = 2, saturation = 2) => {
+    let base64 = thumbnailCache[url]
+    if (!base64) {
+      base64 = fs.readFileSync(url).toString("base64")
+      thumbnailCache[url] = base64
+    }
+    return "url('data:image/svg+xml;base64," + btoa(`
+      <svg width="2100" height="900" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <defs>
+          <filter id="blur-filter">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="40" />
+            <feColorMatrix
+              type="matrix"
+              values="${brightness} 0 0 0 0.25
+                      0 ${brightness} 0 0 0.25
+                      0 0 ${brightness} 0 0.25
+                      0 0 0 1 0" />
+            <feColorMatrix type="saturate" values="${saturation}"/>
+          </filter>
+        </defs>
+        <image xlink:href="data:image/webp;base64,${base64}" width="100%" height="100%" filter="url(#blur-filter)" preserveAspectRatio="none" />
+      </svg>
+    `) + "')"
+  }
 }
 
 const index = fs.readFileSync("views/index.vue", "utf-8")

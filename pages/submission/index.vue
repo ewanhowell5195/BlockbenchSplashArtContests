@@ -38,8 +38,24 @@
     <h2>Your Submission</h2>
     <img :src="`/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_large.webp`" :data-popup-src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`" class="popupable" alt="Your submission" loading="lazy">    
   </div>
+  <div class="panel">
+    <h2>Artist Details</h2>
+    <p>This is the artist details that will show on your submission.</p>
+    <table id="artist-info">
+      <tr>
+        <td>Artist Name:</td>
+        <td>{{ artist.name }}</td>
+      </tr>
+      <tr v-if="artist.socialMedia">
+        <td>Social Media:</td>
+        <td><a :href="artist.socialMedia" target="_blank">{{ artist.socialMedia }}</a></td>
+      </tr>
+    </table>
+    <p>These details can be changed from your <a href="/account">account</a> page.</p>
+  </div>
   <div v-if="submission.artists.length === 1" class="panel">
     <h2>Invite Collaborator</h2>
+    <p>Worked on this submission with someone else? Generate an invite link to add them as a collaborator!</p>
     <div class="button-row">
       <button v-if="invite" id="invite" :data-invite="invite"><span class="icon">link</span>Copy Invite Link</button>
       <button v-else id="invite"><span class="icon">person_add</span>Generate Invite Link</button>

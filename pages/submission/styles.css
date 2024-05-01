@@ -43,3 +43,8 @@ td:first-child {
     padding: 0 12px;
   }
 }
+
+#artist-info {
+  font-size: 1.25rem;
+  font-weight: 700;
+}

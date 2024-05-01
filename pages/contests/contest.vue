@@ -9,10 +9,12 @@
   <h3 v-else-if="currentContest.status === 'finished'">For Blockbench v{{ currentContest.version }} - The {{ currentContest.name }} Update</h3>
 </div>
 <div v-if="currentContest.status !== 'finished'" class="container">
-  <button v-if="currentContest.status === 'upcoming'" disabled>Submit your splash art!</button>
-  <a v-else-if="currentContest.status === 'submissions'" class="button" :href="'/submission'">Submit your splash art!</a>
-  <button v-else-if="currentContest.status === 'reviewing'" disabled>Vote now!</button>
-  <a v-else-if="currentContest.status === 'voting'" class="button" :href="'/vote'">Vote now!</a>
+  <div class="panel">
+    <button v-if="currentContest.status === 'upcoming'" disabled>Submit your splash art!</button>
+    <a v-else-if="currentContest.status === 'submissions'" class="button" :href="'/submission'">Submit your splash art!</a>
+    <button v-else-if="currentContest.status === 'reviewing'" disabled>Vote now!</button>
+    <a v-else-if="currentContest.status === 'voting'" class="button" :href="'/vote'">Vote now!</a>
+  </div>
   <h2>Welcome to the {{ f.numSuffix(currentContest.id) }} Blockbench Splash Art Contest!</h2>
   <p>This is the contest for the upcoming Blockbench update {{ currentContest.version }}!</p>
   <h2>Prizes</h2>

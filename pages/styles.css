@@ -124,7 +124,7 @@ nav {
 
 main {
   margin: var(--header-height) 0 var(--main-bottom);
-  min-height: calc(100vh - var(--header-height) - var(--footer-height) - var(--main-bottom));
+  min-height: calc(100dvh - var(--header-height) - var(--footer-height) - var(--main-bottom));
 }
 
 footer {
@@ -182,7 +182,7 @@ footer {
   user-select: none;
   box-shadow: 0 8px 16px #000;
   max-width: calc(100vw - 80px);
-  max-height: calc(100vh - 80px);
+  max-height: calc(100dvh - 80px);
   overflow: hidden;
   scale: .85;
   transition: scale .2s;
@@ -262,7 +262,7 @@ footer {
 
 .popup-image {
   max-width: calc(100vw - 80px);
-  max-height: calc(100vh - 80px);
+  max-height: calc(100dvh - 80px);
   min-width: min(256px, 100vw - 80px);
   display: block;
   background-image: var(--transparency);
@@ -600,7 +600,7 @@ label:has([type="checkbox"]) {
   }
 
   .container {
-    padding: 12px;
+    padding: 12px 12px 0;
     gap: 12px;
   }
 

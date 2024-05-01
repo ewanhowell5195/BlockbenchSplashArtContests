@@ -65,3 +65,31 @@
     box-shadow: 0 0 5px #D92B2B, 0 0 10px #D92B2B, 0 0 20px #D92B2B;
   }
 }
+
+@media screen and (width < 768px) {
+  #contests {
+    display: flex;
+  }
+
+  .contest-header {
+    height: 128px;
+  }
+
+  .contest-details {
+    padding: 0 12px 12px;
+
+    > table {
+      margin-top: 8px;
+    }
+  }
+
+  #live-contest .contest-header {
+    height: 256px;
+  }
+}
+
+@media screen and (width < 500px) {
+  .button-row {
+    flex-direction: column;
+  }
+}

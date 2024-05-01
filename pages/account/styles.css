@@ -9,3 +9,14 @@
     justify-content: center;
   }
 }
+
+#account-header {
+  align-items: center;
+}
+
+@media screen and (width < 768px) {
+  #account-header > img {
+    width: 64px;
+    height: 64px;
+  }
+}

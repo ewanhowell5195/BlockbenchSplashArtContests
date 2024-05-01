@@ -3,6 +3,7 @@
   --content-width: 1280px;
   --header-height: 64px;
   --footer-height: 42px;
+  --main-bottom: 64px;
   --color-ui: #212e3c;
   --color-panel: #1D2125;
   --color-subpanel: #262C33;
@@ -74,6 +75,10 @@ header {
   &:hover {
     opacity: 1;
   }
+
+  &::after {
+    content: "Blockbench Splash Art Contests";
+  }
 }
 
 nav {
@@ -118,8 +123,8 @@ nav {
 }
 
 main {
-  margin: var(--header-height) 0 64px;
-  min-height: calc(100vh - var(--header-height) - var(--footer-height) - 64px);
+  margin: var(--header-height) 0 var(--main-bottom);
+  min-height: calc(100vh - var(--header-height) - var(--footer-height) - var(--main-bottom));
 }
 
 footer {
@@ -460,7 +465,7 @@ input:is([type="text"], [type="url"]) {
   background-color: var(--color-background);
   letter-spacing: .5px;
   font-weight: 600;
-  line-height: calc(1.375rem - 4px);
+  line-height: calc(1.375rem - 2px);
   box-sizing: border-box;
   border: var(--panel-border);
   border-radius: 8px;
@@ -513,6 +518,10 @@ input:is([type="text"], [type="url"]) {
   display: flex;
   align-items: center;
   gap: 10px;
+
+  + .subpanel {
+    margin-top: -10px;
+  }
 }
 
 .subtle {
@@ -574,5 +583,131 @@ label:has([type="checkbox"]) {
   }
   100% {
     opacity: 1;
+  }
+}
+
+/* Mobile */
+
+@media screen and (width < 768px) {
+  :root {
+    --header-height: 50px;
+    --footer-height: 28px;
+    --main-bottom: 32px;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  .container {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .panel {
+    padding: 12px;
+    gap: 12px;
+
+    & h1 {
+      font-size: 1.75rem;
+    }
+
+    & h2 {
+      font-size: 1.4rem;
+    }
+
+    & h3 {
+      font-size: 1.1rem;
+    }
+  }
+
+  .subpanel {
+    padding: 8px;
+    gap: 8px;
+
+    + .subpanel {
+      margin-top: -4px;
+    }
+  }
+}
+
+/* Mobile Header */
+
+@media screen and (width < 900px) {
+  #home-link::after {
+    content: "Splash Art Contests";
+  } 
+}
+
+@media screen and (width < 768px) {
+  #home-link {
+    font-size: 1.25rem;
+
+    > img {
+      width: 26px;
+      height: 26px;
+    }
+  }
+}
+
+@media screen and (width < 725px) {
+  nav > [href="/account"] > span {
+    display: none;
+  }
+}
+
+@media screen and (width < 600px) {
+  nav > [target="_blank"] {
+    display: none;
+  }
+}
+
+@media screen and (width < 465px) {
+  #home-link::after {
+    content: "Blockbench Splash Art Contests";
+    font-size: .9rem;
+    max-width: 140px;
+  } 
+}
+
+@media screen and (width < 420px) {
+  #home-link::after {
+    content: "Splash Art Contests";
+  } 
+}
+
+@media screen and (width < 375px) {
+  #current-contest {
+    display: none;
+  }
+}
+
+/* Mobile Buttons */
+
+@media screen and (width < 768px) {
+  button, .button {
+    font-size: .9rem;
+    padding: 9px 12px;
+    letter-spacing: .3px;
+
+    .icon, .fa {
+      font-size: 18px;
+    }
+
+    &.loading::after {
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38"><defs><linearGradient x1="8.042%" y1="0%" x2="65.682%" y2="23.865%" id="A"><stop stop-color="%23fff" stop-opacity="0" offset="0%"/><stop stop-color="%23fff" stop-opacity=".631" offset="63.146%"/><stop stop-color="%23fff" offset="100%"/></linearGradient></defs><g fill="none" fill-rule="evenodd" transform="scale(0.473684210)"><g transform="translate(1 1)"><path d="M36 18c0-9.94-8.06-18-18-18" stroke="url(%23A)" stroke-width="2"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="0.9s" repeatCount="indefinite"/></path><circle fill="%23fff" cx="36" cy="18" r="1"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="0.9s" repeatCount="indefinite"/></circle></g></g></svg>');
+      width: 18px;
+      height: 18px;
+    }
+
+    &.square {
+      max-width: 40px;
+    }
+  }
+
+  input:is([type="text"], [type="url"]) {
+    font-size: .9rem;
+    padding: 9px 12px;
+    letter-spacing: .3px;
   }
 }

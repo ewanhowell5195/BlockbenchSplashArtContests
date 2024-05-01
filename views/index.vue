@@ -25,15 +25,14 @@
       <div id="header">
         <a id="home-link" href="/">
           <img src="/assets/images/branding/logo.svg" width="32" height="32" alt="Logo">
-          <span>Blockbench Splash Art Contests</span>
         </a>
         <div class="spacer"></div>
         <nav>
           <a href="https://blockbench.net/" target="_blank">Blockbench <span class="icon">open_in_new</span></a>
-          <a v-if="contest.status === 'upcoming'" :href="'/contests/' + contest.id">Upcoming</a>
-          <a v-else-if="contest.status === 'submissions'" href="/submission">Submit</a>
-          <a v-else-if="contest.status === 'reviewing'" :href="'/contests/' + contest.id">Current</a>
-          <a v-else-if="contest.status === 'voting'" href="/vote">Vote</a>
+          <a v-if="contest.status === 'upcoming'" id="current-contest" :href="'/contests/' + contest.id">Upcoming</a>
+          <a v-else-if="contest.status === 'submissions'" id="current-contest" href="/submission">Submit</a>
+          <a v-else-if="contest.status === 'reviewing'" id="current-contest" :href="'/contests/' + contest.id">Current</a>
+          <a v-else-if="contest.status === 'voting'" id="current-contest" href="/vote">Vote</a>
           <a href="/contests">Contests</a>
           <a v-if="user" href="/account">
             <img :src="user.avatar + '?size=32'" width="32" height="32" alt="Avatar">

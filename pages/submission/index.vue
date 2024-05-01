@@ -40,17 +40,15 @@
   </div>
   <div class="panel">
     <h2>Artist Details</h2>
-    <p>This is the artist details that will show on your submission.</p>
-    <table id="artist-info">
-      <tr>
-        <td>Artist Name:</td>
-        <td>{{ artist.name }}</td>
-      </tr>
-      <tr v-if="artist.socialMedia">
-        <td>Social Media:</td>
-        <td><a :href="artist.socialMedia" target="_blank">{{ artist.socialMedia }}</a></td>
-      </tr>
-    </table>
+    <p>These are the details that will appear on your submission.</p>
+    <div class="subpanel">
+      <p><strong>Artist Name:</strong></p>
+      <p>{{ artist.name }}</p>
+    </div>
+    <div v-if="artist.socialMedia" class="subpanel">
+      <p><strong>Social Media:</strong></p>
+      <p><a :href="artist.socialMedia" target="_blank">{{ artist.socialMedia }}</a></p>
+    </div>
     <p>These details can be changed from your <a href="/account">account</a> page.</p>
   </div>
   <div v-if="submission.artists.length === 1" class="panel">

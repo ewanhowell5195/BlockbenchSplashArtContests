@@ -252,6 +252,7 @@ globalThis.f = {
   relativeTime(epoch) {
     const time = Date.now() / 1000
     const delta = time - epoch / 1000
+    if (delta > 0) return "soon"
     if (delta < 2 && delta > -2) return (delta >= 0 ? "just " : "") + "now"
     if (delta < 60 && delta > -60) return delta >= 0 ? Math.round(delta) + " seconds ago" : "in " + Math.round(-delta) + " seconds"
     if (delta < 120 && delta > -120) return delta >= 0 ? "about a minute ago" : "in about a minute"

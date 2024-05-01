@@ -7,9 +7,8 @@ export default {
       if (!invite) return res.status(404).redirect("/")
       if (!db.submissions.invites.acceptAllowed(invite.data.contest, req.user.id)) return res.status(403).redirect("/")
       db.artists.add(req.user.id, req.user.global_name, null)
-      console.log(invite.data.submission, invite.data.contest, req.user.id)
       db.submissions.invites.accept(invite.data.submission, invite.data.contest, req.user.id)
-      // db.events.delete(invite.id)
+      db.events.delete(invite.id)
       return res.redirect("/submission")
     }
   },

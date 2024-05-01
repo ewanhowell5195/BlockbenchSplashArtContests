@@ -1,7 +1,7 @@
 <div id="contest-header" :style="{ backgroundImage: `linear-gradient(transparent, var(--color-background)), url('${currentContest.status === 'finished' && submissions.length ? `/assets/images/submissions/${currentContest.id}/${submissions[0].image}_thumbnail_large.webp` : `/assets/images/contests/concept_${currentContest.id}_thumbnail_large.webp`}')` }">
   <div></div>
-  <h1>Splash Art Contest {{ currentContest.id }}</h1>
-  <h2>"{{ currentContest.theme }}"</h2>
+  <h2>Splash Art Contest {{ currentContest.id }}</h2>
+  <h1>{{ currentContest.theme }}</h1>
 </div>
 <div v-if="currentContest.status !== 'finished'" class="container">
   <div class="panel">
@@ -35,7 +35,7 @@
       <li>Renders can be made in Blender, Cinema4D, Light Tracer, Sketchfab, or in similar programs. Image editing in post (contrast, backgrounds etc.) is allowed. <a href="https://www.blockbench.net/wiki/guides/model-rendering" target="_blank">Model rendering basics</a></li>
       <li>The model needs to be an original creation, made in Blockbench for this contest. Don't re-use existing models or textures for the model or environment (that includes game worlds as backgrounds)</li>
       <li>Submission should not be based on existing brands or IPs</li>
-      <li>Submissions should be G rated (no violence etc.)</li>
+      <li>Submissions should be G rated (no violence, etc.)</li>
       <li>Collaborations of up to two people are allowed</li>
       <li>You can't win (1st place) in two consecutive contests</li>
       <li>Only one submission per person</li>
@@ -46,8 +46,19 @@
   </div>
 </div>
 <div v-if="currentContest.status === 'finished'" class="container">
-  <p v-if="currentContest.description">{{ currentContest.description }}</p>
-  <h1>Submissions:</h1>
+  <div id="contest-information" class="panel">
+    <h2>Information</h2>
+    <div id="contest-date" class="subtle">{{ new Date(currentContest.date).toLocaleString().split(",")[0] }}</div>
+    <p>This contest was for the Blockbench v{{ currentContest.version }} update, also known as the {{ currentContest.name }} update.</p>
+    <p v-if="currentContest.description" id="contest-description">{{ currentContest.description }}</p>
+    <a class="button secondary" :href="`https://github.com/JannisX11/blockbench/releases/tag/v${currentContest.version}.0`" target="_blank"><span class="fa fa-github"></span><span>Blockbench <span style="text-transform: lowercase;">v</span>{{ currentContest.version }}</span></a>
+    <div id="contest-stats" class="subpanel">
+      <span>Submissions: {{ submissions.length.toLocaleString() }}</span>
+      <span>Participants: {{ submissions.reduce((a, e) => a + e.artists.length, 0).toLocaleString() }}</span>
+      <span>Total votes: {{ submissions.reduce((a, e) => a + e.votes, 0).toLocaleString() }}</span>
+    </div>
+  </div>
+  <div class="divider">Submissions</div>
   <div id="submissions">
     <div class="submission" v-for="(submission, i) of submissions">
       <img :src="`/assets/images/submissions/${currentContest.id}/${submission.image}_thumbnail_large.webp`" :alt="'Splash art by ' + submission.artists.map(e => e.name).join(' & ')" loading="lazy">
@@ -62,11 +73,5 @@
         </div>
       </div>
     </div>
-  </div>
-  <div id="contest-stats">
-    <span>Contest date: {{ new Date(currentContest.date).toLocaleString().split(",")[0] }}</span>
-    <span>Submissions: {{ submissions.length.toLocaleString() }}</span>
-    <span>Participants: {{ submissions.reduce((a, e) => a + e.artists.length, 0).toLocaleString() }}</span>
-    <span>Total votes: {{ submissions.reduce((a, e) => a + e.votes, 0).toLocaleString() }}</span>
   </div>
 </div>

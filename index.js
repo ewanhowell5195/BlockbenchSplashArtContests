@@ -303,10 +303,6 @@ globalThis.f = {
 }
 
 async function renderTemplate(req, res, page, context, template = "index") {
-  if (page.data) {
-    Object.assign(context, page.data(req, context))
-  }
-
   for (const key in context.config) {
     if (typeof context.config[key] === "function") {
       context.config[key] = context.config[key](req, context)
@@ -400,6 +396,10 @@ app.get("*", async (req, res) => {
     } else {
       context.styles = null
     }
+  }
+
+  if (page.data) {
+    Object.assign(context, page.data(req, context))
   }
 
   renderTemplate(req, res, page, context)

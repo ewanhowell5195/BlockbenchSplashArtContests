@@ -65,21 +65,6 @@ app.use("/src", (req, res, next) => {
 }, express.static("pages"))
 app.use("/assets", express.static("assets"))
 
-function authenticate(req, res, next) {
-  if (!req.user) {
-    if (req.method === "GET") {
-      res.cookie("authRedirect", req.originalUrl, {
-        httpOnly: true,
-        secure: process.env.DOMAIN.startsWith("https"),
-        maxAge: 300000
-      })
-      return res.status(401).redirect("/auth/discord")
-    }
-    return res.sendStatus(401)
-  }
-  next()
-}
-
 const getFiles = async function*(dir) {
   const dirents = await fs.promises.readdir(dir, { withFileTypes: true })
   for (const dirent of dirents) {
@@ -165,7 +150,26 @@ for await (const f of getFiles("api")) {
       }
       next()
     })
-    if (!data.public) parts.push(authenticate)
+    if (!data.public) parts.push((req, res, next) => {
+      if (!req.user) {
+        if (req.method === "GET") {
+          res.cookie("authRedirect", req.originalUrl, {
+            httpOnly: true,
+            secure: process.env.DOMAIN.startsWith("https"),
+            maxAge: 300000
+          })
+          return res.status(401).redirect("/auth/discord")
+        }
+        return res.sendStatus(401)
+      }
+      next()
+    })
+    if (data.admin) parts.push((req, res, next) => {
+      if (!req.user?.admin) {
+        return res.sendStatus(401)
+      }
+      next()
+    })
     if (data.check) parts.push(data.check)
     if (data.upload) parts.push(
       multer({
@@ -202,7 +206,7 @@ async function loadPage(dir, parent) {
       obj.script = true
     } else if (file === "styles.css") {
       obj.styles = true
-    } else if (!file.includes(".")) {
+    } else if (!file.includes(".") && !obj.get) {
       obj.pages ??= {}
       obj.pages[file] = await loadPage(path.join(dir, file), obj)
     }
@@ -292,7 +296,7 @@ globalThis.f = {
             <feColorMatrix type="saturate" values="${saturation}"/>
           </filter>
         </defs>
-        <image xlink:href="data:image/webp;base64,${base64}" width="100%" height="100%" filter="url(#blur-filter)" preserveAspectRatio="none" />
+        <image xlink:href="data:image/webp;base64,${base64}" width="2310" height="990" transform="translate(-105, -45)" filter="url(#blur-filter)" preserveAspectRatio="none" />
       </svg>
     `) + "')"
   }
@@ -320,13 +324,16 @@ app.get("*", async (req, res) => {
     page = page.pages[part]
   }
 
-  if (page.config.auth && !req.user) {
+  if ((page.config.auth || page.config.admin) && !req.user) {
     res.cookie("authRedirect", req.originalUrl, {
       httpOnly: true,
       secure: process.env.DOMAIN.startsWith("https"),
       maxAge: 300000
     })
     return res.status(401).redirect("/auth/discord")
+  }
+  if (page.config.admin && !req.user?.admin) {
+    return res.status(401).redirect("/")
   }
 
   const context = {

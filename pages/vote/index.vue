@@ -63,7 +63,7 @@
               <a :href="artist.socialMedia" target="_blank">{{ artist.name }}</a><span v-if="j < submission.artists.length - 1"> & </span>
             </span>
           </div>
-          <div class="submission-votes">{{ submission.votes }} Vote{{ submission.votes === 1 ? "" : "s" }}</div>
+          <div class="submission-votes">{{ submission.votes.toLocaleString() }} Vote{{ submission.votes === 1 ? "" : "s" }}</div>
           <div class="spacer"></div>
           <div v-if="submission.voters.includes(user.id)" class="your-vote">
             <span class="icon">check_circle</span>

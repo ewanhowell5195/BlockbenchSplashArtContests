@@ -1,0 +1,53 @@
+#current-contest {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#contests {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(475px, 1fr));
+  gap: 20px;
+
+  > div {
+    position: relative;
+  }
+}
+
+.contest-date {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.contest-stats {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  text-align: center;
+
+  > span {
+    display: contents;
+  }
+
+  > span:not(:last-child)::after {
+    content: "•";
+  }
+}
+
+@media screen and (width < 768px) {
+  #current-contest {
+    gap: 12px;
+  }
+
+  #contests {
+    gap: 12px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contest-date {
+    top: 12px;
+    right: 12px;
+  }
+}

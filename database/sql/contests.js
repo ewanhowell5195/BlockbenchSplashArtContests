@@ -92,5 +92,15 @@ export default {
       ELSE status
     END
     WHERE status != 'finished'
+  `),
+  regress: prepareDBAction(`
+    UPDATE contests
+    SET status = CASE
+      WHEN status = 'submissions' THEN 'upcoming'
+      WHEN status = 'reviewing' THEN 'submissions'
+      WHEN status = 'voting' THEN 'reviewing'
+      ELSE status
+    END
+    WHERE status != 'finished'
   `)
 }

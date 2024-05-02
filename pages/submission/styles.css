@@ -1,15 +1,3 @@
-table {
-  align-self: flex-start;
-}
-
-td {
-  padding: 0;
-}
-
-td:first-child {
-  padding-right: 8px; 
-}
-
 .panel img {
   width: 100%;
   border-radius: 8px;

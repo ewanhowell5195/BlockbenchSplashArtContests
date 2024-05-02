@@ -502,6 +502,18 @@ input:is([type="text"], [type="url"]) {
   & h3 {
     font-size: 1.25rem;
   }
+
+  & table {
+    align-self: flex-start;
+  }
+
+  & td {
+    padding: 0;
+  }
+
+  & td:first-child {
+    padding-right: 8px; 
+  }
 }
 
 .panel-group {
@@ -649,7 +661,7 @@ label:has([type="checkbox"]) {
 /* Mobile Header */
 
 @media screen and (width < 900px) {
-  #home-link::after {
+  .role-user #home-link::after {
     content: "Splash Art Contests";
   } 
 }
@@ -666,19 +678,19 @@ label:has([type="checkbox"]) {
 }
 
 @media screen and (width < 725px) {
-  nav > [href="/account"] > span {
+  .role-user nav > [href="/account"] > span {
     display: none;
   }
 }
 
 @media screen and (width < 625px) {
-  nav > [target="_blank"] {
+  .role-user nav > [target="_blank"] {
     display: none;
   }
 }
 
 @media screen and (width < 500px) {
-  #home-link::after {
+  .role-user #home-link::after {
     content: "Blockbench Splash Art Contests";
     font-size: .9rem;
     max-width: 140px;
@@ -686,13 +698,53 @@ label:has([type="checkbox"]) {
 }
 
 @media screen and (width < 440px) {
-  #home-link::after {
+  .role-user #home-link::after {
     content: "Splash Art Contests";
   } 
 }
 
 @media screen and (width < 400px) {
-  #current-contest {
+  .role-user #current-contest {
+    display: none;
+  }
+}
+
+/* Admin Mobile Header */
+
+@media screen and (width < 950px) {
+  .role-admin #home-link::after {
+    content: "Splash Art Contests";
+  } 
+}
+
+@media screen and (width < 820px) {
+  .role-admin nav > [href="/account"] > span {
+    display: none;
+  }
+}
+
+@media screen and (width < 768px) {
+  .role-admin nav > [target="_blank"] {
+    display: none;
+  }
+}
+
+@media screen and (width < 560px) {
+  .role-admin #home-link::after {
+    content: "Blockbench Splash Art Contests";
+    font-size: .9rem;
+    max-width: 140px;
+  } 
+}
+
+@media screen and (width < 500px) {
+  .role-admin #home-link::after {
+    content: "Splash Art Contests";
+  } 
+}
+
+@media screen and (width < 450px) {
+  .role-admin #current-contest {
     display: none;
   }
 }

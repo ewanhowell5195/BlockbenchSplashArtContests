@@ -217,7 +217,7 @@ if (submissions) {
         const voteCount = element.querySelector(".submission-votes")
         if (voteCount.textContent.split(" ")[0] != vote.votes) {
           changes = true
-          voteCount.textContent = `${vote.votes} Vote${vote.votes === 1 ? "" : "s"}`
+          voteCount.textContent = `${vote.votes.toLocaleString()} Vote${vote.votes === 1 ? "" : "s"}`
           voteCount.classList.add("votes-changed")
           setTimeout(() => {
             voteCount.classList.remove("votes-changed")

@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="/src/styles.css">
     <link v-if="styles" rel="stylesheet" :href="'/src/' + styles">
   </head>
-  <body>
+  <body :class="{ 'role-user': !user?.admin, 'role-admin': user?.admin }">
     <header>
       <div id="header">
         <a id="home-link" href="/">
@@ -29,6 +29,7 @@
         <div class="spacer"></div>
         <nav>
           <a href="https://blockbench.net/" target="_blank">Blockbench <span class="icon">open_in_new</span></a>
+          <a v-if="user?.admin" href="/admin">Admin</a>
           <a v-if="contest.status === 'upcoming'" id="current-contest" :href="'/contests/' + contest.id">Upcoming</a>
           <a v-else-if="contest.status === 'submissions'" id="current-contest" href="/submission">Submit</a>
           <a v-else-if="contest.status === 'reviewing'" id="current-contest" :href="'/contests/' + contest.id">Current</a>

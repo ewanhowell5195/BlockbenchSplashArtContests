@@ -1,0 +1,17 @@
+#submissions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(475px, 1fr));
+  gap: 20px;
+}
+
+.submission-image {
+  min-width: 100%;
+  border-radius: 8px;
+  background-image: var(--transparency);
+}
+
+@media screen and (width < 768px) {
+  #submissions {
+    display: flex;
+  }
+}

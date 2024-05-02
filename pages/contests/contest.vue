@@ -18,7 +18,7 @@
     <a v-else-if="currentContest.status === 'voting'" class="button" :href="'/vote'">Vote now!</a>
   </div>
   <div class="panel">
-    <h2>The Theme for this Contest: <strong>Underwater!</strong></h2>
+    <h2>The theme for this contest: <strong>Underwater!</strong></h2>
   </div>
   <div class="panel">
     <h2>Prizes</h2>

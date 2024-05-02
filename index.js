@@ -256,24 +256,19 @@ globalThis.f = {
     return i + "th"
   },
   relativeTime(epoch) {
-    const time = Date.now() / 1000
-    const delta = time - epoch / 1000
-    if (delta > 0) return "soon"
-    if (delta < 2 && delta > -2) return (delta >= 0 ? "just " : "") + "now"
-    if (delta < 60 && delta > -60) return delta >= 0 ? Math.round(delta) + " seconds ago" : "in " + Math.round(-delta) + " seconds"
-    if (delta < 120 && delta > -120) return delta >= 0 ? "about a minute ago" : "in about a minute"
-    if (delta < 3600 && delta > -3600) return delta >= 0 ? Math.round(delta / 60) + " minutes ago" : "in " + Math.round(-delta / 60) + " minutes"
-    if (delta < 7200 && delta > -7200) return delta >= 0 ? "about an hour ago" : "in about an hour"
-    if (delta < 86400 && delta > -86400) return delta >= 0 ? Math.round(delta / 3600) + " hours ago" : "in " + Math.round(-delta / 3600) + " hours"
-    if (delta < 172800 && delta > -172800) return delta >= 0 ? "1 day ago" : "in 1 day"
-    if (delta < 2505600 && delta > -2505600) return delta >= 0 ? Math.round(delta / 86400) + " days ago" : "in " + Math.round(-delta / 86400) + " days"
-    if (delta < 5184000 && delta > -5184000) return delta >= 0 ? "about a month ago" : "in about a month"
-    const currentYear = new Date().getUTCFullYear()
-    const epochYear = new Date(epoch).getUTCFullYear()
-    const monthDelta = 12 * currentYear + new Date(time * 1000).getUTCMonth() + 1 - 12 * epochYear - new Date(epoch * 1000).getUTCMonth() - 1
-    if (monthDelta < 12 && monthDelta > -12) return monthDelta >= 0 ? monthDelta + " months ago" : "in " + -monthDelta + " months";
-    const yearDelta = currentYear - epochYear
-    return yearDelta < 2 && yearDelta > -2 ? yearDelta >= 0 ? "a year ago" : "in a year" : yearDelta >= 0 ? yearDelta + " years ago" : "in " + -yearDelta + " years"
+    const now = Date.now()
+    const delta = epoch - now
+    if (delta < 60000) return "soon"
+    const years = Math.floor(delta / 3.1536e10)
+    let days = Math.floor(delta / 8.64e7) % 365
+    const weeks = Math.floor(days / 7)
+    days %= 7
+    const hours = Math.floor(delta / 3.6e6) % 24
+    const minutes = Math.floor(delta / 6e4) % 60
+    if (!years && !weeks && !days && !hours) {
+      return `${minutes} minute${minutes === 1 ? "" : "s"}`
+    }
+    return `${years} year${years === 1 ? "" : "s"}, ${weeks} week${weeks === 1 ? "" : "s"}, ${days} day${days === 1 ? "" : "s"}, ${hours} hour${hours === 1 ? "" : "s"}`.replace(/(?<!\d)0\s[a-z]+,\s/g, "")
   },
   randomString: l => Array.from(crypto.getRandomValues(new Uint32Array(l))).map(n => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"[n%62]).join(""),
   blurImageSVG: (url, brightness = 2, saturation = 2) => {

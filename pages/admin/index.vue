@@ -1,6 +1,6 @@
 <div class="container">
   <div v-if="contest.status !== 'finished'" id="current-contest">
-    <div class="divider">Current Contests</div>
+    <div class="divider">Current Contest</div>
     <div class="panel">
       <h2>Information</h2>
       <table>

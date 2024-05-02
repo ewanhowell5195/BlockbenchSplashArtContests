@@ -10,5 +10,6 @@
     <meta property="og:image" :content="`${domain}/${config.image}`">
     <meta property="twitter:image" :content="`${domain}/${config.image}`">
     <meta property="twitter:card" content="summary_large_image">
+    <meta name="theme-color" :content="config.colour">
   </head>
 </html>

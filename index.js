@@ -302,7 +302,26 @@ globalThis.f = {
   }
 }
 
-const index = fs.readFileSync("views/index.vue", "utf-8")
+async function renderTemplate(req, res, page, context, template = "index") {
+  if (page.data) {
+    Object.assign(context, page.data(req, context))
+  }
+
+  for (const key in context.config) {
+    if (typeof context.config[key] === "function") {
+      context.config[key] = context.config[key](req, context)
+    }
+  }
+
+  res.send("<!DOCTYPE html>" + await renderToString(createSSRApp({
+    data: () => context,
+    template: await render(`views/${template}.vue`, context),
+    compilerOptions: {
+      isCustomElement: tag => tag === "file-input"
+    }
+  })))
+}
+
 app.get("*", async (req, res) => {
   if (
     req.path.startsWith("/src") ||
@@ -322,6 +341,11 @@ app.get("*", async (req, res) => {
       return send404(req, res)
     }
     page = page.pages[part]
+  }
+
+  if (req.get("User-Agent").includes("Discordbot")) {
+    if (page.admin) return res.sendStatus(404)
+    return renderTemplate(req, res, page, { config: { ...page.config } }, "opengraph")
   }
 
   if ((page.config.auth || page.config.admin) && !req.user) {
@@ -346,8 +370,7 @@ app.get("*", async (req, res) => {
     contest: db.contests.latest(),
     settings,
     render,
-    f,
-    setTimeout
+    f
   }
 
   if (dynamic) {
@@ -375,23 +398,8 @@ app.get("*", async (req, res) => {
       context.styles = null
     }
   }
-  if (page.data) {
-    Object.assign(context, page.data(req, context))
-  }
 
-  for (const key in context.config) {
-    if (typeof context.config[key] === "function") {
-      context.config[key] = context.config[key](req, context)
-    }
-  }
-
-  res.send("<!DOCTYPE html>" + await renderToString(createSSRApp({
-    data: () => context,
-    template: await render("views/index.vue", context),
-    compilerOptions: {
-      isCustomElement: tag => tag === "file-input"
-    }
-  })))
+  renderTemplate(req, res, page, context)
 })
 
 process.on("unhandledRejection", error => {

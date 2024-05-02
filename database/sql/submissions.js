@@ -48,7 +48,8 @@ export default {
       ) as artists,
       s.votes,
       s.voters,
-      s.image
+      s.image,
+      s.agreed
     FROM submissions s,
     json_each(s.artists) j
     JOIN artists a ON a.id = j.value

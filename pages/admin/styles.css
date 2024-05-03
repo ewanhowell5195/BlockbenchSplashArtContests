@@ -1,4 +1,4 @@
-#current-contest {
+#contest {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -36,7 +36,7 @@
 }
 
 @media screen and (width < 768px) {
-  #current-contest {
+  #contest {
     gap: 12px;
   }
 

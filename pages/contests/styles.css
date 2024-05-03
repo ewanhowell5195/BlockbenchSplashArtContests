@@ -116,9 +116,3 @@
     height: 192px !important;
   }
 }
-
-@media screen and (width < 500px) {
-  .button-row {
-    flex-direction: column;
-  }
-}

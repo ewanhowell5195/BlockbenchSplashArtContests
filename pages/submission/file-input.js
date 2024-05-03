@@ -22,6 +22,10 @@ class FileInput extends HTMLElement {
           user-select: none;
           position: relative;
           text-shadow: none;
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          align-items: flex-start;
 
           &.active .file-drop-button::before {
             filter: brightness(1.15);
@@ -41,18 +45,19 @@ class FileInput extends HTMLElement {
           position: relative;
           z-index: 1;
           align-items: center;
-          gap: 8px;
+          gap: 10px;
           line-height: 1.375rem;
           color: var(--color-text);
           display: flex;
           align-items: center;
+          text-shadow: 0 2px 3px #000, 0 -1px 3px #0004;
+          text-wrap: nowrap;
 
-          > * {
+          & svg {
             filter: drop-shadow(0 2px 1.5px #000) drop-shadow(0 -1px 1.5px #0004);
-          }
-
-          > svg {
             fill: var(--color-text);
+            width: 22px;
+            height: 22px;
           }
 
           &::before {
@@ -69,7 +74,8 @@ class FileInput extends HTMLElement {
         .file-drop-row {
           display: flex;
           align-items: center;
-          gap: 16px;
+          gap: 20px;
+          max-width: 100%;
         }
 
         .file-drop-text {
@@ -92,10 +98,14 @@ class FileInput extends HTMLElement {
         }
 
         .file-drop-images {
-          margin-top: 20px;
           display: flex;
           gap: 10px;
           flex-wrap: wrap;
+          overflow-x: auto;
+          position: relative;
+          z-index: 1;
+          margin-bottom: -10px;
+          max-width: 100%;
 
           > div {
             display: flex;
@@ -112,13 +122,44 @@ class FileInput extends HTMLElement {
             background-image: var(--transparency);
           }
         }
+
+        @media screen and (width < 768px) {
+          .file-drop {
+            padding: 12px;
+            gap: 12px;
+          }
+
+          .file-drop-row {
+            gap: 12px;
+          }
+
+          .file-drop-button {
+            font-size: .9rem;
+            padding: 9px 12px;
+            letter-spacing: .3px;
+            gap: 6px;
+
+            & svg {
+              width: 18px;
+              height: 18px;
+            }
+          }
+
+          .file-drop-images {
+            margin-bottom: -6px;
+
+            & img {
+              height: 128px;
+            }
+          }
+        }
       `
       const fileDrop = document.createElement("div")
       fileDrop.classList.add("file-drop")
       fileDrop.innerHTML = `
         <div class="file-drop-row">
           <span class="file-drop-button">
-            <svg width="22" height="22" viewBox="0 0 24 24"><path d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z" /></svg>
+            <svg viewBox="0 0 24 24"><path d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z" /></svg>
             <span>Choose file${multiple ? "s" : ""}</span>
           </span>
           <span class="file-drop-text">or drag and drop ${fileLimit ? `up to ${fileLimit}` : ""} ${multiple ? "files" : "a file"} here</span>

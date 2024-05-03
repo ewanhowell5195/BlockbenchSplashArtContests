@@ -30,7 +30,7 @@
       <input type="checkbox" id="optional">
       <span>I agree that my submission can be used for additional Blockbench marketing, such as social media banners, posts, YouTube end-cards, etc. (Optional)</span>
     </label>
-    <button id="submit" disabled><svg width="22" height="22" viewBox="0 0 24 24"><path d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z"></path></svg>Create Submission</button>
+    <button id="submit" disabled><svg viewBox="0 0 24 24"><path d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z"></path></svg>Create Submission</button>
   </div>
 </div>
 <div v-else-if="contest.status === 'submissions' && submission" class="container">

@@ -4,16 +4,16 @@
   </template>
   <div id="vote-start" class="container">
     <div class="panel">
-      <h2>Vote!</h2>
-      <p>You will first be shown every submission one at a time.</p>
-      <p>After seeing every submission, you will sort the list of submissions so your favourite is at the top and your least favourite is at the bottom.</p>
-      <button id="start">Start Voting!</button>
+      <h2>Voting!</h2>
+      <p>You will first be shown every submission one at a time, allowing you to view each one before you vote.</p>
+      <p>After seeing every submission, you can then select {{ voteCount }} submission{{ voteCount === 1 ? "" : "s" }} as your vote{{ voteCount === 1 ? "" : "s" }}.</p>
+      <button id="start">View Submissions!</button>
     </div>
   </div>
   <div id="submission-preview" class="hidden loading-fade">
     <div>
       <div class="step-heading">
-        <span>Step 1: Viewing Submissions</span>
+        <span>View Submissions</span>
         <span>Submission <span id="submission-progress">1</span> of {{ submissions.length }}</span>
       </div>
       <div>
@@ -27,12 +27,12 @@
   </div>
   <div id="submission-voting" class="hidden container">
     <div class="panel">
-      <h2>Step 2: Voting</h2>
-      <p>Order the submissions so your favourite is at the top and your least favourite is at the bottom. The top {{ Math.ceil(submissions.length * 0.2) }} will be submitted as your vote{{ Math.ceil(submissions.length * 0.2) === 1 ? "" : "s"}}.</p>
+      <h2>Voting</h2>
+      <p>Order the submissions so your favourite is at the top and your least favourite is at the bottom. The top {{ voteCount }} will be submitted as your vote{{ voteCount === 1 ? "" : "s"}}.</p>
     </div>
     <div class="divider">Order Submissions</div>
     <div id="submission-list"></div>
-    <div class="divider">Submit Vote{{ Math.ceil(submissions.length * 0.2) === 1 ? "" : "s"}}</div>
+    <div class="divider">Submit Vote{{ voteCount === 1 ? "" : "s"}}</div>
     <div class="panel">
       <label for="ready">
         <input type="checkbox" id="ready">

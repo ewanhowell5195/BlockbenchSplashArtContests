@@ -27,9 +27,8 @@
 
   > img {
     width: calc(100% - 40px);
-    max-height: calc(100dvh - var(--header-height) - var(--footer-height) - 86px * 2);
+    max-height: calc(100dvh - var(--header-height) - var(--footer-height) - 172px);
     min-height: 128px;
-    margin: 86px 0;
     object-fit: contain;
     z-index: 1;
     filter: drop-shadow(0 5px 5px #0008);
@@ -275,4 +274,30 @@
   transition: initial;
   filter: drop-shadow(0 0 10px var(--color-accent)) drop-shadow(0 0 5px var(--color-accent));
   scale: 1.5;
+}
+
+@media screen and ((width < 768px) or (height < 500px)) {
+  .step-heading {
+    font-size: 1.5rem;
+  }
+
+  #submission-preview {
+    > div {
+      top: 12px;
+      bottom: 12px;
+      width: min(100% - 24px, var(--content-width) - 24px);
+    }
+
+    > img {
+      width: calc(100% - 24px);
+      max-height: calc(100dvh - var(--header-height) - var(--footer-height) - 120px);
+    }
+  }
+}
+
+@media screen and (width < 500px) {
+  .step-heading {
+    flex-direction: column;
+    gap: 6px;
+  }
 }

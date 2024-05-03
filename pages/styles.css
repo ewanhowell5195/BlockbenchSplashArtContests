@@ -18,6 +18,7 @@
   --color-danger-transparent: #D91F3940;
   --color-bronze: #CD7F32;
   --text-shadow: 0 2px 3px #000, 0 -1px 3px #0004;
+  --drop-shadow: drop-shadow(0 2px 1.5px #000D) drop-shadow(0 -1px 1.5px #0002);
   --transparency: url("data:image/webp;base64,UklGRiYAAABXRUJQVlA4TBkAAAAvD8ADAAWRto2Te5h/fYXnEf2fgDj+cfwDAA==");
 }
 
@@ -417,7 +418,7 @@ button, .button {
   }
 
   & svg {
-    filter: drop-shadow(0 2px 1.5px #000) drop-shadow(0 -1px 1.5px #0004);
+    filter: var(--drop-shadow);
     fill: var(--color-text);
     width: 22px;
     height: 22px;
@@ -435,7 +436,7 @@ button, .button {
       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38"><defs><linearGradient x1="8.042%" y1="0%" x2="65.682%" y2="23.865%" id="A"><stop stop-color="%23fff" stop-opacity="0" offset="0%"/><stop stop-color="%23fff" stop-opacity=".631" offset="63.146%"/><stop stop-color="%23fff" offset="100%"/></linearGradient></defs><g fill="none" fill-rule="evenodd" transform="scale(0.578947368)"><g transform="translate(1 1)"><path d="M36 18c0-9.94-8.06-18-18-18" stroke="url(%23A)" stroke-width="2"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="0.9s" repeatCount="indefinite"/></path><circle fill="%23fff" cx="36" cy="18" r="1"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="0.9s" repeatCount="indefinite"/></circle></g></g></svg>');
       width: 22px;
       height: 22px;
-      filter: drop-shadow(0 2px 1.5px #000) drop-shadow(0 -1px 1.5px #0004);
+      filter: var(--drop-shadow);
     }
   }
 

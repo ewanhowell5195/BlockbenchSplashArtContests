@@ -35,7 +35,7 @@
     -webkit-background-clip: text;
     background-position: 50% 50%;
     background-size: cover;
-    filter: drop-shadow(0 2px 1.5px #000) drop-shadow(0 -1px 1.5px #0004);
+    filter: var(--drop-shadow);
     line-height: 110%;
   }
 
@@ -54,7 +54,7 @@
 .submission {
   position: relative;
   width: 100%;
-  border-radius: 20px;
+  border-radius: 14px;
   overflow: hidden;
 
   > img {
@@ -68,26 +68,6 @@
     position: absolute;
     inset: 0;
   }
-
-  &:is(:first-child, :nth-child(2), :nth-child(3)) .submission-position::before {
-    content: "trophy";
-    font-family: "Material Symbols Outlined";
-    transform: translateY(4px);
-    margin-right: 8px;
-    display: inline-block;
-  }
-
-  &:first-child .submission-position::before {
-    color: gold;
-  }
-
-  &:nth-child(2) .submission-position::before {
-    color: silver;
-  }
-
-  &:nth-child(3) .submission-position::before {
-    color: var(--color-bronze);
-  }
 }
 
 .submission-position {
@@ -96,6 +76,17 @@
   font-weight: 700;
   padding: 15px 20px 0;
   color: var(--color-text-light);
+  display: flex;
+  gap: 10px;
+  line-height: 38px;
+
+  &:has(img) {
+    padding-top: 20px;
+  }
+
+  > img {
+    filter: var(--drop-shadow);
+  }
 }
 
 .submission-votes {
@@ -103,6 +94,14 @@
   text-shadow: var(--text-shadow);
   padding: 0 20px;
   color: var(--color-text-light);
+  line-height: 28px;
+  display: flex;
+  gap: 10px;
+  margin: 10px 0 0 6px;
+
+  > img {
+    filter: var(--drop-shadow);
+  }
 }
 
 .submission-artists {
@@ -112,9 +111,14 @@
   right: 0;
   padding: 2px 15px 2px 100px;
   font-size: 1.5rem;
+  text-align: right;
 
-  & a[href]:hover {
-    color: var(--color-text-light) !important;
+  & a[href] {
+    color: var(--color-text);
+
+    &:hover {
+      color: var(--color-text-light) !important;
+    }
   }
 }
 
@@ -167,5 +171,44 @@
     > h2 {
       font-size: 1.5rem;
     }
+  }
+
+  #submissions {
+    gap: 12px;
+  }
+
+  .submission-position {
+    font-size: 1.5rem;
+    line-height: 28px;
+    gap: 6px;
+    padding: 9px 12px 0;
+
+    &:has(img) {
+      padding-top: 12px;
+    }
+
+    > img {
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  .submission-votes {
+    font-size: 1.1rem;
+    margin: 6px 0 0 4px;
+    line-height: 20px;
+    padding: 0 12px;
+    gap: 6px;
+
+    > img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .submission-artists {
+    font-size: 1rem;
+    bottom: 6px;
+    padding: 1px 6px 1px 50px;
   }
 }

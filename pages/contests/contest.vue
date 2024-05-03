@@ -63,8 +63,14 @@
     <div class="submission" v-for="(submission, i) of submissions">
       <img :src="`/assets/images/submissions/${currentContest.id}/${submission.image}_thumbnail_large.webp`" :alt="'Splash art by ' + submission.artists.map(e => e.name).join(' & ')" loading="lazy">
       <div class="popupable" :src="`/assets/images/submissions/${currentContest.id}/${submission.image}.webp`">
-        <div class="submission-position">{{ f.numSuffix(i + 1) }} Place</div>
-        <div class="submission-votes">{{ submission.votes.toLocaleString() }} Vote<span v-if="submission.votes < 1 || submission.votes > 1">s</span></div>
+        <div class="submission-position">
+          <img v-if="i < 3" :src="`/assets/images/icons/trophy_${i}.png`" width="38" height="38" :alt="f.numSuffix(i + 1) + ' Place Trophy'">
+          <span>{{ f.numSuffix(i + 1) }} Place</span>
+        </div>
+        <div class="submission-votes">
+          <img src="/assets/images/icons/like.png" width="28" height="28" alt="Like">
+          <span>{{ submission.votes.toLocaleString() }} Vote<span v-if="submission.votes < 1 || submission.votes > 1">s</span></span>
+        </div>
         <div class="submission-artists">
           By
           <span v-for="(artist, j) of submission.artists">

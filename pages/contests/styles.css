@@ -38,7 +38,7 @@
     -webkit-background-clip: text;
     background-position: 50% 50%;
     background-size: cover;
-    filter: drop-shadow(0 2px 1.5px #000) drop-shadow(0 -1px 1.5px #0004) drop-shadow(0 0 30px black);
+    filter: var(--drop-shadow) drop-shadow(0 0 30px black);
     line-height: 110%;
     text-align: center;
   }

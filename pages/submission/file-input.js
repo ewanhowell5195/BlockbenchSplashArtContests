@@ -54,7 +54,7 @@ class FileInput extends HTMLElement {
           text-wrap: nowrap;
 
           & svg {
-            filter: drop-shadow(0 2px 1.5px #000) drop-shadow(0 -1px 1.5px #0004);
+            filter: var(--drop-shadow);
             fill: var(--color-text);
             width: 22px;
             height: 22px;

@@ -173,6 +173,10 @@
     }
   }
 
+  #contest-stats {
+    gap: 12px;
+  }
+
   #submissions {
     gap: 12px;
   }

@@ -119,4 +119,62 @@ if (submissions) {
   }
   document.getElementById("vote-start").classList.add("hidden")
   loadVoting()
+} else {
+  const list = document.getElementById("submission-results-list")
+  if (list) {
+    function numSuffix(i) {
+      const j = i % 10
+      const k = i % 100
+      if (j === 1 && k !== 11) return i + "st"
+      if (j === 2 && k !== 12) return i + "nd"
+      if (j === 3 && k !== 13) return i + "rd"
+      return i + "th"
+    }
+    function position() {
+      let top = 0
+      const gap = window.innerWidth < 768 ? 12 : 20
+      for (const [i, child] of Array.from(list.children).entries()) {
+        child.style.top = top + "px"
+        child.children[0].textContent = numSuffix(i + 1)
+        top += child.clientHeight + gap
+      }
+      list.style.height = top - gap + "px"
+    }
+    position()
+    window.addEventListener("resize", position)
+    list.querySelectorAll("img").forEach(e => e.addEventListener("load", position))
+    const totalVotes = document.getElementById("total-votes")
+    const ws = new WebSocket(`ws${location.protocol === "http:" ? "" : "s"}://${location.host}/websocket`)
+    ws.onmessage = ev => {
+      const data = JSON.parse(ev.data)
+      if (data.type === "votes") {
+        console.log(data)
+        const arr = Array.from(list.children)
+        const submissions = []
+        let changes
+        for (const vote of data.votes) {
+          const element = arr.find(e => e.dataset.id == vote.id)
+          const voteCount = element.querySelector(".submission-votes")
+          if (voteCount.textContent.split(" ")[0] != vote.votes) {
+            changes = true
+            voteCount.textContent = `${vote.votes.toLocaleString()} Vote${vote.votes === 1 ? "" : "s"}`
+            voteCount.classList.add("votes-changed")
+            setTimeout(() => voteCount.classList.remove("votes-changed"), 0)
+          }
+          submissions.push([vote.votes, element])
+        }
+        if (changes) {
+          totalVotes.textContent = data.votes.reduce((a, e) => a + e.votes, 0).toLocaleString()
+          totalVotes.classList.add("votes-changed")
+          setTimeout(() => totalVotes.classList.remove("votes-changed"), 0)
+          const sorted = submissions.sort((a, b) => b[0] - a[0])
+          list.innerHTML = ""
+          for (const item of sorted) {
+            list.append(item[1])
+          }
+          setTimeout(position, 10)
+        }
+      }
+    }
+  }
 }

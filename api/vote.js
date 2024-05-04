@@ -44,3 +44,5 @@ async function updateVotes(id) {
     }
   }, 5000)
 }
+
+setInterval(() => updateVotes(17), 5100)

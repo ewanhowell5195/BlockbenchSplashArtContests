@@ -266,9 +266,9 @@ globalThis.f = {
     const hours = Math.floor(delta / 3.6e6) % 24
     const minutes = Math.floor(delta / 6e4) % 60
     if (!years && !weeks && !days && !hours) {
-      return `${minutes} minute${minutes === 1 ? "" : "s"}`
+      return `in ${minutes} minute${minutes === 1 ? "" : "s"}`
     }
-    return `${years} year${years === 1 ? "" : "s"}, ${weeks} week${weeks === 1 ? "" : "s"}, ${days} day${days === 1 ? "" : "s"}, ${hours} hour${hours === 1 ? "" : "s"}`.replace(/(?<!\d)0\s[a-z]+,\s/g, "")
+    return `in ${years} year${years === 1 ? "" : "s"}, ${weeks} week${weeks === 1 ? "" : "s"}, ${days} day${days === 1 ? "" : "s"}, ${hours} hour${hours === 1 ? "" : "s"}`.replace(/(?<!\d)0\s[a-z]+,\s/g, "")
   },
   randomString: l => Array.from(crypto.getRandomValues(new Uint32Array(l))).map(n => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"[n%62]).join(""),
   blurImageSVG: (url, brightness = 2, saturation = 2) => {

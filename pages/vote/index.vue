@@ -47,4 +47,44 @@
     </div>
   </div>
 </div>
+<div v-else-if="contest.status === 'voting'">
+  <div id="contest-header" :style="{ backgroundImage: `linear-gradient(transparent, var(--color-background)), url('/assets/images/contests/concept_${contest.id}_thumbnail_large.webp')` }">
+    <div></div>
+    <h2>Splash Art Contest {{ contest.id }}</h2>
+    <h1 :style="{ backgroundImage: f.blurImageSVG(`assets/images/contests/concept_${contest.id}_thumbnail_small.webp`) }">{{ contest.theme }}</h1>
+    <h2>Live Results</h2>
+  </div>
+  <div class="container">
+    <div class="panel">
+      <h2>Voting closes {{ f.relativeTime(contest.finish) }}</h2>
+      <p v-if="contest.description" id="contest-description">{{ contest.description }}</p>
+      <div id="contest-stats" class="subpanel">
+        <span>Submissions: {{ submissions.length.toLocaleString() }}</span>
+        <span>Participants: {{ submissions.reduce((a, e) => a + e.artists.length, 0).toLocaleString() }}</span>
+        <span>Total votes: <span id="total-votes">{{ submissions.reduce((a, e) => a + e.votes, 0).toLocaleString() }}</span></span>
+      </div>
+    </div>
+    <div class="divider">Live Results</div>
+    <div id="submission-results-list">
+      <div v-for="[i, submission] of submissions.entries()" class="submission-result panel" :data-id="submission.id" :style="{ backgroundImage: `linear-gradient(90deg, var(--color-panel), #0004), linear-gradient(90deg, var(--color-panel), transparent), url('/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_small.webp')` }">
+        <div class="submission-place">{{ f.numSuffix(i + 1) }}</div>
+        <img :src="`/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_small.webp`" :data-popup-src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`" class="popupable">
+        <div class="submission-info">
+          <div class="submission-artists">
+            By
+            <span v-for="(artist, j) of submission.artists">
+              <a :href="artist.socialMedia" target="_blank">{{ artist.name }}</a><span v-if="j < submission.artists.length - 1"> & </span>
+            </span>
+          </div>
+          <div class="submission-votes">{{ submission.votes.toLocaleString() }} Vote{{ submission.votes === 1 ? "" : "s" }}</div>
+          <div class="spacer"></div>
+          <div v-if="submission.voters.includes(user.id)" class="your-vote">
+            <span class="icon">check_circle</span>
+            <span>Your vote</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div v-else class="container">Voting is not open at this time</div>

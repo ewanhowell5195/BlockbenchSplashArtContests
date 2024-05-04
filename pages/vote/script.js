@@ -110,7 +110,7 @@ if (submissions) {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            votes: Array.from(list.children).map(e => Number(e.dataset.id))
+            votes: Array.from(list.children).sort((a, b) => b.classList.contains("selected") - a.classList.contains("selected")).map(e => Number(e.dataset.id))
           })
         })
         location.reload()

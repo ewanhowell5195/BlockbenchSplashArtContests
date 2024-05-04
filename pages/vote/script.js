@@ -148,7 +148,6 @@ if (submissions) {
     ws.onmessage = ev => {
       const data = JSON.parse(ev.data)
       if (data.type === "votes") {
-        console.log(data)
         const arr = Array.from(list.children)
         const submissions = []
         let changes

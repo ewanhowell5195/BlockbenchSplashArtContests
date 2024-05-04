@@ -1,4 +1,3 @@
-{{ console.log(contests[0]) }}
 <div class="container">
   <div v-if="contest.status !== 'finished'" id="contest">
     <div class="divider">Current Contest</div>

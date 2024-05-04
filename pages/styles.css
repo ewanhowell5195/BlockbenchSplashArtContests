@@ -606,7 +606,9 @@ label:has([type="checkbox"]) {
   font-size: 1.5rem;
   gap: 20px;
   align-items: center;
-  margin: 40px 0 20px;
+  padding: 20px;
+  background-color: var(--color-background);
+  margin: 20px -20px 0;
 
   &::before, &::after {
     content: "";
@@ -614,6 +616,18 @@ label:has([type="checkbox"]) {
     flex: 1;
     background-color: var(--color-text-subtle);
   }
+
+  &.sticky {
+    position: sticky;
+    top: calc(var(--header-height));
+    z-index: 1;
+  }
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 /* Mobile */
@@ -663,7 +677,12 @@ label:has([type="checkbox"]) {
   .divider {
     font-size: 1.25rem;
     gap: 12px;
-    margin: 18px 0 12px;
+    padding: 12px;
+    margin: 12px -12px 0;
+  }
+
+  .section {
+    gap: 12px;
   }
 
   .button-row {

@@ -28,49 +28,22 @@
   <div id="submission-voting" class="hidden container">
     <div class="panel">
       <h2>Voting</h2>
-      <p>Order the submissions so your favourite is at the top and your least favourite is at the bottom. The top {{ voteCount }} will be submitted as your vote{{ voteCount === 1 ? "" : "s"}}.</p>
+      <p>Select the {{ voteCount }} submission{{ voteCount === 1 ? "" : "s"}} that you wish to vote for.</p>
+      <p>The submission artists will be revealed after you have voted.</p>
     </div>
-    <div class="divider">Order Submissions</div>
-    <div id="submission-list"></div>
+    <div class="section">
+      <div class="divider sticky">
+        <div><span id="selection-counter">0</span> / {{ voteCount }} Selected</div>
+      </div>
+      <div id="submission-list"></div>
+    </div>
     <div class="divider">Submit Vote{{ voteCount === 1 ? "" : "s"}}</div>
     <div class="panel">
       <label for="ready">
         <input type="checkbox" id="ready">
-        <span>I have sorted the submissions and am ready to submit! Votes cannot be recast.</span>
+        <span>I have chosen my votes and am ready to submit! Votes cannot be recast.</span>
       </label>
       <button id="submit" disabled>Submit votes</button>
-    </div>
-  </div>
-</div>
-<div v-else-if="contest.status === 'voting'">
-  <div id="contest-header" :style="{ backgroundImage: `linear-gradient(transparent, var(--color-background)), url('/assets/images/contests/concept_${contest.id}_thumbnail_large.webp')` }">
-    <div></div>
-    <h1>Splash Art Contest {{ contest.id }}</h1>
-    <h2>"{{ contest.theme }}"</h2>
-    <h3 >Voting closes {{ f.relativeTime(contest.finish) }}</h3>
-  </div>
-  <div class="container">
-    <p v-if="contest.description">{{ contest.description }}</p>
-    <h1>Live Results:</h1>
-    <div id="submission-list">
-      <div v-for="[i, submission] of submissions.entries()" class="panel" :data-id="submission.id" :style="{ backgroundImage: `linear-gradient(90deg, var(--color-panel), #0004), linear-gradient(90deg, var(--color-panel), transparent), url('/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_small.webp')` }">
-        <div>{{ f.numSuffix(i + 1) }}</div>
-        <img :src="`/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_small.webp`" :data-popup-src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`" class="popupable">
-        <div class="submission-info">
-          <div class="submission-artists">
-            By
-            <span v-for="(artist, j) of submission.artists">
-              <a :href="artist.socialMedia" target="_blank">{{ artist.name }}</a><span v-if="j < submission.artists.length - 1"> & </span>
-            </span>
-          </div>
-          <div class="submission-votes">{{ submission.votes.toLocaleString() }} Vote{{ submission.votes === 1 ? "" : "s" }}</div>
-          <div class="spacer"></div>
-          <div v-if="submission.voters.includes(user.id)" class="your-vote">
-            <span class="icon">check_circle</span>
-            <span>Your vote</span>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </div>

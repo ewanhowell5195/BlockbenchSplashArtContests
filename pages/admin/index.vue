@@ -1,3 +1,4 @@
+{{ console.log(contests[0]) }}
 <div class="container">
   <div v-if="contest.status !== 'finished'" id="contest">
     <div class="divider">Current Contest</div>
@@ -36,6 +37,10 @@
           <td>Voting Ends:</td>
           <td>{{ new Date(contest.finish).toLocaleString() }}</td>
         </tr>
+        <tr>
+          <td>Submissions:</td>
+          <td>{{ contests[0].submissions.toLocaleString() }}</td>
+        </tr>
       </table>
     </div>
     <div class="panel">
@@ -48,6 +53,12 @@
     </div>
     <div class="panel">
       <a class="button" :href="'/admin/contests/' + contest.id">View Contest</a>
+    </div>
+  </div>
+  <div class="divider">Tools</div>
+  <div class="panel">
+    <div class="button-row">
+      <a href="/admin/sql" class="button">SQL</a>
     </div>
   </div>
   <div class="divider">Previous Contests</div>

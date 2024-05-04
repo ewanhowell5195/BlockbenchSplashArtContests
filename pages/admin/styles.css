@@ -50,4 +50,9 @@
     top: 12px;
     right: 12px;
   }
+
+  .contest-stats {
+    gap: 12px;
+    font-size: 12px;
+  }
 }

@@ -117,8 +117,6 @@ if (submissions) {
       }
     })
   }
-  document.getElementById("vote-start").classList.add("hidden")
-  loadVoting()
 } else {
   const list = document.getElementById("submission-results-list")
   if (list) {

@@ -318,6 +318,12 @@ async function renderTemplate(req, res, page, context, template = "index") {
 }
 
 app.get("*", async (req, res) => {
+  if (req.path.endsWith("/")) {
+    Object.defineProperty(req, "path", {
+      value: req.path.slice(0, -1)
+    })
+  }
+
   if (
     req.path.startsWith("/src") ||
     req.path.startsWith("/assets") ||

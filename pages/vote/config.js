@@ -1,7 +1,8 @@
 export default {
   config: {
     auth: true,
-    title: "Vote!"
+    title: "Vote! - Blockbench Splash Art Contests",
+    description: "Submit you vote for the current splash art contest!"
   },
   data: (req, context) => {
     const submissions = context.contest.status === "voting" ? db.submissions.contest(context.contest.id) : undefined

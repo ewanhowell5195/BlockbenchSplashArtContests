@@ -20,8 +20,8 @@ export default {
       styles: "artist/styles",
       context: {
         config: {
-          title: artist.name,
-          description: `${artist.name}'${artist.name.endsWith("s") ? "" : "s"} profile. ${votes.toLocaleString()} vote${votes === 1 ? "" : "s"} across ${submissions.length.toLocaleString()} submission${submissions.length === 1 ? "" : "s"}`,
+          title: `${artist.name} - Blockbench Splash Art Contests`,
+          description: `${artist.name}'${artist.name.endsWith("s") ? "" : "s"} profile. ${votes.toLocaleString()} vote${votes === 1 ? "" : "s"} across ${submissions.length.toLocaleString()} submission${submissions.length === 1 ? "" : "s"}.`,
           image: `assets/images/submissions/${biggest.contest.id}/${biggest.image}_thumbnail_small.webp`
         },
         image: `/assets/images/submissions/${biggest.contest.id}/${biggest.image}_thumbnail_large.webp`,

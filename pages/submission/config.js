@@ -1,7 +1,8 @@
 export default {
   config: {
     auth: true,
-    title: "Submit your splash art!"
+    title: "Submit your splash art! - Blockbench Splash Art Contests",
+    description: "Submit your splash art to the current splash art contest!"
   },
   data: (req, context) => {
     if (context.contest.status !== "submissions") return

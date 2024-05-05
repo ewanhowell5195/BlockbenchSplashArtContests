@@ -344,7 +344,7 @@ app.get("*", async (req, res) => {
     page = page.pages[part]
   }
 
-  if (req.get("User-Agent")?.includes("Discordbot")) {
+  if (page.config.auth && req.get("User-Agent")?.includes("Discordbot")) {
     if (page.config.admin) return res.sendStatus(404)
     return renderTemplate(req, res, page, {
       config: { ...page.config },

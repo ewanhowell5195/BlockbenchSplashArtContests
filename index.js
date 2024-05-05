@@ -294,6 +294,10 @@ globalThis.f = {
         <image xlink:href="data:image/webp;base64,${base64}" width="2310" height="990" transform="translate(-105, -45)" filter="url(#blur-filter)" preserveAspectRatio="none" />
       </svg>
     `) + "')"
+  },
+  prettyURL(link) {
+    const url = new URL(link)
+    return decodeURI(url.hostname + url.pathname)
   }
 }
 
@@ -368,7 +372,7 @@ app.get("*", async (req, res) => {
   }
 
   if (dynamic) {
-    const data = page.get(dynamic)
+    const data = page.get(dynamic, req, context)
     if (!data) {
       return send404(req, res)
     }

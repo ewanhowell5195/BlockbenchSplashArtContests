@@ -1,0 +1,147 @@
+#artist-header {
+  height: 512px;
+  background-position: 50% 50%;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  text-shadow: var(--text-shadow);
+  text-align: center;
+  gap: 10px;
+
+  > :first-child {
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(4px);
+    max-width: initial;
+  }
+
+  > h1 {
+    font-size: 5rem;
+    font-family: Montserrat;
+    font-weight: 900;
+    color: transparent;
+    text-shadow: none;
+    background-clip: text;
+    -webkit-background-clip: text;
+    background-position: 50% 50%;
+    background-size: cover;
+    filter: var(--drop-shadow);
+    max-width: calc(100vw - 40px);
+    line-height: 110%;
+  }
+}
+
+.favicon {
+  border-radius: 4px;
+  filter: var(--drop-shadow);
+}
+
+#artist-stats {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  text-align: center;
+
+  > span {
+    display: contents;
+  }
+
+  > span:not(:last-child)::after {
+    content: "•";
+  }
+}
+
+#submissions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.submission {
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+
+  > img {
+    width: 100%;
+    user-select: none;
+    display: flex;
+    background-image: var(--transparency);
+  }
+
+  > div {
+    position: absolute;
+    inset: 0;
+  }
+}
+
+.submission-position {
+  text-shadow: var(--text-shadow);
+  font-size: 2.25rem;
+  font-weight: 700;
+  padding: 15px 20px 0;
+  color: var(--color-text-light);
+  display: flex;
+  gap: 10px;
+  line-height: 38px;
+
+  &:has(img) {
+    padding-top: 20px;
+  }
+
+  > img {
+    filter: var(--drop-shadow);
+  }
+}
+
+.submission-votes {
+  font-size: 1.5rem;
+  text-shadow: var(--text-shadow);
+  padding: 0 20px;
+  color: var(--color-text-light);
+  line-height: 28px;
+  display: flex;
+  gap: 10px;
+  margin: 10px 0 0 6px;
+
+  > img {
+    filter: var(--drop-shadow);
+  }
+}
+
+.submission-artists {
+  background: linear-gradient(90deg, #03567000 0%, #000A16A1 34%, #000914B8 45%);
+  position: absolute;
+  bottom: 15px;
+  right: 0;
+  padding: 2px 15px 2px 100px;
+  font-size: 1.5rem;
+  text-align: right;
+
+  & a {
+    color: var(--color-text);
+
+    &:hover {
+      color: var(--color-text-light) !important;
+    }
+  }
+}
+
+@media screen and (width < 768px) {
+  #artist-header {
+    min-height: calc(90svh - var(--header-height));
+
+    > h1 {
+      font-size: 3rem;
+    }
+  }
+
+  #artist-stats {
+    gap: 12px;
+  }
+}

@@ -1,6 +1,6 @@
 export default {
   config: {
-    title: "Contests - Blockbench Splash Art Contests",
+    title: "Contests",
     description: "View the current and previous Blockbench splash art contests"
   },
   data: () => ({
@@ -12,8 +12,8 @@ export default {
     if (!contest) return
     const submissions = db.submissions.contest(contest.id)
     return {
-      view: "contest",
-      styles: "contest",
+      view: "contest/index",
+      styles: "contest/styles",
       context: {
         config: {
           title: `Splash Art Contest ${contest.id} - ${contest.theme}`,

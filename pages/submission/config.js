@@ -5,7 +5,7 @@ export default {
   },
   data: (req, context) => {
     if (context.contest.status !== "submissions") return
-    const submission = db.submissions.artist(context.contest.id, req.user.id)
+    const submission = db.submissions.artist.get(context.contest.id, req.user.id)
     return {
       submission,
       artist: db.artists.get(req.user.id),

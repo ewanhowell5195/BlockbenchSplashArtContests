@@ -74,7 +74,7 @@
         <div class="submission-artists">
           By
           <span v-for="(artist, j) of submission.artists">
-            <a :href="artist.socialMedia" target="_blank">{{ artist.name }}</a><span v-if="j < submission.artists.length - 1"> & </span>
+            <span v-if="j"> & </span><a :href="'/artists/' + artist.id">{{ artist.name }}</a>
           </span>
         </div>
       </div>

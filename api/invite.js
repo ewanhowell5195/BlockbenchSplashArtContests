@@ -29,7 +29,7 @@ export default {
     execute(req, res) {
       const contest = db.contests.latest()
       if (contest.status !== "submissions") return res.sendStatus(403)
-      const submission = db.submissions.artist(contest.id, req.user.id)
+      const submission = db.submissions.artist.get(contest.id, req.user.id)
       if (!submission) return res.sendStatus(404)
       db.submissions.invites.delete(submission.id, contest.id)
       res.sendStatus(200)

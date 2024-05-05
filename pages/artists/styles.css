@@ -1,0 +1,118 @@
+#contests {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(475px, 1fr));
+}
+
+.contest {
+  color: var(--color-text);
+  overflow: hidden;
+  padding: 0;
+}
+
+.contest-header {
+  background-size: cover;
+  background-position: 50% 50%;
+  height: 192px;
+  display: block;
+  overflow: hidden;
+  text-decoration: none;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px);
+    height: 100%;
+    padding: 40px;
+    box-sizing: border-box;
+  }
+
+  & h1 {
+    font-size: 3rem;
+    font-family: Montserrat;
+    font-weight: 900;
+    color: transparent;
+    text-shadow: none;
+    background-clip: text;
+    -webkit-background-clip: text;
+    background-position: 50% 50%;
+    background-size: cover;
+    filter: var(--drop-shadow) drop-shadow(0 0 30px black);
+    line-height: 110%;
+    text-align: center;
+  }
+}
+
+.contest-details {
+  padding: 0 20px 20px;
+
+  > :first-child {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  > table {
+    margin-top: 16px;
+
+    & td:first-child {
+      padding-right: 16px;
+      font-weight: 600;
+    }
+  }
+
+  .button-row {
+    margin-top: 16px;
+  }
+}
+
+#live-contest > .panel {
+  animation: glow linear infinite 2.5s;
+
+  .contest-header {
+    height: 256px;
+  }
+
+  & h1 {
+    font-size: 4rem;
+  }
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px #D92B2B, 0 0 10px #D92B2B, 0 0 20px #D92B2B;
+  }
+  50% {
+    box-shadow: 0 0 5px transparent, 0 0 10px transparent, 0 0 20px transparent;
+  }
+  100% {
+    box-shadow: 0 0 5px #D92B2B, 0 0 10px #D92B2B, 0 0 20px #D92B2B;
+  }
+}
+
+@media screen and (width < 768px) {
+  #contests {
+    display: flex;
+  }
+
+  .contest-header {
+    height: 128px;
+
+    & h1 {
+      font-size: 2rem !important;
+    }
+  }
+
+  .contest-details {
+    padding: 0 12px 12px;
+
+    > table {
+      margin-top: 8px;
+    }
+  }
+
+  #live-contest .contest-header {
+    height: 192px !important;
+  }
+}

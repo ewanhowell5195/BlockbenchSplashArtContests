@@ -61,28 +61,66 @@ export default {
     e.voters = JSON.parse(e.voters)
     return e
   })),
-  artist: prepareDBAction(`
-    SELECT
-      submissions.id,
-      submissions.contest,
-      (
-        SELECT json_group_array(json_object('id', artists.id, 'name', artists.name))
-        FROM json_each(submissions.artists)
-        JOIN artists ON artists.id = json_each.value
-      ) AS artists,
-      submissions.votes,
-      submissions.image
-    FROM submissions
-    WHERE submissions.contest = ?
-      AND EXISTS (
+  artist: {
+    get: prepareDBAction(`
+      SELECT
+        submissions.id,
+        submissions.contest,
+        (
+          SELECT json_group_array(json_object('id', artists.id, 'name', artists.name))
+          FROM json_each(submissions.artists)
+          JOIN artists ON artists.id = json_each.value
+        ) AS artists,
+        submissions.votes,
+        submissions.image
+      FROM submissions
+      WHERE submissions.contest = ?
+        AND EXISTS (
+          SELECT 1
+          FROM json_each(submissions.artists)
+          WHERE json_each.value = ?
+        )
+    `, "get", null, o => {
+      if (o) o.artists = JSON.parse(o.artists)
+      return o
+    }),
+    all: prepareDBAction(`
+      SELECT
+        submissions.id,
+        JSON_OBJECT(
+          'id', contests.id,
+          'name', contests.name,
+          'theme', contests.theme,
+          'version', contests.version
+        ) AS contest,
+        (
+          SELECT json_group_array(json_object('id', artists.id, 'name', artists.name))
+          FROM json_each(submissions.artists)
+          JOIN artists ON artists.id = json_each.value
+        ) AS artists,
+        submissions.votes,
+        submissions.image,
+        (
+          SELECT COUNT(*)
+          FROM submissions s
+          WHERE s.contest = submissions.contest AND s.votes > submissions.votes
+        ) + 1 AS position
+      FROM submissions
+      JOIN contests ON contests.id = submissions.contest
+      WHERE EXISTS (
         SELECT 1
         FROM json_each(submissions.artists)
         WHERE json_each.value = ?
       )
-  `, "get", null, o => {
-    if (o) o.artists = JSON.parse(o.artists)
-    return o
-  }),
+      ORDER BY votes DESC
+    `, "all", null, o => {
+      o.forEach(e => {
+        e.contest = JSON.parse(e.contest)
+        e.artists = JSON.parse(e.artists)
+      })
+      return o
+    })
+  },
   removeArtist: prepareDBAction(`
     UPDATE submissions
     SET artists = json_remove(artists, '$[' || ? || ']')

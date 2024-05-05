@@ -297,7 +297,7 @@ globalThis.f = {
   },
   prettyURL(link) {
     const url = new URL(link)
-    return decodeURI(url.hostname + url.pathname)
+    return decodeURI(url.hostname + url.pathname).replace(/\/$/, "")
   }
 }
 

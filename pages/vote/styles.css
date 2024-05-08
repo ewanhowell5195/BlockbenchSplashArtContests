@@ -222,7 +222,7 @@
     -webkit-background-clip: text;
     background-position: 50% 50%;
     background-size: cover;
-    filter: var(--drop-shadow);
+    filter: var(--drop-shadow-header);
     line-height: 110%;
   }
 

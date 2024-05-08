@@ -19,6 +19,7 @@
   --color-bronze: #CD7F32;
   --text-shadow: 0 2px 3px #000, 0 -1px 3px #0004;
   --drop-shadow: drop-shadow(0 2px 1.5px #000D) drop-shadow(0 -1px 1.5px #0002);
+  --drop-shadow-header: drop-shadow(0 3px 1.5px #0008) drop-shadow(0 6px 3px #0008);
   --transparency: url("data:image/webp;base64,UklGRiYAAABXRUJQVlA4TBkAAAAvD8ADAAWRto2Te5h/fYXnEf2fgDj+cfwDAA==");
 }
 

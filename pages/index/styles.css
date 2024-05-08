@@ -86,6 +86,8 @@ main {
     background-size: cover;
     filter: var(--drop-shadow-header);
     line-height: 110%;
+    text-align: center;
+    word-break: break-word;
   }
 
   > h2 {
@@ -149,7 +151,6 @@ main {
   background-color: var(--color-text);
   border-radius: 5px;
   transition: right 8s linear;
-  box-shadow: 0 0 5px #0008;
 }
 
 #prev {

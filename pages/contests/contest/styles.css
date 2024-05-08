@@ -37,6 +37,8 @@
     background-size: cover;
     filter: var(--drop-shadow-header);
     line-height: 110%;
+    text-align: center;
+    word-break: break-word;
   }
 
   > h2 {

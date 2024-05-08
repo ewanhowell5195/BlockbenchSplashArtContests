@@ -39,8 +39,8 @@ document.addEventListener("click", e => {
     popup.innerHTML = `
       <div class="popup-container">
         <img class="popup-image">
-        <div id="popup-image-prev" class="icon">chevron_left</div>
-        <div id="popup-image-next" class="icon">chevron_right</div>
+        <div id="popup-image-prev" class="icon">navigate_before</div>
+        <div id="popup-image-next" class="icon">navigate_next</div>
         <div id="popup-image-close" class="icon">close</div>
         <a id="popup-image-open" class="icon" target="_blank">open_in_new</a>
       </div>

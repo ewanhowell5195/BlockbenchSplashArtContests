@@ -31,6 +31,8 @@
     filter: var(--drop-shadow);
     max-width: calc(100vw - 40px);
     line-height: 110%;
+    text-align: center;
+    word-break: break-word;
   }
 }
 

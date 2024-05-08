@@ -200,6 +200,7 @@ async function loadPage(dir, parent) {
     obj.config = Object.assign({ ...obj.config }, config.config)
     obj.data = config.data
     obj.get = config.get
+    obj.pageList = config.pageList
   }
   for (const file of files) {
     if (file === "script.js") {
@@ -214,7 +215,7 @@ async function loadPage(dir, parent) {
   return obj
 }
 
-const pages = await loadPage("pages", {})
+globalThis.pages = await loadPage("pages", {})
 
 async function render(path, context) {
   let contents = await fs.promises.readFile(path, "utf-8")
@@ -315,6 +316,30 @@ async function renderTemplate(req, res, page, context, template = "index") {
       isCustomElement: tag => tag === "file-input"
     }
   })))
+}
+
+const crawlers = [
+  "discordbot",
+  "googlebot",
+  "bingbot",
+  "slurp",
+  "duckduckbot",
+  "baiduspider",
+  "yandexbot",
+  "sogou",
+  "exabot",
+  "facebookexternalhit",
+  "facebot",
+  "ia_archiver",
+  "twitterbot",
+  "redditbot",
+  "slackbot"
+]
+
+function isCrawler(userAgent) {
+  if (!userAgent) return
+  userAgent = userAgent.toLowerCase()
+  return crawlers.some(e => userAgent.includes(e))
 }
 
 app.get("*", async (req, res) => {

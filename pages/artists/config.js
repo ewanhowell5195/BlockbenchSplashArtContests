@@ -30,5 +30,6 @@ export default {
         votes
       }
     }
-  }
+  },
+  pageList: () => db.artists.ids()
 }

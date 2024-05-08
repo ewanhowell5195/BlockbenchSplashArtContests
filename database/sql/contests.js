@@ -102,5 +102,9 @@ export default {
       ELSE status
     END
     WHERE status != 'finished'
-  `)
+  `),
+  ids: prepareDBAction(`
+    SELECT id
+    FROM contests
+  `, "all", null, o => o.map(e => e.id))
 }

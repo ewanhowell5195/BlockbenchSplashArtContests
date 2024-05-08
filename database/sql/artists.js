@@ -21,5 +21,15 @@ export default {
     UPDATE artists
     SET name = ?, socialMedia = ?
     WHERE id = ?
-  `, "run", (id, name, socialMedia) => [name, socialMedia, id])
+  `, "run", (id, name, socialMedia) => [name, socialMedia, id]),
+  ids: prepareDBAction(`
+    SELECT id
+    FROM artists
+    WHERE EXISTS (
+      SELECT 1
+      FROM submissions,
+           json_each(submissions.artists) AS artist
+      WHERE artist.value = artists.id
+    )
+  `, "all", null, o => o.map(e => e.id))
 }

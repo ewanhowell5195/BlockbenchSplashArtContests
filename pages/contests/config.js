@@ -24,5 +24,6 @@ export default {
         submissions
       }
     }
-  }
+  },
+  pageList: () => db.contests.ids()
 }

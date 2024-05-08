@@ -134,6 +134,10 @@
   }
 }
 
+.panel h2 {
+  word-break: break-word;
+}
+
 @media screen and (width < 768px) {
   #artist-header {
     min-height: calc(90svh - var(--header-height));

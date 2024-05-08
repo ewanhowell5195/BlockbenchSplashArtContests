@@ -15,7 +15,7 @@ app.get("/sitemap.xml", (req, res) => {
   generate(pages.pages, process.env.DOMAIN)
   res.header("Content-Type", "application/xml")
   res.send(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pageList.map(e => {
-    if (e === "/index") e = "/"
+    if (e === `${process.env.DOMAIN}/index`) e = process.env.DOMAIN + "/"
     return `<url><loc>${e}</loc></url>`
   }).join("")}</urlset>`)
 })

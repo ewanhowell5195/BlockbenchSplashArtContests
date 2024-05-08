@@ -9,10 +9,10 @@ if (backgrounds.children.length > 1) {
     clearTimeout(timeout)
     progress.style.transition = "initial"
     progress.style.right = "118px"
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       progress.style.transition = null
       progress.style.right = 0
-    }, 5)
+    })
     const currentBackground = backgrounds.children[0]
     const nextBackground = prev ? backgrounds.children[backgrounds.children.length - 1] : backgrounds.children[1]
     const currentContent = contents.children[1]
@@ -23,16 +23,16 @@ if (backgrounds.children.length > 1) {
       nextBackground.classList.add("hidden")
       nextContent.classList.add("hidden")
     }
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       nextBackground.classList.remove("hidden")
       nextContent.classList.remove("hidden")
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         currentBackground.classList.add("leave")
         currentContent.classList.add("leave")
         nextBackground.classList.remove("enter")
         nextContent.classList.remove("enter")
-      }, 5)
-    }, 5)
+      })
+    })
     setTimeout(() => {
       currentBackground.classList.remove("leave")
       currentBackground.classList.add("enter")

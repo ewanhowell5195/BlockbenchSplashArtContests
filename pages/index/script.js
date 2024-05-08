@@ -9,10 +9,6 @@ if (backgrounds.children.length > 1) {
     clearTimeout(timeout)
     progress.style.transition = "initial"
     progress.style.right = "118px"
-    requestAnimationFrame(() => {
-      progress.style.transition = null
-      progress.style.right = 0
-    })
     const currentBackground = backgrounds.children[0]
     const nextBackground = prev ? backgrounds.children[backgrounds.children.length - 1] : backgrounds.children[1]
     const currentContent = contents.children[1]
@@ -24,6 +20,8 @@ if (backgrounds.children.length > 1) {
       nextContent.classList.add("hidden")
     }
     requestAnimationFrame(() => {
+      progress.style.transition = null
+      progress.style.right = 0
       nextBackground.classList.remove("hidden")
       nextContent.classList.remove("hidden")
       requestAnimationFrame(() => {
@@ -31,24 +29,24 @@ if (backgrounds.children.length > 1) {
         currentContent.classList.add("leave")
         nextBackground.classList.remove("enter")
         nextContent.classList.remove("enter")
+        setTimeout(() => {
+          currentBackground.classList.remove("leave")
+          currentBackground.classList.add("enter")
+          currentContent.classList.remove("leave")
+          currentContent.classList.add("enter")
+          if (prev) {
+            backgrounds.prepend(nextBackground)
+            contents.insertBefore(nextContent, progress.parentNode.parentNode.children[1])
+            backgrounds.classList.remove("reverse")
+            contents.classList.remove("reverse")
+          } else {
+            backgrounds.append(currentBackground)
+            contents.append(currentContent)
+          }
+          processing = false
+        }, 500)
       })
     })
-    setTimeout(() => {
-      currentBackground.classList.remove("leave")
-      currentBackground.classList.add("enter")
-      currentContent.classList.remove("leave")
-      currentContent.classList.add("enter")
-      if (prev) {
-        backgrounds.prepend(nextBackground)
-        contents.insertBefore(nextContent, progress.parentNode.parentNode.children[1])
-        backgrounds.classList.remove("reverse")
-        contents.classList.remove("reverse")
-      } else {
-        backgrounds.append(currentBackground)
-        contents.append(currentContent)
-      }
-      processing = false
-    }, 500)
     if (pausePlay.textContent === "pause") {
       timeout = setTimeout(() => next(), 8000)
     }

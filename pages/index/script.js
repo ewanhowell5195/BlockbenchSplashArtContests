@@ -20,8 +20,6 @@ if (backgrounds.children.length > 1) {
       nextContent.classList.add("hidden")
     }
     requestAnimationFrame(() => {
-      progress.style.transition = null
-      progress.style.right = 0
       nextBackground.classList.remove("hidden")
       nextContent.classList.remove("hidden")
       requestAnimationFrame(() => {
@@ -43,6 +41,8 @@ if (backgrounds.children.length > 1) {
             backgrounds.append(currentBackground)
             contents.append(currentContent)
           }
+          progress.style.transition = null
+          progress.style.right = 0
           processing = false
         }, 500)
       })
@@ -69,6 +69,6 @@ if (backgrounds.children.length > 1) {
       }, 10)
     }
   })
-  progress.style.right = 0
+  setTimeout(() => progress.style.right = 0, 500)
   timeout = setTimeout(() => next(), 8000)
 }

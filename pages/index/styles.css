@@ -1,8 +1,7 @@
 main {
-  min-height: calc(100dvh - var(--header-height) - var(--footer-height));
-  position: relative;
+  height: calc(100dvh - var(--header-height) - var(--footer-height));
   margin-bottom: 0;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .home-background {
@@ -11,7 +10,7 @@ main {
   background-position: 50% 50%;
   position: absolute;
   inset: 0;
-  transition: transform .5s;
+  transition: transform .5s, opacity .5s;
 
   &::after {
     content: "";
@@ -22,21 +21,36 @@ main {
 
   &.enter {
     visibility: hidden;
-    transform: translateX(100%);
+    opacity: 0;
   }
 
   &.leave {
-    transform: translateX(-100%);
+    transform: scale(1.25);
+  }
+}
+
+#home-background-container {
+  position: absolute;
+  width: 100vw;
+  height: calc(100dvh - var(--header-height) - var(--footer-height));
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(transparent, var(--color-background));
   }
 }
 
 #home-background-container.reverse {
   .enter {
-    transform: translateX(-100%);
+    transform: scale(1.25);
   }
 
   .leave {
-    transform: translateX(100%);
+    transform: initial;
+    opacity: 1;
   }
 }
 
@@ -49,11 +63,11 @@ main {
 
   &.reverse {
     .enter {
-      transform: translateX(-100%);
+      transform: translateX(-25vw);
     }
 
     .leave {
-      transform: translateX(100%);
+      transform: translateX(25vw);
     }
   }
 }
@@ -100,13 +114,13 @@ main {
 
   &.enter {
     visibility: hidden;
-    transform: translateX(50%);
+    transform: translateX(25vw);
     opacity: 0;
     scale: .75;
   }
 
   &.leave {
-    transform: translateX(-50%);
+    transform: translateX(-25vw);
     opacity: 0;
     scale: .75;
   }
@@ -117,14 +131,14 @@ main {
   bottom: 15px;
   width: 128px;
   height: 10px;
-  background-color: #0004;
+  background-color: #0008;
   border-radius: 5px;
 
   .icon {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: #0004;
+    background-color: #0008;
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -163,4 +177,62 @@ main {
 
 #pause-play {
   right: -60px;
+}
+
+.button-row {
+  margin-top: 40px;
+
+  > a {
+    box-shadow: var(--text-shadow);
+    width: 230px;
+  }
+}
+
+#live-details {
+  display: flex;
+  margin-top: 25px;
+  gap: 20px;
+  align-items: center;
+
+  .live {
+    box-shadow: var(--text-shadow);
+  }
+
+  > :last-child {
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+}
+
+@media screen and (width < 768px) {
+  .home-content {
+    max-width: calc(100vw - 40px);
+
+    > h1 {
+      font-size: 3rem;
+    }
+
+    > h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .button-row {
+    margin-top: 24px;
+
+    > a {
+      width: initial;
+    }
+  }
+
+  #live-details {
+    display: flex;
+    margin-top: 15px;
+    gap: 12px;
+
+    > :last-child {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+  }
 }

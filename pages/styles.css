@@ -753,6 +753,19 @@ label:has([type="checkbox"]) {
       margin-top: -12px;
     }
   }
+
+  .live {
+    border-radius: 3px;
+    padding: 3px 5px;
+    gap: 4px;
+    height: 16px;
+    font-size: 12px;
+
+    &::before {
+      width: 8px;
+      height: 8px;
+    }
+  }
 }
 
 /* Mobile Header */

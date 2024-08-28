@@ -1,4 +1,4 @@
-import settings from "./settings.json" assert { type: "json" }
+import settings from "./settings.json" with { type: "json" }
 import { renderToString } from "vue/server-renderer"
 import cookieParser from "cookie-parser"
 import Database from "better-sqlite3"

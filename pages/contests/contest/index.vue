@@ -18,7 +18,7 @@
     <a v-else-if="currentContest.status === 'voting'" class="button" :href="'/vote'">Vote now!</a>
   </div>
   <div class="panel">
-    <h2>The theme for this contest: <strong>Underwater!</strong></h2>
+    <h2>The theme for this contest: <strong>{{ contest.theme }}!</strong></h2>
   </div>
   <div class="panel">
     <h2>Prizes</h2>
@@ -37,7 +37,6 @@
       <li>Submission should not be based on existing brands or IPs</li>
       <li>Submissions should be G rated (no violence, etc.)</li>
       <li>Collaborations of up to two people are allowed</li>
-      <li>You can't win (1st place) in two consecutive contests</li>
       <li>Only one submission per person</li>
     </ol>
   </div>

@@ -25,8 +25,8 @@ database.exec(`
 
 export default {
   add: prepareDBAction(`
-    INSERT INTO contests (date, open, close, finish, version, name, theme, description)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO contests (date, open, close, vote, finish, version, name, theme, description)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `),
   all: prepareDBAction(`
     SELECT

@@ -8,7 +8,7 @@ export default {
     const artist = db.artists.get(path[0])
     if (!artist) return
     const submissions = db.submissions.artist.all(artist.id)
-    if (context.contest.status !== "finished" && req.user.id !== artist.id) {
+    if (context.contest.status !== "finished" && req.user?.id !== artist.id) {
       const index = submissions.findIndex(e => e.contest.id === context.contest.id)
       if (index !== -1 ) submissions.splice(index, 1)
     }

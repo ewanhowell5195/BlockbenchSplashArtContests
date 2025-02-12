@@ -35,10 +35,12 @@ const corsMiddleware = cors({
 app.use(corsMiddleware)
 app.options("*", corsMiddleware)
 
-globalThis.server = https.createServer({
-  cert: fs.readFileSync("private/ewanhowell.com.pem"),
-  key: fs.readFileSync("private/ewanhowell.com.key")
-}, app)
+if (!process.argv.includes("-dev")) {
+  globalThis.server = https.createServer({
+    cert: fs.readFileSync("/etc/letsencrypt/live/contests.blockbench.net/fullchain.pem"),
+    key: fs.readFileSync("/etc/letsencrypt/live/contests.blockbench.net/privkey.pem")
+  }, app)
+}
 
 await import("./auth.js")
 

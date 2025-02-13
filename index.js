@@ -54,6 +54,10 @@ app.get("/logout", (req, res) => {
   res.redirect("/")
 })
 
+function setCacheHeaders(res, path) {
+  res.setHeader("Cache-Control", "public, max-age=14400")
+}
+
 app.use("/src", (req, res, next) => {
   const extname = path.extname(req.path)
   const basename = path.basename(req.path)
@@ -63,8 +67,8 @@ app.use("/src", (req, res, next) => {
     basename === "config.js"
   ) return send404(req, res)
   next()
-}, express.static("pages"))
-app.use("/assets", express.static("assets"))
+}, express.static("pages", { setHeaders: setCacheHeaders }))
+app.use("/assets", express.static("assets", { setHeaders: setCacheHeaders }))
 
 async function loadPage(dir, parent) {
   const files = fs.readdirSync(dir)

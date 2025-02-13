@@ -7,6 +7,6 @@
         <span v-if="j"> & </span><a :href="'/artists/' + artist.id">{{ artist.name }}</a>
       </span>
     </div>
-    <div>Additional Marketing: {{ submission.agreed ? "Yes" : "No" }}</div>
+    <div style="margin-top: -10px;">Additional Marketing: {{ submission.agreed ? "Yes" : "No" }}</div>
   </div>
 </div>

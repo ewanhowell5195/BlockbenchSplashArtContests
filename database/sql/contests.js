@@ -106,5 +106,11 @@ export default {
   ids: prepareDBAction(`
     SELECT id
     FROM contests
-  `, "all", null, o => o.map(e => e.id))
+  `, "all", null, o => o.map(e => e.id)),
+  progressable: prepareDBAction(`
+    SELECT EXISTS (
+      SELECT 1 FROM submissions 
+      WHERE contest = (SELECT id FROM contests ORDER BY id DESC LIMIT 1)
+    ) AS has_submissions
+  `, "get", null, o => !!o.has_submissions)
 }

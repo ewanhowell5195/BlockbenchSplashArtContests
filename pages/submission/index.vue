@@ -1,5 +1,5 @@
-<script src="/src/submission/file-input.js" type="text/javascript"></script>
 <div v-if="contest.status === 'submissions' && !submission" class="container">
+  <script src="/src/file-input.js" type="text/javascript"></script>
   <div class="panel">
     <h2>Upload Submission</h2>
     <h3 style="margin-bottom: -10px;">Requirements:</h3>

@@ -57,6 +57,11 @@ for await (const f of getFiles("api")) {
             if (arg === "true") arg = true
             else if (arg === "false") arg = false
             if (typeof arg !== "boolean") return res.sendStatus(400)
+          } else if (conf.type === "integer") {
+            arg = parseInt(arg)
+            if (isNaN(arg) || arg === Infinity || arg > Number.MAX_SAFE_INTEGER || arg < Number.MIN_SAFE_INTEGER) {
+              return res.sendStatus(400)
+            }
           } else {
             if (typeof arg !== "string") return res.sendStatus(400)
             if (conf.minLength && arg.length < conf.minLength) return res.status(400).send({
@@ -68,6 +73,7 @@ for await (const f of getFiles("api")) {
               key: id
             })
           }
+          req.body[id] = arg
         }
       }
       data.execute(req, res)

@@ -1,5 +1,51 @@
 <div class="container">
-  <div v-if="contest.status !== 'finished'" id="contest">
+  <div v-if="contest.status === 'finished'" id="contest">
+    <script src="/src/file-input.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <div class="divider">New Contest</div>
+    <div class="panel">
+      <h3>Contest Theme:</h3>
+      <input id="theme" type="text" placeholder="Theme Name" required>
+      <h3>Blockbench Version:</h3>
+      <input id="version" type="text" placeholder="X.XX" required>
+      <h3>Update Name:</h3>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <span>The</span>
+        <input id="update" type="text" placeholder="Update Name" required>
+        <span>Update</span>
+      </div>
+      <h3>Description:</h3>
+      <input id="description" type="text" placeholder="Optional description…">
+      <h3>Date and Times:</h3>
+      <div id="dates-container">
+        <div class="date">
+          <h4>Contest Start:</h4>
+          <input type="text" id="contest-date">
+        </div>
+        <div>
+          <h4>Submissions Open:</h4>
+          <input type="text" id="contest-open">
+        </div>
+        <div class="date">
+          <h4>Submissions Close:</h4>
+          <input type="text" id="contest-close">
+        </div>
+        <div class="date">
+          <h4>Voting Starts:</h4>
+          <input type="text" id="contest-vote">
+        </div>
+        <div class="date">
+          <h4>Voting Closes:</h4>
+          <input type="text" id="contest-finish">
+        </div>
+      </div>
+      <h3>Image:</h3>
+      <file-input id="image" accept="image/png" :data-max-file-size="settings.maxFileSize"></file-input>
+      <button id="submit" disabled><div class="icon">add</div>Create Contest</button>
+    </div>
+  </div>
+  <div v-else id="contest">
     <div class="divider">Current Contest</div>
     <div class="panel">
       <h2>Information</h2>

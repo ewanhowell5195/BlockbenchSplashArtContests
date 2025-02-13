@@ -154,7 +154,7 @@
 }
 
 #contest-description {
-  white-space: pre;
+  white-space: pre-wrap;
   line-height: 120%;
 }
 
@@ -173,6 +173,12 @@
     > h2 {
       font-size: 1.5rem;
     }
+  }
+
+  #contest-date {
+    position: absolute;
+    top: 12px;
+    right: 12px;
   }
 
   #contest-stats {
@@ -217,4 +223,18 @@
     bottom: 6px;
     padding: 1px 6px 1px 50px;
   }
+}
+
+@media screen and (width < 364px) {
+  #contest-stats {
+    flex-direction: column;
+    gap: 8px;
+
+    > span:not(:last-child)::after {
+      content: "";
+      height: 1px;
+      background-color: var(--color-text);
+      width: 32px;
+    }
+  } 
 }

@@ -7,7 +7,8 @@
   --color-ui: #212e3c;
   --color-panel: #1D2125;
   --color-subpanel: #262C33;
-  --panel-border: 1px solid #353A43;
+  --color-panel-border: #353A43;
+  --panel-border: 1px solid var(--color-panel-border);
   --color-text: #EEE;
   --color-text-light: #FFF;
   --color-text-subtle: #B3B3BA;
@@ -517,11 +518,17 @@ input:is([type="text"], [type="url"]), textarea {
   border: var(--panel-border);
   border-radius: 8px;
   font-size: 1rem;
-  outline: none;
+  outline: 2px solid transparent;
   resize: vertical;
+  transition: outline .15s, border .15s;
 
   &:focus {
     border: 1px solid var(--color-accent);
+  }
+
+  &.invalid {
+    outline: 2px solid var(--color-danger);
+    border: 1px solid var(--color-danger);
   }
 }
 

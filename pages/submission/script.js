@@ -10,7 +10,7 @@ if (input) {
   submit.addEventListener("click", async e => {
     if (submit.classList.contains("loading")) return
     if (!input.files[0]) {
-      return shakeError(input, "Please provide a submission file")
+      return shakeError(input, "Please provide a submission image")
     }
     if (input.files[0].size > maxFileSize) {
       return shakeError(input, `File size too large. The maximum file size is ${maxFileSize / 1024 / 1024} MB`)

@@ -286,9 +286,12 @@
   position: initial !important;
   width: 16px !important;
   height: 16px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &.flatpickr-disabled {
-    display: initial !important;
+    display: flex !important;
     cursor: not-allowed !important;
     opacity: 0.25;
   }

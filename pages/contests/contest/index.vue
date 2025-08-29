@@ -36,6 +36,7 @@
       <li>The model needs to be an original creation, made in Blockbench for this contest. Don't re-use existing models or textures for the model or environment (that includes game worlds as backgrounds)</li>
       <li>Submission should not be based on existing brands or IPs</li>
       <li>Submissions should be G rated (no violence, etc.)</li>
+      <li>The use of generative AI is not allowed</li>
       <li>Collaborations of up to two people are allowed</li>
       <li>Only one submission per person</li>
     </ol>

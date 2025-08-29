@@ -1,0 +1,1 @@
+app.get("/google4187c12bbc649505.html", (req, res) => res.type("html").send("google-site-verification: google4187c12bbc649505.html"))

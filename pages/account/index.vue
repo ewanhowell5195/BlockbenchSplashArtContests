@@ -2,8 +2,8 @@
   <div id="account-header" class="panel">
     <img :src="user.avatar + '?size=128'" width="128" height="128" alt="Avatar">
     <div class="panel-group">
-      <h1>{{ user.global_name }}</h1>
-      <h2 :hidden="!artist || user.global_name === artist.name">{{ artist?.name }}</h2>
+      <h1>{{ user.global_name ?? req.user.username }}</h1>
+      <h2 :hidden="!artist || (user.global_name ?? req.user.username) === artist.name">{{ artist?.name }}</h2>
       <p class="subtle">{{ user.id }}</p>
     </div>
   </div>

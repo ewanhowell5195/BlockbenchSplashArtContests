@@ -49,7 +49,7 @@ export default {
       if (Math.abs(targetRatio - imgRatio) > 0.04) {
         return res.status(400).send({ error: `Aspect ratio not met. The aspect ratio should be ${settings.aspectRatio.join(":")}` })
       }
-      db.artists.add(req.user.id, req.user.global_name, null)
+      db.artists.add(req.user.id, req.user.global_name ?? req.user.username, null)
       const contest = db.contests.latest()
       const folder = "assets/images/submissions/" + contest.id
       await fs.promises.mkdir(folder, { recursive: true })

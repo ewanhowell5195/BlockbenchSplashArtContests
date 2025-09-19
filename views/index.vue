@@ -37,7 +37,7 @@
           <a href="/contests">Contests</a>
           <a v-if="user" href="/account">
             <img :src="user.avatar + '?size=32'" width="32" height="32" alt="Avatar">
-            <span>{{ user.global_name }}</span>
+            <span>{{ user.global_name ?? req.user.username }}</span>
           </a>
           <a v-else href="/account">
             <img src="https://cdn.discordapp.com/embed/avatars/0.png" width="32" height="32" alt="Avatar">

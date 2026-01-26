@@ -36,10 +36,18 @@ app.use(corsMiddleware)
 app.options("*", corsMiddleware)
 
 if (!process.argv.includes("-dev")) {
-  globalThis.server = https.createServer({
-    cert: fs.readFileSync("/etc/letsencrypt/live/contests.blockbench.net/fullchain.pem"),
-    key: fs.readFileSync("/etc/letsencrypt/live/contests.blockbench.net/privkey.pem")
-  }, app)
+  function loadTls() {
+    return {
+      cert: fs.readFileSync("/etc/letsencrypt/live/contests.blockbench.net/fullchain.pem"),
+      key: fs.readFileSync("/etc/letsencrypt/live/contests.blockbench.net/privkey.pem")
+    }
+  }
+
+  globalThis.server = https.createServer(loadTls(), app)
+
+  setInterval(() => {
+    server.setSecureContext(loadTls())
+  }, 7 * 24 * 60 * 60 * 1000)
 }
 
 await import("./auth.js")

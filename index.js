@@ -33,7 +33,7 @@ const corsMiddleware = cors({
   }
 })
 app.use(corsMiddleware)
-app.options("*", corsMiddleware)
+app.options("{*splat}", corsMiddleware)
 
 if (!process.argv.includes("-dev")) {
   function loadTls() {
@@ -226,7 +226,7 @@ function isCrawler(userAgent) {
   return crawlers.some(e => userAgent.includes(e))
 }
 
-app.get("*", async (req, res) => {
+app.get("{*splat}", async (req, res) => {
   if (req.path !== "/" && req.path.endsWith("/")) {
     Object.defineProperty(req, "path", {
       value: req.path.slice(0, -1)

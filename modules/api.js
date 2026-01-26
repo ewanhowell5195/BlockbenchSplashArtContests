@@ -131,4 +131,4 @@ for await (const f of getFiles("api")) {
   }
 }
 
-app.get("/api/*", (req, res) => res.sendStatus(404))
+app.get("/api/{*splat}", (req, res) => res.sendStatus(404))

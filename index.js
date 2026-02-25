@@ -36,12 +36,10 @@ app.use(corsMiddleware)
 app.options("{*splat}", corsMiddleware)
 
 if (!process.argv.includes("-dev")) {
-  function loadTls() {
-    return {
-      cert: fs.readFileSync("/etc/letsencrypt/live/contests.blockbench.net/fullchain.pem"),
-      key: fs.readFileSync("/etc/letsencrypt/live/contests.blockbench.net/privkey.pem")
-    }
-  }
+  const loadTls = () => ({
+    cert: fs.readFileSync("/etc/letsencrypt/live/contests.blockbench.net/fullchain.pem"),
+    key: fs.readFileSync("/etc/letsencrypt/live/contests.blockbench.net/privkey.pem")
+  })
 
   globalThis.server = https.createServer(loadTls(), app)
 

@@ -79,7 +79,7 @@ if (submissions) {
       div.className = "submission panel"
       div.innerHTML = `
         <img src="${image.src}"></div>
-        <div src="${image.src}" class="icon popupable" title="Fullscreen">fullscreen</div>
+        <div src="${image.src}" class="icon" data-popupable data-popupable-anim="pop" title="Fullscreen">fullscreen</div>
       `
       list.append(div)
       div.addEventListener("click", e => {

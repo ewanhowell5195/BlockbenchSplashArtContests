@@ -13,10 +13,10 @@
     </div>
   </div>
   <div class="divider">Submissions</div>
-  <div id="submissions">
+  <div id="submissions" data-popupable-group="submission">
     <div class="submission" v-for="submission of submissions">
-      <img :src="`/assets/images/submissions/${submission.contest.id}/${submission.image}_thumbnail_large.webp`" :alt="'Splash art by ' + submission.artists.map(e => e.name).join(' & ')" loading="lazy">
-      <div class="popupable" :src="`/assets/images/submissions/${submission.contest.id}/${submission.image}.webp`">
+      <img :src="`/assets/images/submissions/${submission.contest.id}/${submission.image}_thumbnail_large.webp`" :data-popupable-src="`/assets/images/submissions/${submission.contest.id}/${submission.image}.webp`" :alt="'Splash art by ' + submission.artists.map(e => e.name).join(' & ')" loading="lazy" data-popupable>
+      <div>
         <a class="submission-position" :href="'/contests/' + submission.contest.id">
           <img v-if="submission.position <= 3" :src="`/assets/images/icons/trophy_${submission.position - 1}.png`" width="38" height="38" :alt="f.numSuffix(submission.position) + ' Place Trophy'">
           <span>{{ f.numSuffix(submission.position) }} Place</span>

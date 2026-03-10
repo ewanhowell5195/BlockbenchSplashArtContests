@@ -56,19 +56,23 @@
 .submission {
   position: relative;
   width: 100%;
-  border-radius: 14px;
-  overflow: hidden;
 
   > img {
     width: 100%;
     user-select: none;
     display: flex;
     background-image: var(--transparency);
+    border-radius: 14px;
   }
 
   > div {
     position: absolute;
     inset: 0;
+    pointer-events: none;
+
+    * {
+      pointer-events: initial;
+    }
   }
 }
 

@@ -23,7 +23,7 @@
       </div>
     </div>
     <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 38 38" width="40" height="40"><defs><linearGradient x1="8.042%" y1="0%" x2="65.682%" y2="23.865%" id="A"><stop stop-color="#fff" stop-opacity="0" offset="0%"/><stop stop-color="#fff" stop-opacity=".631" offset="63.146%"/><stop stop-color="#fff" offset="100%"/></linearGradient></defs><g fill="none" fill-rule="evenodd"><g transform="translate(1 1)"><path d="M36 18c0-9.94-8.06-18-18-18" stroke="url(#A)" stroke-width="2"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="0.9s" repeatCount="indefinite"/></path><circle fill="#fff" cx="36" cy="18" r="1"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="0.9s" repeatCount="indefinite"/></circle></g></g></svg>
-    <img class="popupable">
+    <img data-popupable>
   </div>
   <div id="submission-voting" class="hidden container">
     <div class="panel">
@@ -68,7 +68,7 @@
     <div id="submission-results-list">
       <div v-for="[i, submission] of submissions.entries()" class="submission-result panel" :data-id="submission.id" :style="{ backgroundImage: `linear-gradient(90deg, var(--color-panel), #0004), linear-gradient(90deg, var(--color-panel), transparent), url('/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_small.webp')` }">
         <div class="submission-place">{{ f.numSuffix(i + 1) }}</div>
-        <img :src="`/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_small.webp`" :data-popup-src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`" class="popupable">
+        <img :src="`/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_small.webp`" data-popupable :data-popupable-src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`">
         <div class="submission-info">
           <div class="submission-artists">
             By

@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/brands.min.css" />
     <link rel="stylesheet" href="/src/styles.css">
     <link v-if="styles" rel="stylesheet" :href="'/src/' + styles">
-    <link href="https://cdn.jsdelivr.net/npm/popupable@1.6.1/dist/popupable.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/popupable@1.6.2/dist/popupable.min.css" rel="stylesheet">
   </head>
   <body :class="{ 'role-user': !user?.admin, 'role-admin': user?.admin }" data-popupable-counter data-popupable-thumbnails>
     <header>
@@ -58,6 +58,6 @@
     <div id="notification-container"></div>
     <script src="/src/script.js"></script>
     <script v-if="script" :src="'/src/' + script"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popupable@1.6.1/dist/popupable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popupable@1.6.2/dist/popupable.min.js"></script>
   </body>
 </html>

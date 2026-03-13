@@ -19,9 +19,8 @@ for await (const f of getFiles("api")) {
   for (const [method, data] of Object.entries(api)) {
     const path = f.split("api")[1].replace(/\\/g, "/").slice(0, -3)
     data.path = `/api${path}`
-    if (data.parameter) {
-      const params = Array.isArray(data.parameter) ? data.parameter : [data.parameter]
-      for (const p of params) data.path += `/:${p}`
+    if (data.params) {
+      for (const p of data.params) data.path += `/:${p}`
     }
     async function execute(req, res) {
       if (req.error) return res.status(400).send({ error: req.error })

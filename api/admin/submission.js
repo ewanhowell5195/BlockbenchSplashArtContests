@@ -1,7 +1,7 @@
 export default {
   delete: {
     admin: true,
-    parameter: ["contest", "id"],
+    params: ["contest", "id"],
     execute(req, res) {
       const contest = parseInt(req.params.contest)
       const id = parseInt(req.params.id)

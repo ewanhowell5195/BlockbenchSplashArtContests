@@ -1,6 +1,6 @@
 export default {
   delete: {
-    parameter: "id",
+    params: ["id"],
     execute(req, res) {
       const contest = db.contests.latest()
       if (contest.status !== "submissions") return res.sendStatus(403)

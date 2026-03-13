@@ -1,6 +1,6 @@
 export default {
   get: {
-    parameter: "invite",
+    params: ["invite"],
     execute(req, res) {
       if (db.contests.latest().status !== "submissions") return res.sendStatus(403)
       const invite = db.submissions.invites.getCode(req.params.invite)

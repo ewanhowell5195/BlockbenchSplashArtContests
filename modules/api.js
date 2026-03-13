@@ -22,6 +22,7 @@ for await (const f of getFiles("api")) {
     if (data.parameter) data.path += `/:${data.parameter}`
     async function execute(req, res) {
       if (req.error) return res.status(400).send({ error: req.error })
+      req.body ??= {}
       if (Object.keys(req.body).length && !data.arguments) return res.sendStatus(400)
       for (const arg of Object.keys(req.body)) {
         if (!data.arguments[arg])  return res.sendStatus(400)

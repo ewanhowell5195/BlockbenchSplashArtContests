@@ -31,6 +31,11 @@ export default {
     INSERT INTO submissions (id, contest, artists, image, agreed)
     VALUES (COALESCE((SELECT MAX(id) + 1 FROM submissions WHERE contest = ?), 0), ?, json(?), ?, ?)
   `, "run", (id, artists, image, agreed) => [id, id, JSON.stringify(artists), image, agreed ? 1 : null]),
+  get: prepareDBAction(`
+    SELECT id, contest, image
+    FROM submissions
+    WHERE id = ? AND contest = ?
+  `, "get"),
   delete: prepareDBAction(`
     DELETE FROM submissions
     WHERE id = ? AND contest = ?

@@ -23,6 +23,7 @@ export default {
         return {
           view: "contest",
           styles: "contest",
+          script: "contest",
           context: {
             config: {
               title: `Splash Art Contest ${contest.id} - ${contest.theme}`,

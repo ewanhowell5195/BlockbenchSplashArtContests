@@ -10,6 +10,19 @@
   background-image: var(--transparency);
 }
 
+.submission-info {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.submission-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 10px;
+}
+
 @media screen and (width < 768px) {
   #submissions {
     display: flex;

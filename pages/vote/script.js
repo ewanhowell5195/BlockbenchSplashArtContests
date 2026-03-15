@@ -23,11 +23,13 @@ if (submissions) {
   let currentIndex = 0
   let loading
   let first = true
+  let previewMode = new URLSearchParams(location.search).has("preview")
   function showPreviewImage() {
     loading = true
     if (!first) preview.classList.add("loading-fade")
     setTimeout(async () => {
       if (currentIndex === images.length) {
+        history.pushState(null, "", location.pathname)
         loadVoting()
       } else {
         first = false
@@ -65,6 +67,7 @@ if (submissions) {
   })
   skip.addEventListener("click", e => {
     if (loading) return
+    history.pushState(null, "", location.pathname)
     loadVoting()
   })
   function startPreview(isRepreview) {
@@ -75,11 +78,26 @@ if (submissions) {
     } else {
       skip.classList.add("hidden")
     }
+    if (!new URLSearchParams(location.search).has("preview")) {
+      history.pushState(null, "", "?preview")
+    }
     showPreviewImage()
     preview.classList.remove("hidden")
   }
+  window.addEventListener("popstate", e => {
+    if (new URLSearchParams(location.search).has("preview")) {
+      document.getElementById("vote-start").classList.add("hidden")
+      document.getElementById("submission-voting").classList.add("hidden")
+      startPreview(localStorage.getItem(storageKey))
+    } else if (!preview.classList.contains("hidden")) {
+      loadVoting()
+    }
+  })
   let votingLoaded = false
-  if (localStorage.getItem(storageKey)) {
+  if (previewMode) {
+    document.getElementById("vote-start").classList.add("hidden")
+    startPreview(localStorage.getItem(storageKey))
+  } else if (localStorage.getItem(storageKey)) {
     document.getElementById("vote-start").classList.add("hidden")
     loadVoting()
   }

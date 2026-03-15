@@ -61,8 +61,20 @@
 
     > :last-child {
       display: flex;
-      justify-content: space-between;
       filter: drop-shadow(0 5px 5px #0008);
+
+      > button:first-child {
+        transition: opacity .15s;
+
+        &.fade {
+          opacity: 0;
+          pointer-events: none;
+        }
+      }
+
+      > button + button {
+        margin-left: 10px;
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 <div v-if="contest.status === 'voting' && !voted">
-  <template id="submissions">
+  <template id="submissions" :data-contest="contest.id">
     <img v-for="submission of submissions" :src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`" :data-id="submission.id">
   </template>
   <div id="vote-start" class="container">
@@ -17,9 +17,10 @@
         <span>Submission <span id="submission-progress">1</span> of {{ submissions.length }}</span>
       </div>
       <div>
-        <button class="hidden">Back</button>
-        <span></span>
+        <button class="fade">Back</button>
+        <div class="spacer"></div>
         <button>Next</button>
+        <button id="skip" class="hidden secondary">Vote</button>
       </div>
     </div>
     <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 38 38" width="40" height="40"><defs><linearGradient x1="8.042%" y1="0%" x2="65.682%" y2="23.865%" id="A"><stop stop-color="#fff" stop-opacity="0" offset="0%"/><stop stop-color="#fff" stop-opacity=".631" offset="63.146%"/><stop stop-color="#fff" offset="100%"/></linearGradient></defs><g fill="none" fill-rule="evenodd"><g transform="translate(1 1)"><path d="M36 18c0-9.94-8.06-18-18-18" stroke="url(#A)" stroke-width="2"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="0.9s" repeatCount="indefinite"/></path><circle fill="#fff" cx="36" cy="18" r="1"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="0.9s" repeatCount="indefinite"/></circle></g></g></svg>
@@ -30,6 +31,7 @@
       <h2>Voting</h2>
       <p>Select the {{ voteCount }} submission{{ voteCount === 1 ? "" : "s"}} that you wish to vote for.</p>
       <p>The submission artists will be revealed after you have voted.</p>
+      <button id="re-preview" class="secondary">Re-preview Submissions</button>
     </div>
     <div class="section">
       <div class="divider sticky">

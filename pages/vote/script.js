@@ -11,68 +11,97 @@ function shuffle(arr) {
 const submissions = document.getElementById("submissions")
 if (submissions) {
   const images = shuffle(Array.from(submissions.content.children).map(e => ({ id: e.dataset.id, src: e.src })))
+  const contestId = submissions.dataset.contest
+  const storageKey = `voting-previewed-${contestId}`
   const preview = document.getElementById("submission-preview")
-  document.getElementById("start").addEventListener("click", e => {
-    document.getElementById("vote-start").classList.add("hidden")
-    let currentIndex = 0
-    const back = preview.querySelector("button:first-child")
-    const next = preview.querySelector("button:last-child")
-    const img = preview.querySelector("img")
-    const spinner = preview.querySelector("svg")
-    const progress = document.getElementById("submission-progress")
-    let loading
-    let first = true
-    function showPreviewImage() {
-      loading = true
-      if (!first) preview.classList.add("loading-fade")
-      setTimeout(async () => {
-        if (currentIndex === images.length) {
-          loadVoting()
+  const back = preview.querySelector("button:first-child")
+  const next = preview.querySelector("button:nth-child(3)")
+  const skip = document.getElementById("skip")
+  const img = preview.querySelector("img")
+  const spinner = preview.querySelector("svg")
+  const progress = document.getElementById("submission-progress")
+  let currentIndex = 0
+  let loading
+  let first = true
+  function showPreviewImage() {
+    loading = true
+    if (!first) preview.classList.add("loading-fade")
+    setTimeout(async () => {
+      if (currentIndex === images.length) {
+        loadVoting()
+      } else {
+        first = false
+        img.src = images[currentIndex].src
+        preview.style.backgroundImage = `linear-gradient(#000C, #000C), url('${img.src}')`
+        const timeout = setTimeout(() => spinner.classList.add("visible"), 500)
+        await img.decode()
+        if (currentIndex <= 0) {
+          back.classList.add("fade")
         } else {
-          first = false
-          img.src = images[currentIndex].src
-          preview.style.backgroundImage = `linear-gradient(#000C, #000C), url('${img.src}')`
-          const timeout = setTimeout(() => spinner.classList.add("visible"), 500)
-          await img.decode()
-          if (currentIndex <= 0) {
-            back.classList.add("hidden")
-          } else {
-            back.classList.remove("hidden")
-          }
-          if (currentIndex >= images.length - 1) {
-            next.textContent = "Vote"
-          } else {
-            next.textContent = "Next"
-          }
-          progress.textContent = currentIndex + 1
-          clearTimeout(timeout)
-          spinner.classList.remove("visible")
-          preview.classList.remove("loading-fade")
-          setTimeout(() => loading = false, 500)
+          back.classList.remove("fade")
         }
-      }, first ? 0 : 500)
+        if (currentIndex >= images.length - 1) {
+          next.textContent = "Vote"
+        } else {
+          next.textContent = "Next"
+        }
+        progress.textContent = currentIndex + 1
+        clearTimeout(timeout)
+        spinner.classList.remove("visible")
+        preview.classList.remove("loading-fade")
+        setTimeout(() => loading = false, 500)
+      }
+    }, first ? 0 : 500)
+  }
+  back.addEventListener("click", e => {
+    if (loading) return
+    currentIndex--
+    showPreviewImage()
+  })
+  next.addEventListener("click", e => {
+    if (loading) return
+    currentIndex++
+    showPreviewImage()
+  })
+  skip.addEventListener("click", e => {
+    if (loading) return
+    loadVoting()
+  })
+  function startPreview(isRepreview) {
+    currentIndex = 0
+    first = true
+    if (isRepreview) {
+      skip.classList.remove("hidden")
+    } else {
+      skip.classList.add("hidden")
     }
-    back.addEventListener("click", e => {
-      if (loading) return
-      currentIndex--
-      showPreviewImage()
-    })
-    next.addEventListener("click", e => {
-      if (loading) return
-      currentIndex++
-      showPreviewImage()
-    })
     showPreviewImage()
     preview.classList.remove("hidden")
+  }
+  let votingLoaded = false
+  if (localStorage.getItem(storageKey)) {
+    document.getElementById("vote-start").classList.add("hidden")
+    loadVoting()
+  }
+  document.getElementById("start").addEventListener("click", e => {
+    document.getElementById("vote-start").classList.add("hidden")
+    startPreview()
   })
   function loadVoting() {
-    let processing, selected
+    localStorage.setItem(storageKey, "1")
     preview.classList.add("hidden")
     document.getElementById("submission-voting").classList.remove("hidden")
+    if (votingLoaded) return
+    votingLoaded = true
+    let processing, selected
     const counter = document.getElementById("selection-counter")
     const list = document.getElementById("submission-list")
     const ready = document.getElementById("ready")
     const submit = document.getElementById("submit")
+    document.getElementById("re-preview").addEventListener("click", e => {
+      document.getElementById("submission-voting").classList.add("hidden")
+      startPreview(true)
+    })
     for (const [i, image] of images.entries()) {
       const div = document.createElement("div")
       div.dataset.id = image.id
@@ -104,6 +133,7 @@ if (submissions) {
       if (submit.classList.contains("loading")) return
       if (confirm("Are you sure you want to submit your votes? Votes cannot be recast.")) {
         submit.classList.add("loading")
+        localStorage.removeItem(storageKey)
         const r = await fetch("/api/vote", {
           method: "POST",
           headers: {

@@ -14,8 +14,6 @@ import cors from "cors"
 
 config()
 
-const __dirname = url.fileURLToPath(new URL(".", import.meta.url))
-
 globalThis.database = new Database("database.db")
 globalThis.db = (await import("./database/db.js")).default
 globalThis.createHash = crypto.createHash

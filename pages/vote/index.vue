@@ -68,7 +68,7 @@
     <div id="submission-results-list">
       <div v-for="[i, submission] of submissions.entries()" class="submission-result panel" :data-id="submission.id" :style="{ backgroundImage: `linear-gradient(90deg, var(--color-panel), #0004), linear-gradient(90deg, var(--color-panel), transparent), url('/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_small.webp')` }">
         <div class="submission-place">{{ f.numSuffix(i + 1) }}</div>
-        <img :src="`/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_small.webp`" data-popupable :data-popupable-src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`">
+        <img :src="`/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_small.webp`" data-popupable :data-popupable-src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`" :data-popupable-title="'By ' + submission.artists.map(e => e.name).join(' & ')" :data-popupable-description="submission.votes.toLocaleString() + ' Vote' + (submission.votes === 1 ? '' : 's')">
         <div class="submission-info">
           <div class="submission-artists">
             By

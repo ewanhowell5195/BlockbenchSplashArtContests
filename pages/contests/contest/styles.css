@@ -65,6 +65,10 @@
     border-radius: 14px;
   }
 
+  > img.popupable-hide + div {
+    display: none;
+  }
+
   > div {
     position: absolute;
     inset: 0;

@@ -15,7 +15,7 @@
   <div class="divider">Submissions</div>
   <div id="submissions" data-popupable-group="submission">
     <div class="submission" v-for="submission of submissions">
-      <img :src="`/assets/images/submissions/${submission.contest.id}/${submission.image}_thumbnail_large.webp`" :data-popupable-src="`/assets/images/submissions/${submission.contest.id}/${submission.image}.webp`" :alt="'Splash art by ' + submission.artists.map(e => e.name).join(' & ')" loading="lazy" data-popupable>
+      <img :src="`/assets/images/submissions/${submission.contest.id}/${submission.image}_thumbnail_large.webp`" :data-popupable-src="`/assets/images/submissions/${submission.contest.id}/${submission.image}.webp`" :data-popupable-title="submission.artists.length > 1 ? 'In collaboration with ' + submission.artists.filter(e => e.id !== artist.id).map(e => e.name).join(' & ') : ''" :data-popupable-description="f.numSuffix(submission.position) + ' Place · ' + submission.votes.toLocaleString() + ' Vote' + (submission.votes === 1 ? '' : 's') + ' · Contest ' + submission.contest.id + ' - ' + submission.contest.theme" :alt="'Splash art by ' + submission.artists.map(e => e.name).join(' & ')" loading="lazy" data-popupable>
       <div>
         <a class="submission-position" :href="'/contests/' + submission.contest.id">
           <img v-if="submission.position <= 3" :src="`/assets/images/icons/trophy_${submission.position - 1}.png`" width="38" height="38" :alt="f.numSuffix(submission.position) + ' Place Trophy'">

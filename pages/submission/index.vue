@@ -36,7 +36,7 @@
 <div v-else-if="contest.status === 'submissions' && submission" class="container">
   <div class="panel">
     <h2>Your Submission</h2>
-    <img :src="`/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_large.webp`" data-popupable :data-popupable-src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`" alt="Your submission" loading="lazy">    
+    <img :src="`/assets/images/submissions/${contest.id}/${submission.image}_thumbnail_large.webp`" data-popupable :data-popupable-src="`/assets/images/submissions/${contest.id}/${submission.image}.webp`" alt="Your submission" loading="lazy">
   </div>
   <div class="panel">
     <h2>Artist Details</h2>

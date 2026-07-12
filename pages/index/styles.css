@@ -357,6 +357,7 @@ main {
     padding: 10px 18px;
     font-size: .9rem;
     color: var(--color-text);
+    text-shadow: none;
 
     &::before {
       content: none;
@@ -364,6 +365,7 @@ main {
 
     &.active {
       color: var(--color-text-light);
+      text-shadow: var(--text-shadow);
     }
   }
 }

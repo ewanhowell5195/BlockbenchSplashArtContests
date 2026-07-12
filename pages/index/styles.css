@@ -359,7 +359,8 @@ main {
     padding: 10px 18px;
     font-size: .9rem;
     color: var(--color-text);
-    text-shadow: none;
+    text-shadow: 0 2px 3px #0000, 0 -1px 3px #0000;
+    transition: color var(--tab-transition-duration) var(--tab-transition-easing), text-shadow var(--tab-transition-duration) var(--tab-transition-easing);
 
     &::before {
       content: none;

@@ -95,10 +95,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
       renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
 
       const camera = new THREE.PerspectiveCamera(30, 2, 0.1, 1000)
-      const controls = new OrbitControls(camera, canvas)
-      controls.enableDamping = true
-      controls.enabled = false
-      canvas.style.touchAction = "pan-y"
+      let controls = null
 
       const modelButtons = document.getElementById("model-buttons")
       const renderImg = document.getElementById("model-render")
@@ -113,6 +110,25 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
       }
 
       const conv = v => new THREE.Vector3(v.x ?? v[0], v.z ?? v[2], -(v.y ?? v[1]))
+      const checkAlpha = material => {
+        if (!material.map || material.userData.alphaChecked) return
+        material.userData.alphaChecked = true
+        const image = material.map.image
+        const scratch = document.createElement("canvas")
+        scratch.width = image.width
+        scratch.height = image.height
+        const ctx = scratch.getContext("2d")
+        ctx.drawImage(image, 0, 0)
+        const data = ctx.getImageData(0, 0, image.width, image.height).data
+        for (let i = 3; i < data.length; i += 4) {
+          if (data[i] > 10 && data[i] < 245) {
+            material.transparent = true
+            material.alphaTest = 0.01
+            material.needsUpdate = true
+            return
+          }
+        }
+      }
       const camDir = new THREE.Vector3(-1.55, 0.85, -1.55).normalize()
       const elevation = Math.asin(camDir.y)
       const tanV = Math.tan(30 * Math.PI / 360)
@@ -174,6 +190,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
               object.material.map.minFilter = THREE.NearestFilter
               object.material.map.generateMipmaps = false
               object.material.map.needsUpdate = true
+              checkAlpha(object.material)
             }
             if (!object.userData.scale) object.userData.scale = object.scale.clone()
             object.scale.copy(object.userData.scale)
@@ -297,6 +314,14 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         const shotQuat = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(conv(camAxis(0)), conv(camAxis(1)), conv(camAxis(2))))
         const shotPos = mapPoint([B.camera[0][3], B.camera[1][3], B.camera[2][3]])
         const shotFov = () => Math.atan(B.tanHalfH / camera.aspect) * 360 / Math.PI
+
+        camera.up.copy(conv(camAxis(1)))
+        controls?.dispose()
+        controls = new OrbitControls(camera, canvas)
+        controls.enableDamping = true
+        controls.enabled = false
+        controls.addEventListener("start", () => renderImg.classList.remove("visible"))
+        canvas.style.touchAction = "pan-y"
 
         const shotLights = []
         for (const l of B.lights) {
@@ -473,7 +498,6 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         }
       }).observe(modelContainer)
 
-      controls.addEventListener("start", () => renderImg.classList.remove("visible"))
       document.getElementById("model-reset").addEventListener("click", () => active?.resetShot())
       document.getElementById("model-replay").addEventListener("click", () => active?.restart())
       tabs.forEach((tab, i) => tab.addEventListener("click", () => activate(i)))

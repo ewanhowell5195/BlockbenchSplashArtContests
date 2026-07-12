@@ -9,7 +9,7 @@ if (modelContainer && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
     {
       model: "/assets/models/snowplough.glb",
       render: "/assets/images/submissions/5/85f1c3b546cfcaf30c7da8f5e638ee32e7cb004c5ac8d694fffa525e16b19d59.webp",
-      order: ["snowplough/wheels", "snowplough/frame", "snowplough/plough", "snowplough/container", "snowplough/cab", "vehicle_decorations", "ground", "snow", "house", "trees", "grass"],
+      order: ["snowplough/frame", "snowplough/wheels", "snowplough/container", "snowplough/cab", "snowplough/plough", "vehicle_decorations", "ground", "snow", "house", "trees", "grass"],
       primary: ["snowplough", "vehicle_decorations"],
       ground: ["ground", "snow"],
       sweep: ["trees", "grass"],

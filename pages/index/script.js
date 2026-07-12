@@ -4,7 +4,9 @@ document.getElementById("scroll-hint").addEventListener("click", e => {
 })
 
 const modelContainer = document.getElementById("home-model")
-if (modelContainer && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  document.getElementById("home-showcase").classList.add("hidden")
+} else if (modelContainer) {
   const SCENES = [
     {
       model: "/assets/models/snowplough.glb",
@@ -100,6 +102,7 @@ if (modelContainer && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
 
       const modelButtons = document.getElementById("model-buttons")
       const renderImg = document.getElementById("model-render")
+      const modelLoading = document.getElementById("model-loading")
       const tabs = [...document.querySelectorAll(".model-tab")]
 
       const loader = new GLTFLoader()
@@ -429,12 +432,14 @@ if (modelContainer && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
         tabs.forEach((tab, i) => tab.classList.toggle("active", i === index))
         renderImg.classList.remove("visible")
         modelButtons.classList.add("hidden")
+        modelLoading.classList.remove("hidden")
         const token = ++activating
         const gltf = await loadModel(config.model)
         if (token !== activating) return
         renderImg.src = config.render
         active = buildScene(config, gltf)
         active.restart()
+        modelLoading.classList.add("hidden")
       }
 
       function resize() {
@@ -473,11 +478,12 @@ if (modelContainer && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
       document.getElementById("model-replay").addEventListener("click", () => active?.restart())
       tabs.forEach((tab, i) => tab.addEventListener("click", () => activate(i)))
 
-      document.getElementById("home-showcase").classList.remove("hidden")
       resize()
       await activate(0)
       frame = requestAnimationFrame(animate)
-    } catch (err) {}
+    } catch (err) {
+      document.getElementById("home-showcase").classList.add("hidden")
+    }
   }, { rootMargin: "600px" })
   loadObserver.observe(document.getElementById("home-about"))
 }

@@ -380,6 +380,20 @@ main {
     display: block;
   }
 
+  > #model-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+
+    > .icon {
+      font-size: 64px;
+      animation: spin 1s linear infinite;
+    }
+  }
+
   > #model-render {
     position: absolute;
     inset: 0;

@@ -42,7 +42,7 @@
       <img v-for="entry of collage" :src="`/assets/images/submissions/${entry.id}/${entry.image}_thumbnail_small.webp`" :alt="'Winning splash art from contest ' + entry.id" loading="lazy">
     </div>
   </div>
-  <div class="home-section hidden" id="home-showcase">
+  <div class="home-section" id="home-showcase">
     <h2>Built cube by cube</h2>
     <p>Every splash art begins life as a Blockbench model. Watch a real contest entry assemble itself piece by piece, light itself, and settle into the final shot, live in your browser.</p>
     <div id="model-tabs">
@@ -52,6 +52,7 @@
     <div id="home-model">
       <canvas></canvas>
       <img id="model-render" alt="The final splash art render of the scene">
+      <div id="model-loading"><span class="icon">progress_activity</span></div>
       <div id="model-buttons" class="hidden">
         <button id="model-reset" class="secondary"><span class="icon">videocam</span>Reset camera</button>
         <button id="model-replay"><span class="icon">replay</span>Rebuild</button>

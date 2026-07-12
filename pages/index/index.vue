@@ -45,9 +45,11 @@
   <div class="home-section" id="home-showcase">
     <h2>Built cube by cube</h2>
     <p>Every splash art begins life as a Blockbench model. Watch a real contest entry assemble itself piece by piece, light itself, and settle into the final shot, live in your browser.</p>
-    <div id="model-tabs">
-      <button class="model-tab active">Snowplough</button>
-      <button class="model-tab">Pickup Truck</button>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fluid-tabs@0.1.2/dist/fluid-tabs.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fluid-tabs@0.1.2/dist/fluid-tabs.min.js" defer></script>
+    <div class="tab-bar tab-style-slide" id="model-tabs">
+      <button class="tab-bar-button active" data-tab="snowplough">Snowplough</button>
+      <button class="tab-bar-button" data-tab="pickup_truck">Pickup Truck</button>
     </div>
     <div id="home-model">
       <canvas></canvas>

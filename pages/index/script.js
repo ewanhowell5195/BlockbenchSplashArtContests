@@ -100,7 +100,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
       const modelButtons = document.getElementById("model-buttons")
       const renderImg = document.getElementById("model-render")
       const modelLoading = document.getElementById("model-loading")
-      const tabs = [...document.querySelectorAll(".model-tab")]
+      const tabs = [...document.querySelectorAll("#model-tabs .tab-bar-button")]
 
       const makeControls = () => {
         controls?.dispose()
@@ -570,8 +570,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
       let activating = 0
       async function activate(index) {
         const config = SCENES[index]
-        if (active?.config === config) return
-        tabs.forEach((tab, i) => tab.classList.toggle("active", i === index))
+        if (!config || active?.config === config) return
         renderImg.classList.remove("visible")
         modelButtons.classList.add("hidden")
         modelLoading.classList.remove("hidden")
@@ -631,7 +630,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         if (active.isAtShot()) active.viewScene()
         else active.resetShot()
       })
-      tabs.forEach((tab, i) => tab.addEventListener("click", () => activate(i)))
+      document.getElementById("model-tabs").addEventListener("tab-changed", e => activate(tabs.findIndex(tab => tab.dataset.tab === e.detail)))
 
       const playButton = document.getElementById("model-play")
       const playIcon = playButton.querySelector(".icon")

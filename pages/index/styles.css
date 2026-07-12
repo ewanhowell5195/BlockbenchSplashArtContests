@@ -347,24 +347,23 @@ main {
 }
 
 #model-tabs {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
+  background-color: var(--color-ui);
 
-  > button {
-    padding: 8px 14px;
+  .tab-bar-active {
+    background-color: var(--color-accent);
+  }
+
+  .tab-bar-button {
+    padding: 10px 18px;
     font-size: .9rem;
+    color: var(--color-text);
 
     &::before {
-      background-color: var(--color-ui);
+      content: none;
     }
 
     &.active {
       color: var(--color-text-light);
-
-      &::before {
-        background-color: var(--color-accent);
-      }
     }
   }
 }

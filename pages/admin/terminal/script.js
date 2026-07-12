@@ -42,6 +42,8 @@ async function submit(command, echo = true) {
       if (data.timedOut) append("[timed out after 120s]", "stderr")
       else if (data.code) append(`[exit ${data.code}]`, "exit")
       setCwd(data.cwd)
+    } else if ([502, 503, 504, 521, 522, 523, 524].includes(r.status)) {
+      append(`No response (${r.status}, the server may be restarting)`, "exit")
     } else {
       append(`Request failed: ${r.status} ${r.statusText}`, "stderr")
     }

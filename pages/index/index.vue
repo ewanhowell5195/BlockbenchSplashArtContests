@@ -53,8 +53,7 @@
       <canvas></canvas>
       <img id="model-render" alt="The final splash art render of the scene">
       <div id="model-buttons" class="hidden">
-        <button id="model-reset" class="secondary"><span class="icon">videocam</span>Reset camera</button>
-        <button id="model-replay"><span class="icon">replay</span>Rebuild</button>
+        <button id="model-reset" class="secondary"><span class="icon">zoom_out_map</span>View scene</button>
       </div>
       <div id="model-controls">
         <button id="model-play" aria-label="Play or pause"><span class="icon">pause</span></button>

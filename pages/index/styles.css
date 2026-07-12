@@ -373,6 +373,8 @@ main {
   position: relative;
   width: 100%;
   aspect-ratio: 2 / 1;
+  border-radius: 14px;
+  overflow: hidden;
 
   > canvas {
     width: 100%;
@@ -412,10 +414,9 @@ main {
   > #model-buttons {
     position: absolute;
     right: 14px;
-    bottom: 14px;
+    top: 14px;
     display: flex;
     gap: 10px;
-    transition: bottom .2s;
 
     > button {
       box-shadow: 0 4px 16px #0008;
@@ -464,10 +465,6 @@ main {
     > #model-controls {
       opacity: 1;
       pointer-events: auto;
-    }
-
-    > #model-buttons {
-      bottom: 60px;
     }
   }
 }

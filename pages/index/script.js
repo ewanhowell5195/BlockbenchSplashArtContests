@@ -102,6 +102,18 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
       const modelLoading = document.getElementById("model-loading")
       const tabs = [...document.querySelectorAll(".model-tab")]
 
+      const makeControls = () => {
+        controls?.dispose()
+        controls = new OrbitControls(camera, canvas)
+        controls.enableDamping = true
+        controls.enabled = false
+        controls.addEventListener("start", () => {
+          renderImg.classList.remove("visible")
+          active?.onGrab()
+        })
+        canvas.style.touchAction = "pan-y"
+      }
+
       const loader = new GLTFLoader()
       const gltfCache = new Map()
       const loadModel = url => {
@@ -315,13 +327,9 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         const shotPos = mapPoint([B.camera[0][3], B.camera[1][3], B.camera[2][3]])
         const shotFov = () => Math.atan(B.tanHalfH / camera.aspect) * 360 / Math.PI
 
-        camera.up.copy(conv(camAxis(1)))
-        controls?.dispose()
-        controls = new OrbitControls(camera, canvas)
-        controls.enableDamping = true
-        controls.enabled = false
-        controls.addEventListener("start", () => renderImg.classList.remove("visible"))
-        canvas.style.touchAction = "pan-y"
+        const shotUp = conv(camAxis(1))
+        camera.up.set(0, 1, 0)
+        makeControls()
 
         const shotLights = []
         for (const l of B.lights) {
@@ -353,13 +361,50 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         let lastTime = null
         let glideStart = null
         let finished = false
+        let freeCamera = false
+        let atShot = false
+        let viewTween = null
 
         const unfinish = () => {
           finished = false
-          controls.enabled = false
+          freeCamera = false
+          atShot = false
+          viewTween = null
+          camera.up.set(0, 1, 0)
+          makeControls()
           canvas.style.cursor = ""
           modelButtons.classList.add("hidden")
           renderImg.classList.remove("visible")
+        }
+
+        const startTween = toShot => {
+          let to
+          if (toShot) {
+            to = { pos: shotPos.clone(), quat: shotQuat.clone(), fov: shotFov() }
+          } else {
+            const pos = fullCenter.clone().addScaledVector(camDir, fitDistance(fullSize))
+            const quat = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().lookAt(pos, fullCenter, camera.up))
+            to = { pos, quat, fov: 30 }
+          }
+          viewTween = { toShot, t0: null, from: { pos: camera.position.clone(), quat: camera.quaternion.clone(), fov: camera.fov }, to }
+          controls.enabled = false
+        }
+
+        const enterFreeCamera = () => {
+          if (freeCamera || finished) return
+          freeCamera = true
+          controls.target.copy(lookSmooth)
+          controls.enabled = true
+          canvas.style.cursor = "grab"
+        }
+
+        const exitFreeCamera = () => {
+          if (!freeCamera) return
+          freeCamera = false
+          lookSmooth.copy(controls.target)
+          if (elapsed >= tGlide && !finished) glideStart = { pos: camera.position.clone(), quat: camera.quaternion.clone(), fov: camera.fov }
+          controls.enabled = false
+          canvas.style.cursor = ""
         }
 
         return {
@@ -370,9 +415,17 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
           isFinished: () => finished,
           togglePlay() {
             playing = !playing
+            if (playing) exitFreeCamera()
+            else enterFreeCamera()
           },
-          setPlaying(value) {
-            playing = value
+          beginScrub() {
+            playing = false
+            exitFreeCamera()
+          },
+          endScrub(resume) {
+            playing = resume
+            if (playing) exitFreeCamera()
+            else enterFreeCamera()
           },
           setTime(t) {
             elapsed = Math.max(0, Math.min(t, tDone))
@@ -392,6 +445,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
             playing = true
             lastTime = null
             glideStart = null
+            freeCamera = false
             unfinish()
             ambient.intensity = 1.8
             buildSun.intensity = 2.4
@@ -404,16 +458,27 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
             camera.lookAt(lookSmooth)
           },
           setShotCamera() {
+            camera.up.copy(shotUp)
+            makeControls()
             camera.position.copy(shotPos)
             camera.quaternion.copy(shotQuat)
             camera.fov = shotFov()
             camera.updateProjectionMatrix()
             controls.target.copy(shotPos).addScaledVector(camera.getWorldDirection(tmpVec), shotPos.distanceTo(fullCenter))
           },
+          isAtShot: () => atShot,
+          onGrab() {
+            atShot = false
+          },
           resetShot() {
-            if (!finished) return
-            this.setShotCamera()
-            renderImg.classList.add("visible")
+            if (!finished || viewTween) return
+            startTween(true)
+          },
+          viewScene() {
+            if (!finished || viewTween) return
+            atShot = false
+            renderImg.classList.remove("visible")
+            startTween(false)
           },
           applyFov() {
             if (finished) camera.fov = shotFov()
@@ -425,7 +490,28 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
             const delta = Math.min(50, now - (lastTime ?? now))
             lastTime = now
             if (finished) {
-              controls.update()
+              if (viewTween) {
+                if (viewTween.t0 === null) viewTween.t0 = now
+                const k = smooth(clamp01((now - viewTween.t0) / 1400))
+                camera.position.lerpVectors(viewTween.from.pos, viewTween.to.pos, k)
+                camera.quaternion.slerpQuaternions(viewTween.from.quat, viewTween.to.quat, k)
+                camera.fov = viewTween.from.fov + (viewTween.to.fov - viewTween.from.fov) * k
+                camera.updateProjectionMatrix()
+                if (k >= 1) {
+                  const toShot = viewTween.toShot
+                  viewTween = null
+                  if (toShot) {
+                    this.setShotCamera()
+                    atShot = true
+                    renderImg.classList.add("visible")
+                  } else {
+                    controls.target.copy(fullCenter)
+                  }
+                  controls.enabled = true
+                }
+              } else {
+                controls.update()
+              }
               renderer.render(scene, camera)
               return
             }
@@ -440,7 +526,9 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
               }
             }
             const damp = 1 - Math.exp(-delta / 800)
-            if (elapsed >= tGlide) {
+            if (freeCamera) {
+              controls.update()
+            } else if (elapsed >= tGlide) {
               if (!glideStart) glideStart = { pos: camera.position.clone(), quat: camera.quaternion.clone(), fov: camera.fov }
               const k = smooth(clamp01((elapsed - tGlide) / GLIDE))
               camera.position.lerpVectors(glideStart.pos, shotPos, k)
@@ -467,6 +555,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
             })
             if (elapsed >= tDone) {
               finished = true
+              atShot = true
               this.setShotCamera()
               controls.enabled = true
               canvas.style.cursor = "grab"
@@ -516,6 +605,11 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         if (!scrubbing) scrubber.value = active.getTime() / active.duration * 1000
         const icon = active.isFinished() ? "replay" : active.isPlaying() ? "pause" : "play_arrow"
         if (playIcon.textContent !== icon) playIcon.textContent = icon
+        const mode = active.isAtShot() ? "view" : "reset"
+        if (resetButton.dataset.mode !== mode) {
+          resetButton.dataset.mode = mode
+          resetButton.innerHTML = mode === "view" ? '<span class="icon">zoom_out_map</span>View scene' : '<span class="icon">videocam</span>Reset camera'
+        }
       }
 
       new IntersectionObserver(entries => {
@@ -530,8 +624,12 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         }
       }).observe(modelContainer)
 
-      document.getElementById("model-reset").addEventListener("click", () => active?.resetShot())
-      document.getElementById("model-replay").addEventListener("click", () => active?.restart())
+      const resetButton = document.getElementById("model-reset")
+      resetButton.addEventListener("click", () => {
+        if (!active) return
+        if (active.isAtShot()) active.viewScene()
+        else active.resetShot()
+      })
       tabs.forEach((tab, i) => tab.addEventListener("click", () => activate(i)))
 
       const playButton = document.getElementById("model-play")
@@ -548,12 +646,12 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
       scrubber.addEventListener("pointerdown", () => {
         scrubbing = true
         scrubWasPlaying = active?.isPlaying() ?? false
-        active?.setPlaying(false)
+        active?.beginScrub()
       })
       const endScrub = () => {
         if (!scrubbing) return
         scrubbing = false
-        if (scrubWasPlaying) active?.setPlaying(true)
+        active?.endScrub(scrubWasPlaying)
       }
       scrubber.addEventListener("pointerup", endScrub)
       scrubber.addEventListener("pointercancel", endScrub)

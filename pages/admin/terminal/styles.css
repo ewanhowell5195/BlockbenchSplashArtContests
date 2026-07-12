@@ -96,7 +96,7 @@ button.term-btn.ghost:hover {
 }
 
 #output .stderr {
-  color: #ff6b6b;
+  color: var(--color-text-subtle);
 }
 
 #output .exit {
@@ -120,7 +120,6 @@ button.term-btn.ghost:hover {
   flex-shrink: 0;
 }
 
-/* Reset the global input styling so the terminal input reads as a bare shell prompt */
 .input-line input,
 .input-line input:focus,
 .input-line input:hover {

@@ -104,6 +104,7 @@
   <div class="panel">
     <div class="button-row">
       <a href="/admin/sql" class="button">SQL</a>
+      <a href="/admin/terminal" class="button">Terminal</a>
     </div>
   </div>
   <div class="divider">Previous Contests</div>

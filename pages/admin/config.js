@@ -14,6 +14,12 @@ export default {
           styles: "sql/styles",
           script: "sql/script"
         }
+      } else if (path[0] === "terminal") {
+        return {
+          view: "terminal/index",
+          styles: "terminal/styles",
+          script: "terminal/script"
+        }
       }
     } else if (path.length === 2) {
       if (path[0] === "contests") {

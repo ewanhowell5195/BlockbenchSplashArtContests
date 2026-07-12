@@ -62,8 +62,9 @@ if (input) {
     if (!r.ok) {
       submit.classList.remove("loading")
       processing = false
-      if (r.status === 429) return showNotification("Uploading too fast, try again in a couple seconds")
-      return shakeError(input, (await r.json()).error)
+      input.classList.add("shake-error")
+      setTimeout(() => input.classList.remove("shake-error"), 500)
+      return showAPIError(r)
     }
     location.reload()
   })
@@ -82,7 +83,7 @@ if (input) {
         })
         if (!r.ok) {
           processing = false
-          return showNotification("Failed to generate invite link")
+          return showAPIError(r)
         }
         inviteButton.dataset.invite = await r.text()
       }
@@ -110,9 +111,13 @@ if (input) {
     if (processing) return
     processing = true
     if (confirm(`Are you sure you want to remove ${e.previousElementSibling.previousElementSibling.textContent} from being a collaborator?`)) {
-      await fetch("/api/collaborator/" + e.dataset.id, {
+      const r = await fetch("/api/collaborator/" + e.dataset.id, {
         method: "DELETE"
       })
+      if (!r.ok) {
+        processing = false
+        return showAPIError(r)
+      }
       location.reload()
     }
     processing = false
@@ -121,9 +126,13 @@ if (input) {
     if (processing) return
     processing = true
     if (confirm("Are you sure you want to retract your submission?")) {
-      await fetch("/api/submission", {
+      const r = await fetch("/api/submission", {
         method: "DELETE"
       })
+      if (!r.ok) {
+        processing = false
+        return showAPIError(r)
+      }
       location.reload()
     }
     processing = false
@@ -133,9 +142,13 @@ if (input) {
     if (processing) return
     processing = true
     if (confirm("Are you sure you want to leave the submission?")) {
-      await fetch("/api/collaborator/" + leave.dataset.id, {
+      const r = await fetch("/api/collaborator/" + leave.dataset.id, {
         method: "DELETE"
       })
+      if (!r.ok) {
+        processing = false
+        return showAPIError(r)
+      }
       location.reload()
     }
     processing = false

@@ -23,3 +23,12 @@ function shakeError(element, message) {
   setTimeout(() => element.classList.remove("shake-error"), 500)
   showNotification(message)
 }
+
+async function showAPIError(r) {
+  if (r.status === 429) return showNotification("You are doing that too fast, try again in a couple seconds")
+  let error
+  try {
+    error = (await r.json()).error
+  } catch {}
+  showNotification(error ?? `Something went wrong (Error ${r.status})`)
+}

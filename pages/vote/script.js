@@ -161,6 +161,10 @@ if (submissions) {
             votes: Array.from(list.children).sort((a, b) => b.classList.contains("selected") - a.classList.contains("selected")).map(e => Number(e.dataset.id))
           })
         })
+        if (!r.ok) {
+          submit.classList.remove("loading")
+          return showAPIError(r)
+        }
         location.reload()
       }
     })

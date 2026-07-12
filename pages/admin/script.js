@@ -10,6 +10,10 @@ if (progress) {
         processing = false
         return showNotification("Cannot progress a contest with no submissions")
       }
+      if (!r.ok) {
+        processing = false
+        return showAPIError(r)
+      }
       location.reload()
     }
   })
@@ -17,7 +21,11 @@ if (progress) {
     if (processing) return
     if (confirm("Are you sure you want to regress the contest back to the previous stage?")) {
       processing = true
-      await fetch("/api/admin/contest/regress", { method: "PATCH" })
+      const r = await fetch("/api/admin/contest/regress", { method: "PATCH" })
+      if (!r.ok) {
+        processing = false
+        return showAPIError(r)
+      }
       location.reload()
     }
   })

@@ -44,9 +44,18 @@
   </div>
   <div class="home-section hidden" id="home-showcase">
     <h2>Built cube by cube</h2>
-    <p>Every splash art begins life as a Blockbench model. Watch a real contest entry assemble itself piece by piece, live in your browser. Click the scene to build it again.</p>
-    <div id="home-model" title="Click to rebuild">
+    <p>Every splash art begins life as a Blockbench model. Watch a real contest entry assemble itself piece by piece, light itself, and settle into the final shot, live in your browser.</p>
+    <div id="model-tabs">
+      <button class="model-tab active">Snowplough</button>
+      <button class="model-tab">Pickup Truck</button>
+    </div>
+    <div id="home-model">
       <canvas></canvas>
+      <img id="model-render" alt="The final splash art render of the scene">
+      <div id="model-buttons" class="hidden">
+        <button id="model-reset" class="secondary"><span class="icon">videocam</span>Reset camera</button>
+        <button id="model-replay"><span class="icon">replay</span>Rebuild</button>
+      </div>
     </div>
   </div>
   <div class="home-section">

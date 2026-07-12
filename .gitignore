@@ -7,5 +7,6 @@
 /sessions/
 /assets/images/submissions/
 /assets/images/contests/
+/assets/images/avatars/
 /private/
 .env

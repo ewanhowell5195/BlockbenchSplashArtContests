@@ -58,6 +58,18 @@ app.get("/logout", (req, res) => {
   res.redirect("/")
 })
 
+app.get("/artists/me", (req, res) => {
+  if (!req.user) {
+    res.cookie("authRedirect", "/artists/me", {
+      httpOnly: true,
+      secure: process.env.DOMAIN.startsWith("https"),
+      maxAge: 300000
+    })
+    return res.status(401).redirect("/auth/discord")
+  }
+  res.redirect("/artists/" + req.user.id)
+})
+
 app.use("/src", (req, res, next) => {
   const extname = path.extname(req.path)
   const basename = path.basename(req.path)

@@ -348,9 +348,11 @@ main {
 
 #model-tabs {
   background-color: var(--color-ui);
+  border-radius: 8px;
 
   .tab-bar-active {
     background-color: var(--color-accent);
+    border-radius: 4px;
   }
 
   .tab-bar-button {

@@ -52,11 +52,15 @@
     <div id="home-model">
       <canvas></canvas>
       <img id="model-render" alt="The final splash art render of the scene">
-      <div id="model-loading"><span class="icon">progress_activity</span></div>
       <div id="model-buttons" class="hidden">
         <button id="model-reset" class="secondary"><span class="icon">videocam</span>Reset camera</button>
         <button id="model-replay"><span class="icon">replay</span>Rebuild</button>
       </div>
+      <div id="model-controls">
+        <button id="model-play" aria-label="Play or pause"><span class="icon">pause</span></button>
+        <input id="model-scrub" type="range" min="0" max="1000" step="any" value="0" aria-label="Animation progress">
+      </div>
+      <div id="model-loading"><span class="icon">progress_activity</span></div>
     </div>
   </div>
   <div class="home-section">

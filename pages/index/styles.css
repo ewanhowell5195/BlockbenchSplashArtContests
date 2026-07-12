@@ -415,9 +415,59 @@ main {
     bottom: 14px;
     display: flex;
     gap: 10px;
+    transition: bottom .2s;
 
     > button {
       box-shadow: 0 4px 16px #0008;
+    }
+  }
+
+  > #model-controls {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px 6px 6px;
+    background: linear-gradient(#0000, #000B);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+
+    > button {
+      padding: 6px;
+
+      &::before {
+        background-color: transparent;
+      }
+
+      &:hover::before {
+        background-color: #FFF2;
+      }
+
+      > .icon {
+        font-size: 26px;
+      }
+    }
+
+    > input {
+      flex: 1;
+      accent-color: var(--color-accent);
+      cursor: pointer;
+      margin: 0;
+    }
+  }
+
+  &:hover, &.show-controls {
+    > #model-controls {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    > #model-buttons {
+      bottom: 60px;
     }
   }
 }

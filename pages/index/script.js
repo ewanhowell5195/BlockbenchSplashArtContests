@@ -348,22 +348,48 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
 
         const camTarget = new THREE.Vector3()
         const lookSmooth = new THREE.Vector3()
-        let startTime = null
+        let elapsed = 0
+        let playing = true
         let lastTime = null
         let glideStart = null
         let finished = false
 
+        const unfinish = () => {
+          finished = false
+          controls.enabled = false
+          canvas.style.cursor = ""
+          modelButtons.classList.add("hidden")
+          renderImg.classList.remove("visible")
+        }
+
         return {
           config,
+          duration: tDone,
+          getTime: () => elapsed,
+          isPlaying: () => playing,
+          isFinished: () => finished,
+          togglePlay() {
+            playing = !playing
+          },
+          setTime(t) {
+            elapsed = Math.max(0, Math.min(t, tDone))
+            if (finished && elapsed < tDone) unfinish()
+            if (elapsed < tGlide) {
+              glideStart = null
+              camera.fov = 30
+              camera.updateProjectionMatrix()
+            } else if (elapsed < tDone) {
+              const pos = fullCenter.clone().addScaledVector(camDir, fitDistance(fullSize))
+              const quat = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().lookAt(pos, fullCenter, camera.up))
+              glideStart = { pos, quat, fov: 30 }
+            }
+          },
           restart() {
-            startTime = null
+            elapsed = 0
+            playing = true
             lastTime = null
             glideStart = null
-            finished = false
-            controls.enabled = false
-            canvas.style.cursor = ""
-            modelButtons.classList.add("hidden")
-            renderImg.classList.remove("visible")
+            unfinish()
             ambient.intensity = 1.8
             buildSun.intensity = 2.4
             for (const light of shotLights) light.intensity = 0
@@ -393,15 +419,14 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
             lastTime = null
           },
           animate(now) {
-            if (startTime === null) startTime = now
             const delta = Math.min(50, now - (lastTime ?? now))
             lastTime = now
-            const elapsed = now - startTime
             if (finished) {
               controls.update()
               renderer.render(scene, camera)
               return
             }
+            if (playing) elapsed = Math.min(elapsed + delta, tDone)
             for (const [i, piece] of pieces.entries()) {
               const t = (elapsed - startTimes[i]) / POP
               if (t <= 0) {
@@ -483,7 +508,11 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
 
       function animate(now) {
         frame = requestAnimationFrame(animate)
-        active?.animate(now)
+        if (!active) return
+        active.animate(now)
+        if (!scrubbing) scrubber.value = active.getTime() / active.duration * 1000
+        const icon = active.isFinished() ? "replay" : active.isPlaying() ? "pause" : "play_arrow"
+        if (playIcon.textContent !== icon) playIcon.textContent = icon
       }
 
       new IntersectionObserver(entries => {
@@ -501,6 +530,33 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
       document.getElementById("model-reset").addEventListener("click", () => active?.resetShot())
       document.getElementById("model-replay").addEventListener("click", () => active?.restart())
       tabs.forEach((tab, i) => tab.addEventListener("click", () => activate(i)))
+
+      const playButton = document.getElementById("model-play")
+      const playIcon = playButton.querySelector(".icon")
+      const scrubber = document.getElementById("model-scrub")
+      let scrubbing = false
+
+      playButton.addEventListener("click", () => {
+        if (!active) return
+        if (active.isFinished()) active.restart()
+        else active.togglePlay()
+      })
+      scrubber.addEventListener("pointerdown", () => scrubbing = true)
+      scrubber.addEventListener("pointerup", () => scrubbing = false)
+      scrubber.addEventListener("pointercancel", () => scrubbing = false)
+      scrubber.addEventListener("input", () => {
+        active?.setTime(scrubber.value / 1000 * active.duration)
+        showControls()
+      })
+
+      let controlsTimeout
+      function showControls() {
+        if (matchMedia("(hover: hover)").matches) return
+        modelContainer.classList.add("show-controls")
+        clearTimeout(controlsTimeout)
+        controlsTimeout = setTimeout(() => modelContainer.classList.remove("show-controls"), 3000)
+      }
+      modelContainer.addEventListener("pointerdown", showControls)
 
       resize()
       await activate(0)

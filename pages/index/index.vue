@@ -93,6 +93,29 @@
       </div>
     </div>
   </div>
+  <div class="home-section" id="home-process">
+    <h2>From cubes to splash art</h2>
+    <div id="home-process-steps">
+      <div class="home-process-step">
+        <span class="icon">view_in_ar</span>
+        <h3>Model</h3>
+        <p>Every entry starts as an original model built in <a href="https://blockbench.net/" target="_blank">Blockbench</a>.</p>
+      </div>
+      <span class="icon home-process-arrow">arrow_forward</span>
+      <div class="home-process-step">
+        <span class="icon">palette</span>
+        <h3>Texture</h3>
+        <p>Paint it in Blockbench itself, or in any image editor you prefer, like Photoshop, Aseprite, GIMP, or Paint.NET.</p>
+      </div>
+      <span class="icon home-process-arrow">arrow_forward</span>
+      <div class="home-process-step">
+        <span class="icon">photo_camera</span>
+        <h3>Render</h3>
+        <p>Render the final shot in Blender, Cinema 4D, Sketchfab, or similar programs. Touching it up in post, like contrast or backgrounds, is allowed.</p>
+      </div>
+    </div>
+    <a class="button secondary" href="https://www.blockbench.net/wiki/guides/model-rendering" target="_blank">Model rendering guide<span class="icon">open_in_new</span></a>
+  </div>
   <div class="home-section">
     <h2>The story so far</h2>
     <div id="home-stats">

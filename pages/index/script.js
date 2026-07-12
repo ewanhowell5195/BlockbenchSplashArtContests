@@ -594,7 +594,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
       }
       new ResizeObserver(resize).observe(modelContainer)
 
-      let running = true
+      let running = false
       let frame
 
       function animate(now) {
@@ -613,16 +613,17 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
       }
 
       new IntersectionObserver(entries => {
-        const visible = entries.some(e => e.isIntersecting)
-        if (visible && !running) {
-          running = true
-          active?.resume()
-          frame = requestAnimationFrame(animate)
-        } else if (!visible && running) {
-          running = false
-          cancelAnimationFrame(frame)
+        for (const entry of entries) {
+          if (!running && entry.intersectionRatio >= 0.3) {
+            running = true
+            active?.resume()
+            frame = requestAnimationFrame(animate)
+          } else if (running && !entry.isIntersecting) {
+            running = false
+            cancelAnimationFrame(frame)
+          }
         }
-      }).observe(modelContainer)
+      }, { threshold: [0, 0.3] }).observe(modelContainer)
 
       const resetButton = document.getElementById("model-reset")
       resetButton.addEventListener("click", () => {
@@ -671,7 +672,6 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
 
       resize()
       await activate(0)
-      frame = requestAnimationFrame(animate)
     } catch (err) {
       document.getElementById("home-showcase").classList.add("hidden")
     }

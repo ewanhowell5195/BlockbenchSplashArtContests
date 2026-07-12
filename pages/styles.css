@@ -139,10 +139,15 @@ footer {
     text-decoration: none;
     display: flex;
     align-items: center;
+    gap: 6px;
     padding: 5px;
 
     &:hover {
       color: var(--color-text-light);
+    }
+
+    > .fa {
+      color: inherit;
     }
   }
 }

@@ -53,6 +53,8 @@
     <footer>
       <div id="footer">
         <a href="https://ewanhowell.com/" target="_blank">Site by Ewan Howell</a>
+        <div class="spacer"></div>
+        <a href="http://discord.blockbench.net/" target="_blank"><span class="fa fa-discord"></span>Discord</a>
       </div>
     </footer>
     <div id="notification-container"></div>

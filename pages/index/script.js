@@ -327,7 +327,6 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         const shotPos = mapPoint([B.camera[0][3], B.camera[1][3], B.camera[2][3]])
         const shotFov = () => Math.atan(B.tanHalfH / camera.aspect) * 360 / Math.PI
 
-        const shotUp = conv(camAxis(1))
         camera.up.set(0, 1, 0)
         makeControls()
 
@@ -363,15 +362,16 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         let finished = false
         let freeCamera = false
         let atShot = false
+        let userDriven = false
         let viewTween = null
 
         const unfinish = () => {
           finished = false
           freeCamera = false
           atShot = false
+          userDriven = false
           viewTween = null
-          camera.up.set(0, 1, 0)
-          makeControls()
+          controls.enabled = false
           canvas.style.cursor = ""
           modelButtons.classList.add("hidden")
           renderImg.classList.remove("visible")
@@ -458,8 +458,6 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
             camera.lookAt(lookSmooth)
           },
           setShotCamera() {
-            camera.up.copy(shotUp)
-            makeControls()
             camera.position.copy(shotPos)
             camera.quaternion.copy(shotQuat)
             camera.fov = shotFov()
@@ -469,6 +467,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
           isAtShot: () => atShot,
           onGrab() {
             atShot = false
+            userDriven = true
           },
           resetShot() {
             if (!finished || viewTween) return
@@ -500,6 +499,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
                 if (k >= 1) {
                   const toShot = viewTween.toShot
                   viewTween = null
+                  userDriven = false
                   if (toShot) {
                     this.setShotCamera()
                     atShot = true
@@ -509,7 +509,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
                   }
                   controls.enabled = true
                 }
-              } else {
+              } else if (userDriven) {
                 controls.update()
               }
               renderer.render(scene, camera)

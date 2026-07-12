@@ -9,7 +9,7 @@ if (modelContainer && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
     {
       model: "/assets/models/snowplough.glb",
       render: "/assets/images/submissions/5/85f1c3b546cfcaf30c7da8f5e638ee32e7cb004c5ac8d694fffa525e16b19d59.webp",
-      order: ["snowplough", "vehicle_decorations", "ground", "snow", "house", "trees", "grass"],
+      order: ["snowplough/wheels", "snowplough/plough", "snowplough/container", "snowplough/railing", "snowplough/ladder_left", "snowplough/ladder_right", "snowplough", "snowplough/front", "snowplough/light", "snowplough/exhaust", "snowplough/mirrors", "vehicle_decorations", "ground", "snow", "house", "trees", "grass"],
       primary: ["snowplough", "vehicle_decorations"],
       ground: ["ground", "snow"],
       sweep: ["trees", "grass"],
@@ -146,10 +146,20 @@ if (modelContainer && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
         const model = gltf.scene
         scene.add(model)
         const pieceGroup = new Map()
+        const orderKey = new Map()
         for (const child of model.children) {
           child.traverse(object => {
-            if (object.isMesh) pieceGroup.set(object, child.name)
+            if (object.isMesh) {
+              pieceGroup.set(object, child.name)
+              orderKey.set(object, child.name)
+            }
           })
+          for (const sub of child.children) {
+            if (sub.isMesh) continue
+            sub.traverse(object => {
+              if (object.isMesh) orderKey.set(object, `${child.name}/${sub.name}`)
+            })
+          }
         }
         const pieces = []
         model.traverse(object => {
@@ -177,7 +187,8 @@ if (modelContainer && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
         scene.updateMatrixWorld(true)
 
         const orderIndex = new Map(config.order.map((name, i) => [name, i]))
-        pieces.sort((a, b) => (orderIndex.get(pieceGroup.get(a)) ?? 99) - (orderIndex.get(pieceGroup.get(b)) ?? 99))
+        const orderOf = piece => orderIndex.get(orderKey.get(piece)) ?? orderIndex.get(pieceGroup.get(piece)) ?? 99
+        pieces.sort((a, b) => orderOf(a) - orderOf(b))
 
         const groundPieces = new Set(pieces.filter(piece => config.ground.includes(pieceGroup.get(piece))))
         let primaryCount = 0
@@ -225,10 +236,11 @@ if (modelContainer && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
           } else {
             windowBox.makeEmpty()
             let any = false
-            for (let j = Math.max(0, i - WINDOW + 1); j <= i; j++) {
+            for (let j = i, count = 0; j >= 0 && count < WINDOW; j--) {
               if (groundPieces.has(pieces[j])) continue
               windowBox.union(boxes[j])
               any = true
+              count++
             }
             if (any) {
               centers.push(windowBox.getCenter(new THREE.Vector3()))

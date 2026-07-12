@@ -371,6 +371,9 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
           togglePlay() {
             playing = !playing
           },
+          setPlaying(value) {
+            playing = value
+          },
           setTime(t) {
             elapsed = Math.max(0, Math.min(t, tDone))
             if (finished && elapsed < tDone) unfinish()
@@ -541,9 +544,19 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         if (active.isFinished()) active.restart()
         else active.togglePlay()
       })
-      scrubber.addEventListener("pointerdown", () => scrubbing = true)
-      scrubber.addEventListener("pointerup", () => scrubbing = false)
-      scrubber.addEventListener("pointercancel", () => scrubbing = false)
+      let scrubWasPlaying = false
+      scrubber.addEventListener("pointerdown", () => {
+        scrubbing = true
+        scrubWasPlaying = active?.isPlaying() ?? false
+        active?.setPlaying(false)
+      })
+      const endScrub = () => {
+        if (!scrubbing) return
+        scrubbing = false
+        if (scrubWasPlaying) active?.setPlaying(true)
+      }
+      scrubber.addEventListener("pointerup", endScrub)
+      scrubber.addEventListener("pointercancel", endScrub)
       scrubber.addEventListener("input", () => {
         active?.setTime(scrubber.value / 1000 * active.duration)
         showControls()

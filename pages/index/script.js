@@ -605,6 +605,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         if (!scrubbing) scrubber.value = active.getTime() / active.duration * 1000
         const icon = active.isFinished() ? "replay" : active.isPlaying() ? "pause" : "play_arrow"
         if (playIcon.textContent !== icon) playIcon.textContent = icon
+        document.getElementById("model-controls").classList.toggle("ended", active.isFinished())
         const mode = active.isAtShot() ? "view" : "reset"
         if (resetButton.dataset.mode !== mode) {
           resetButton.dataset.mode = mode

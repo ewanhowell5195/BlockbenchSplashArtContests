@@ -459,6 +459,14 @@ main {
       cursor: pointer;
       margin: 0;
     }
+
+    &.ended {
+      background: none;
+
+      > input {
+        display: none;
+      }
+    }
   }
 
   &:hover, &.show-controls {

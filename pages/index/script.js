@@ -54,7 +54,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
       primary: ["pickup_truck"],
       ground: ["ground"],
       sweep: ["stream", "trees", "grass", "foliage"],
-      paces: { pickup_truck: 36, ground: 22, stream: 70, ramp: 28, trees: 22, grass: 5, foliage: 18 },
+      paces: { pickup_truck: 36, ground: 22, stream: 58, ramp: 28, trees: 22, grass: 5, foliage: 18 },
       dim: [0.3, 0.3],
       blend: {
         min: [-118.5672, -363.75, -3.8623],

@@ -348,7 +348,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         const shotQuat = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(conv(camAxis(0)), conv(camAxis(1)), conv(camAxis(2))))
         const shotPos = mapPoint([B.camera[0][3], B.camera[1][3], B.camera[2][3]])
         const shotFov = () => {
-          const aspect = document.fullscreenElement ? Math.min(camera.aspect, RENDER_ASPECT) : Math.max(camera.aspect, RENDER_ASPECT)
+          const aspect = document.getElementById("model-showcase").classList.contains("fullscreen") ? Math.min(camera.aspect, RENDER_ASPECT) : Math.max(camera.aspect, RENDER_ASPECT)
           return Math.atan(B.tanHalfH / aspect) * 360 / Math.PI
         }
 
@@ -666,15 +666,16 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
       const showcaseEl = document.getElementById("model-showcase")
       const fullscreenButton = document.getElementById("model-fullscreen")
       const fullscreenIcon = fullscreenButton.querySelector(".icon")
-      fullscreenButton.addEventListener("click", () => {
-        if (document.fullscreenElement) document.exitFullscreen()
-        else showcaseEl.requestFullscreen?.()
-      })
-      document.addEventListener("fullscreenchange", () => {
-        const full = document.fullscreenElement === showcaseEl
+      const setFullscreen = full => {
+        showcaseEl.classList.toggle("fullscreen", full)
+        document.body.classList.toggle("model-fullscreen-open", full)
         fullscreenIcon.textContent = full ? "fullscreen_exit" : "fullscreen"
         fullscreenButton.title = full ? "Exit fullscreen" : "Fullscreen"
         resize()
+      }
+      fullscreenButton.addEventListener("click", () => setFullscreen(!showcaseEl.classList.contains("fullscreen")))
+      document.addEventListener("keydown", e => {
+        if (e.key === "Escape" && showcaseEl.classList.contains("fullscreen")) setFullscreen(false)
       })
 
       document.getElementById("model-tabs").addEventListener("tab-changed", e => activate(tabs.findIndex(tab => tab.dataset.tab === e.detail)))

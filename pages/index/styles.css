@@ -2,6 +2,10 @@ main {
   margin-bottom: 0;
 }
 
+body.model-fullscreen-open {
+  overflow: hidden;
+}
+
 #home-hero {
   position: relative;
   height: calc(100dvh - var(--header-height));
@@ -362,7 +366,12 @@ main {
   flex-direction: column;
   align-items: center;
 
-  &:fullscreen {
+  &.fullscreen {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    width: 100vw;
+    height: 100dvh;
     background-color: #000;
     box-sizing: border-box;
     padding-top: 16px;

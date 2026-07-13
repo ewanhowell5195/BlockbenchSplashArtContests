@@ -65,11 +65,11 @@ globalThis.avatars = {
 
   const byId = {}
   for (const f of files) {
-    if (!f.endsWith(".webp")) continue
+    if (!f.endsWith(".webp") || !f.includes("_")) continue
     const base = f.slice(0, -5)
     const u = base.indexOf("_")
-    const id = u === -1 ? base : base.slice(0, u)
-    const hash = u === -1 ? null : base.slice(u + 1)
+    const id = base.slice(0, u)
+    const hash = base.slice(u + 1)
     ;(byId[id] ??= []).push({ file: f, hash })
   }
 
@@ -82,21 +82,10 @@ globalThis.avatars = {
         .sort((a, b) => b.mtime - a.mtime)[0]
     }
 
-    let hash = chosen.hash
-    if (!hash) {
-      try {
-        hash = createHash("sha256").update(fs.readFileSync(`${avatarDir}/${chosen.file}`)).digest("hex").slice(0, 16)
-        fs.renameSync(`${avatarDir}/${chosen.file}`, `${avatarDir}/${id}_${hash}.webp`)
-        chosen = { file: `${id}_${hash}.webp`, hash }
-      } catch {
-        continue
-      }
-    }
-
     for (const e of entries) {
       if (e.file !== chosen.file) fs.rmSync(`${avatarDir}/${e.file}`, { force: true })
     }
-    fileMap[id] = hash
+    fileMap[id] = chosen.hash
   }
 
   for (const id of db.artists.reconcileAvatars(fileMap)) {

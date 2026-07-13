@@ -9,12 +9,6 @@ database.exec(`
   )
 `)
 
-const artistColumns = database.prepare("SELECT name FROM pragma_table_info('artists')").all().map(e => e.name)
-if (!artistColumns.includes("bio")) database.exec("ALTER TABLE artists ADD COLUMN bio TEXT")
-if (!artistColumns.includes("featured")) database.exec("ALTER TABLE artists ADD COLUMN featured TEXT")
-if (!artistColumns.includes("avatarHash")) database.exec("ALTER TABLE artists ADD COLUMN avatarHash TEXT")
-if (artistColumns.includes("avatar")) database.exec("ALTER TABLE artists DROP COLUMN avatar")
-
 const listQuery = order => `
   WITH finished AS (
     SELECT

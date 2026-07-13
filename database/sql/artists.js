@@ -170,7 +170,33 @@ export default {
       ) AS artists,
       COUNT(*) AS submissions,
       COALESCE(SUM(s.votes), 0) AS votes,
-      COUNT(DISTINCT s.contest) AS contests
+      COUNT(DISTINCT s.contest) AS contests,
+      (
+        SELECT COUNT(DISTINCT je.value)
+        FROM submissions s2
+        JOIN contests c2 ON c2.id = s2.contest AND c2.status = 'finished'
+        JOIN json_each(s2.voters) je
+      ) AS knownVoters,
+      (
+        SELECT COALESCE(SUM(s2.votes), 0)
+        FROM submissions s2
+        JOIN contests c2 ON c2.id = s2.contest AND c2.status = 'finished'
+        WHERE s2.contest IN (
+          SELECT DISTINCT s3.contest FROM submissions s3 WHERE json_array_length(s3.voters) > 0
+        )
+      ) AS knownVotes,
+      (
+        SELECT COUNT(DISTINCT je.value)
+        FROM submissions s2
+        JOIN contests c2 ON c2.id = s2.contest AND c2.status = 'finished'
+        JOIN json_each(s2.artists) je
+        WHERE s2.votes = (SELECT MAX(s3.votes) FROM submissions s3 WHERE s3.contest = s2.contest)
+      ) AS champions,
+      (
+        SELECT MIN(c2.date)
+        FROM contests c2
+        WHERE c2.status = 'finished'
+      ) AS started
     FROM submissions s
     JOIN contests c ON c.id = s.contest AND c.status = 'finished'
   `, "get"),

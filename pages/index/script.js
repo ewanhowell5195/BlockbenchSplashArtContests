@@ -3,6 +3,25 @@ document.getElementById("scroll-hint").addEventListener("click", e => {
   document.getElementById("home-sections").scrollIntoView({ behavior: "smooth" })
 })
 
+const statsEl = document.getElementById("home-stats")
+if (statsEl && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const counters = [...statsEl.querySelectorAll(".panel > div > span:first-child")].map(el => ({ el, target: parseInt(el.textContent.replace(/\D/g, "")) }))
+  new IntersectionObserver((entries, observer) => {
+    if (!entries.some(e => e.isIntersecting)) return
+    observer.disconnect()
+    let start
+    const duration = 1500
+    const tick = now => {
+      start ??= now
+      const t = Math.min((now - start) / duration, 1)
+      const k = 1 - Math.pow(1 - t, 3)
+      for (const counter of counters) counter.el.textContent = Math.round(counter.target * k).toLocaleString()
+      if (t < 1) requestAnimationFrame(tick)
+    }
+    requestAnimationFrame(tick)
+  }, { threshold: 0.5 }).observe(statsEl)
+}
+
 const modelContainer = document.getElementById("home-model")
 if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
   document.getElementById("home-showcase").classList.add("hidden")
@@ -10,7 +29,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
   const SCENES = [
     {
       model: "/assets/models/snowplough.glb",
-      render: "/assets/images/submissions/5/85f1c3b546cfcaf30c7da8f5e638ee32e7cb004c5ac8d694fffa525e16b19d59.webp",
+      render: "/assets/images/renders/snowplough.webp",
       order: ["snowplough/wheels", "snowplough/frame", "snowplough/container", "snowplough/cab", "snowplough/plough", "vehicle_decorations", "ground", "snow", "house", "trees", "grass"],
       primary: ["snowplough", "vehicle_decorations"],
       ground: ["ground", "snow"],
@@ -25,7 +44,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
           [-7.3704, -2.299, 5.842, 111.5356],
           [0, 9.0093, 3.5453, 74.0683]
         ],
-        tanHalfH: 0.27,
+        tanHalfH: 0.36,
         lights: [
           [3.818, 20.717, 27.637, 1, 0.153, 0, 500],
           [-4.012, 20.596, 27.555, 1, 0.153, 0, 500],
@@ -49,12 +68,12 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
     },
     {
       model: "/assets/models/pickup_truck.glb",
-      render: "/assets/images/submissions/6/42202c18dc73ec509fd27af18add380594d17a6da4ef2bcb414250b48e9952ef.webp",
+      render: "/assets/images/renders/pickup_truck.webp",
       order: ["pickup_truck", "ground", "stream", "ramp", "trees", "grass", "foliage"],
       primary: ["pickup_truck"],
       ground: ["ground"],
       sweep: ["stream", "trees", "grass", "foliage"],
-      paces: { pickup_truck: 36, ground: 22, stream: 58, ramp: 28, trees: 22, grass: 5, foliage: 18 },
+      paces: { pickup_truck: 36, ground: 22, stream: 40, ramp: 28, trees: 22, grass: 5, foliage: 18 },
       dim: [0.3, 0.3],
       blend: {
         min: [-118.5672, -363.75, -3.8623],
@@ -64,7 +83,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
           [-7.8324, -2.6857, 5.0177, 67.1612],
           [-0.296, 8.7167, 4.2034, 85.1652]
         ],
-        tanHalfH: 0.27,
+        tanHalfH: 0.36,
         lights: [
           [3.2634, 3.4827, 42.0315, 1, 0.2789, 0, 10000],
           [-3.7495, 3.4827, 42.0315, 1, 0.2789, 0, 10000],
@@ -85,19 +104,21 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
     loadObserver.disconnect()
     try {
       const [THREE, { GLTFLoader }, { OrbitControls }] = await Promise.all([
-        import("https://cdn.jsdelivr.net/npm/three@0.170.0/+esm"),
-        import("https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js/+esm"),
-        import("https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/controls/OrbitControls.js/+esm")
+        import("https://cdn.jsdelivr.net/npm/three@0.185.1/+esm"),
+        import("https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/loaders/GLTFLoader.js/+esm"),
+        import("https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/controls/OrbitControls.js/+esm")
       ])
 
       const canvas = modelContainer.querySelector("canvas")
-      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true })
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false })
       renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
 
       const camera = new THREE.PerspectiveCamera(30, 2, 0.1, 1000)
       let controls = null
 
-      const modelButtons = document.getElementById("model-buttons")
+      const resetButton = document.getElementById("model-reset")
+      const resetIcon = resetButton.querySelector(".icon")
+      const replayButton = document.getElementById("model-replay")
       const renderImg = document.getElementById("model-render")
       const modelLoading = document.getElementById("model-loading")
       const tabs = [...document.querySelectorAll("#model-tabs .tab-bar-button")]
@@ -150,6 +171,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
       const tmpBox = new THREE.Box3()
       const tmpVec = new THREE.Vector3()
 
+      const RENDER_ASPECT = 16 / 9
       const WINDOW = 20
       const POP = 500
       const OVERVIEW = 800
@@ -325,7 +347,10 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         const camAxis = i => new THREE.Vector3(B.camera[0][i], B.camera[1][i], B.camera[2][i]).normalize()
         const shotQuat = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(conv(camAxis(0)), conv(camAxis(1)), conv(camAxis(2))))
         const shotPos = mapPoint([B.camera[0][3], B.camera[1][3], B.camera[2][3]])
-        const shotFov = () => Math.atan(B.tanHalfH / camera.aspect) * 360 / Math.PI
+        const shotFov = () => {
+          const aspect = document.fullscreenElement ? Math.min(camera.aspect, RENDER_ASPECT) : Math.max(camera.aspect, RENDER_ASPECT)
+          return Math.atan(B.tanHalfH / aspect) * 360 / Math.PI
+        }
 
         camera.up.set(0, 1, 0)
         makeControls()
@@ -373,20 +398,24 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
           viewTween = null
           controls.enabled = false
           canvas.style.cursor = ""
-          modelButtons.classList.add("hidden")
+          resetButton.classList.add("hidden")
+          replayButton.classList.add("hidden")
           renderImg.classList.remove("visible")
         }
 
         const startTween = toShot => {
+          const overviewPos = fullCenter.clone().addScaledVector(camDir, fitDistance(fullSize))
           let to
           if (toShot) {
             to = { pos: shotPos.clone(), quat: shotQuat.clone(), fov: shotFov() }
           } else {
-            const pos = fullCenter.clone().addScaledVector(camDir, fitDistance(fullSize))
-            const quat = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().lookAt(pos, fullCenter, camera.up))
-            to = { pos, quat, fov: 30 }
+            const quat = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().lookAt(overviewPos, fullCenter, camera.up))
+            to = { pos: overviewPos.clone(), quat, fov: 30 }
           }
-          viewTween = { toShot, t0: null, from: { pos: camera.position.clone(), quat: camera.quaternion.clone(), fov: camera.fov }, to }
+          const refDist = shotPos.distanceTo(overviewPos) || 1
+          const dist = camera.position.distanceTo(to.pos)
+          const duration = Math.min(1400, Math.max(180, dist / refDist * 1400))
+          viewTween = { toShot, t0: null, duration, from: { pos: camera.position.clone(), quat: camera.quaternion.clone(), fov: camera.fov }, to }
           controls.enabled = false
         }
 
@@ -491,7 +520,7 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
             if (finished) {
               if (viewTween) {
                 if (viewTween.t0 === null) viewTween.t0 = now
-                const k = smooth(clamp01((now - viewTween.t0) / 1400))
+                const k = smooth(clamp01((now - viewTween.t0) / viewTween.duration))
                 camera.position.lerpVectors(viewTween.from.pos, viewTween.to.pos, k)
                 camera.quaternion.slerpQuaternions(viewTween.from.quat, viewTween.to.quat, k)
                 camera.fov = viewTween.from.fov + (viewTween.to.fov - viewTween.from.fov) * k
@@ -560,7 +589,8 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
               controls.enabled = true
               canvas.style.cursor = "grab"
               renderImg.classList.add("visible")
-              modelButtons.classList.remove("hidden")
+              resetButton.classList.remove("hidden")
+              replayButton.classList.remove("hidden")
             }
             renderer.render(scene, camera)
           }
@@ -572,7 +602,8 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         const config = SCENES[index]
         if (!config || active?.config === config) return
         renderImg.classList.remove("visible")
-        modelButtons.classList.add("hidden")
+        resetButton.classList.add("hidden")
+        replayButton.classList.add("hidden")
         modelLoading.classList.remove("hidden")
         const token = ++activating
         const gltf = await loadModel(config.model)
@@ -602,13 +633,14 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         if (!active) return
         active.animate(now)
         if (!scrubbing) scrubber.value = active.getTime() / active.duration * 1000
-        const icon = active.isFinished() ? "replay" : active.isPlaying() ? "pause" : "play_arrow"
+        const icon = active.isPlaying() ? "pause" : "play_arrow"
         if (playIcon.textContent !== icon) playIcon.textContent = icon
         document.getElementById("model-controls").classList.toggle("ended", active.isFinished())
         const mode = active.isAtShot() ? "view" : "reset"
         if (resetButton.dataset.mode !== mode) {
           resetButton.dataset.mode = mode
-          resetButton.innerHTML = mode === "view" ? '<span class="icon">zoom_out_map</span>View scene' : '<span class="icon">videocam</span>Reset camera'
+          resetIcon.textContent = mode === "view" ? "zoom_out" : "videocam"
+          resetButton.title = mode === "view" ? "View scene" : "Reset camera"
         }
       }
 
@@ -625,12 +657,26 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
         }
       }, { threshold: [0, 0.3] }).observe(modelContainer)
 
-      const resetButton = document.getElementById("model-reset")
       resetButton.addEventListener("click", () => {
         if (!active) return
         if (active.isAtShot()) active.viewScene()
         else active.resetShot()
       })
+
+      const showcaseEl = document.getElementById("model-showcase")
+      const fullscreenButton = document.getElementById("model-fullscreen")
+      const fullscreenIcon = fullscreenButton.querySelector(".icon")
+      fullscreenButton.addEventListener("click", () => {
+        if (document.fullscreenElement) document.exitFullscreen()
+        else showcaseEl.requestFullscreen?.()
+      })
+      document.addEventListener("fullscreenchange", () => {
+        const full = document.fullscreenElement === showcaseEl
+        fullscreenIcon.textContent = full ? "fullscreen_exit" : "fullscreen"
+        fullscreenButton.title = full ? "Exit fullscreen" : "Fullscreen"
+        resize()
+      })
+
       document.getElementById("model-tabs").addEventListener("tab-changed", e => activate(tabs.findIndex(tab => tab.dataset.tab === e.detail)))
 
       const playButton = document.getElementById("model-play")
@@ -638,11 +684,8 @@ if (modelContainer && matchMedia("(prefers-reduced-motion: reduce)").matches) {
       const scrubber = document.getElementById("model-scrub")
       let scrubbing = false
 
-      playButton.addEventListener("click", () => {
-        if (!active) return
-        if (active.isFinished()) active.restart()
-        else active.togglePlay()
-      })
+      playButton.addEventListener("click", () => active?.togglePlay())
+      replayButton.addEventListener("click", () => active?.restart())
       let scrubWasPlaying = false
       scrubber.addEventListener("pointerdown", () => {
         scrubbing = true
@@ -683,13 +726,15 @@ const backgrounds = document.getElementById("home-background-container")
 if (backgrounds.children.length > 1) {
   const progress = document.getElementById("progress-bar")
   const contents = document.getElementById("home-content-container")
-  let timeout, processing
+  const CYCLE = 8000
+  let elapsed = 0
+  let lastTime = null
+  let paused = false
+  let processing
   function next(prev) {
     if (processing) return
     processing = true
-    clearTimeout(timeout)
-    progress.style.transition = "initial"
-    progress.style.right = "118px"
+    elapsed = 0
     const currentBackground = backgrounds.children[0]
     const nextBackground = prev ? backgrounds.children[backgrounds.children.length - 1] : backgrounds.children[1]
     const currentContent = contents.children[1]
@@ -722,34 +767,26 @@ if (backgrounds.children.length > 1) {
             backgrounds.append(currentBackground)
             contents.append(currentContent)
           }
-          progress.style.transition = null
-          progress.style.right = 0
           processing = false
         }, 500)
       })
     })
-    if (pausePlay.textContent === "pause") {
-      timeout = setTimeout(() => next(), 8000)
-    }
   }
+  function frame(now) {
+    requestAnimationFrame(frame)
+    if (!paused && lastTime !== null) {
+      elapsed = Math.min(elapsed + Math.min(now - lastTime, 100), CYCLE)
+      if (elapsed >= CYCLE) next()
+    }
+    lastTime = now
+    progress.style.right = (1 - elapsed / CYCLE) * 118 + "px"
+  }
+  requestAnimationFrame(frame)
   document.getElementById("prev").addEventListener("click", () => next(true))
   document.getElementById("next").addEventListener("click", () => next())
   const pausePlay = document.getElementById("pause-play")
-  pausePlay.addEventListener("click", e => {
-    if (pausePlay.textContent === "pause") {
-      pausePlay.textContent = "play_arrow"
-      progress.hidden = true
-      clearTimeout(timeout)
-    } else {
-      pausePlay.textContent = "pause"
-      progress.style.right = "118px"
-      progress.hidden = false
-      setTimeout(() => {
-        progress.style.right = 0
-        timeout = setTimeout(() => next(), 8000)
-      }, 10)
-    }
+  pausePlay.addEventListener("click", () => {
+    paused = pausePlay.textContent === "pause"
+    pausePlay.textContent = paused ? "play_arrow" : "pause"
   })
-  setTimeout(() => progress.style.right = 0, 500)
-  timeout = setTimeout(() => next(), 8000)
 }

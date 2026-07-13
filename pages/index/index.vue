@@ -30,12 +30,12 @@
 <div id="home-sections">
   <div class="home-section" id="home-about">
     <div>
-      <h2>What is all this?</h2>
-      <p><a href="https://blockbench.net/" target="_blank">Blockbench</a> is a free, open source low poly 3D model editor. Every time it opens, it greets you with a piece of splash art, and every piece of it is made by the community.</p>
-      <p>Ahead of each major Blockbench update, artists compete to create that update's splash art. This site is home to those contests: a theme is announced, submissions roll in, and the community votes for its favourites.</p>
+      <h2>About the contests</h2>
+      <p><a href="https://blockbench.net/" target="_blank">Blockbench</a> is a free, open source low poly 3D model editor. Every time it opens, it shows a piece of splash art, and all of that art is made by the community.</p>
+      <p>Before each major Blockbench update, artists compete to make its splash art. Those contests live here: a theme is announced, entries come in, and the community votes for its favourites.</p>
       <div class="button-row">
-        <a class="button" href="https://blockbench.net/" target="_blank">Visit Blockbench<span class="icon">open_in_new</span></a>
-        <a class="button secondary" href="/contests">Browse past contests</a>
+        <a class="button" href="https://blockbench.net/" target="_blank">Blockbench<span class="icon">open_in_new</span></a>
+        <a class="button secondary" href="/contests">Past contests</a>
       </div>
     </div>
     <div v-if="collage.length" id="home-about-collage">
@@ -43,53 +43,104 @@
     </div>
   </div>
   <div class="home-section" id="home-showcase">
-    <h2>Built cube by cube</h2>
-    <p>Every splash art begins life as a Blockbench model. Watch a real contest entry assemble itself piece by piece, light itself, and settle into the final shot, live in your browser.</p>
+    <div class="home-heading">
+      <h2>Built cube by cube</h2>
+      <p>Every splash art starts as a Blockbench model. Watch a real contest entry build itself into the final shot, live in your browser.</p>
+    </div>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fluid-tabs@0.1.2/dist/fluid-tabs.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fluid-tabs@0.1.2/dist/fluid-tabs.min.js" defer></script>
-    <div class="tab-bar tab-style-slide" id="model-tabs">
-      <button class="tab-bar-button active" data-tab="snowplough">Snowplough</button>
-      <button class="tab-bar-button" data-tab="pickup_truck">Pickup Truck</button>
-    </div>
-    <div id="home-model">
-      <canvas></canvas>
-      <img id="model-render" alt="The final splash art render of the scene">
-      <div id="model-buttons" class="hidden">
-        <button id="model-reset" class="secondary"><span class="icon">zoom_out_map</span>View scene</button>
+    <div id="model-showcase">
+      <div class="tab-bar tab-style-slide" id="model-tabs">
+        <button class="tab-bar-button active" data-tab="snowplough">Snowplough</button>
+        <button class="tab-bar-button" data-tab="pickup_truck">Pickup Truck</button>
       </div>
-      <div id="model-controls">
-        <button id="model-play" aria-label="Play or pause"><span class="icon">pause</span></button>
-        <input id="model-scrub" type="range" min="0" max="1000" step="any" value="0" aria-label="Animation progress">
+      <div id="home-model">
+        <canvas></canvas>
+        <img id="model-render" alt="The final splash art render of the scene">
+        <div id="model-buttons">
+          <button id="model-replay" class="model-icon-button hidden" title="Replay"><span class="icon">replay</span></button>
+          <button id="model-reset" class="model-icon-button hidden" title="View scene"><span class="icon">zoom_out</span></button>
+          <button id="model-fullscreen" class="model-icon-button" title="Fullscreen"><span class="icon">fullscreen</span></button>
+        </div>
+        <div id="model-controls">
+          <button id="model-play" aria-label="Play or pause"><span class="icon">pause</span></button>
+          <input id="model-scrub" type="range" min="0" max="1000" step="any" value="0" aria-label="Animation progress">
+        </div>
+        <div id="model-loading"><span class="icon">progress_activity</span></div>
       </div>
-      <div id="model-loading"><span class="icon">progress_activity</span></div>
     </div>
   </div>
   <div class="home-section">
     <h2>How a contest works</h2>
     <div id="home-steps">
       <div class="home-step">
-        <div class="home-step-number">1</div>
-        <span class="icon">lightbulb</span>
+        <div class="home-step-marker">
+          <span class="icon">lightbulb</span>
+          <span class="home-step-number">1</span>
+        </div>
         <h3>A theme is announced</h3>
-        <p>Every contest pairs with an upcoming Blockbench update and gets its own theme to build around.</p>
+        <p>Each contest ties in with an upcoming Blockbench update and gets its own theme to build around.</p>
       </div>
       <div class="home-step">
-        <div class="home-step-number">2</div>
-        <span class="icon">deployed_code</span>
+        <div class="home-step-marker">
+          <span class="icon">deployed_code</span>
+          <span class="home-step-number">2</span>
+        </div>
         <h3>Model, render, submit</h3>
-        <p>Create an original model in Blockbench, render it in 21:9, and submit it while submissions are open. Collaborations of up to two artists are welcome.</p>
+        <p>Make an original model in Blockbench, render it, and submit it before the deadline. Up to two artists can team up.</p>
       </div>
       <div class="home-step">
-        <div class="home-step-number">3</div>
-        <span class="icon">how_to_vote</span>
+        <div class="home-step-marker">
+          <span class="icon">how_to_vote</span>
+          <span class="home-step-number">3</span>
+        </div>
         <h3>The community votes</h3>
-        <p>Once submissions close, everyone gets to view every entry and vote for their favourites. Artists stay anonymous until voting ends.</p>
+        <p>Once submissions close, everyone can browse the entries and vote for their favourites. Artists stay anonymous until voting ends.</p>
       </div>
       <div class="home-step">
-        <div class="home-step-number">4</div>
-        <span class="icon">emoji_events</span>
+        <div class="home-step-marker">
+          <span class="icon">emoji_events</span>
+          <span class="home-step-number">4</span>
+        </div>
         <h3>Winners get featured</h3>
         <p>The top voted art becomes the Blockbench splash screen slideshow, and 1st place is featured on update posts and in the Blockbench gallery.</p>
+      </div>
+    </div>
+  </div>
+  <div class="home-section">
+    <h2>The story so far</h2>
+    <div id="home-stats">
+      <div class="panel">
+        <span class="icon">flag</span>
+        <div>
+          <span>{{ stats.contests.toLocaleString() }}</span>
+          <span>Contests</span>
+          <span>across {{ stats.years }} years</span>
+        </div>
+      </div>
+      <div class="panel">
+        <span class="icon">groups</span>
+        <div>
+          <span>{{ stats.artists.toLocaleString() }}</span>
+          <span>Artists</span>
+          <span>including {{ stats.champions }} winners</span>
+        </div>
+      </div>
+      <div class="panel">
+        <span class="icon">photo_library</span>
+        <div>
+          <span>{{ stats.submissions.toLocaleString() }}</span>
+          <span>Submissions</span>
+          <span>about {{ stats.perContest }} per contest</span>
+        </div>
+      </div>
+      <div class="panel">
+        <span class="icon">favorite</span>
+        <div>
+          <span>{{ stats.votes.toLocaleString() }}</span>
+          <span>Votes cast</span>
+          <span v-if="stats.voters">by roughly {{ stats.voters.toLocaleString() }} voters</span>
+        </div>
       </div>
     </div>
   </div>
@@ -97,81 +148,70 @@
     <h2>From cubes to splash art</h2>
     <div id="home-process-steps">
       <div class="home-process-step">
-        <span class="icon">view_in_ar</span>
+        <div class="home-process-tools single">
+          <a class="tool-logo" href="https://blockbench.net/" target="_blank" title="Blockbench"><img src="/assets/images/logos/blockbench-ui.svg" alt="Blockbench"></a>
+        </div>
         <h3>Model</h3>
-        <p>Every entry starts as an original model built in <a href="https://blockbench.net/" target="_blank">Blockbench</a>.</p>
+        <p>Start by making your original model in <a href="https://blockbench.net/" target="_blank">Blockbench</a>.</p>
       </div>
       <span class="icon home-process-arrow">arrow_forward</span>
       <div class="home-process-step">
-        <span class="icon">palette</span>
+        <div class="home-process-tools grid">
+          <a class="tool-logo" href="https://aseprite.org/" target="_blank" title="Aseprite"><img class="pixelated" src="/assets/images/logos/aseprite.png" alt="Aseprite"></a>
+          <a class="tool-logo" href="https://www.adobe.com/products/photoshop.html" target="_blank" title="Photoshop"><img src="/assets/images/logos/photoshop.svg" alt="Photoshop"></a>
+          <a class="tool-logo" href="https://www.gimp.org/" target="_blank" title="GIMP"><img src="/assets/images/logos/gimp.svg" alt="GIMP"></a>
+          <a class="tool-logo" href="https://paint.net/" target="_blank" title="Paint.NET"><img src="/assets/images/logos/paintnet.png" alt="Paint.NET"></a>
+        </div>
         <h3>Texture</h3>
-        <p>Paint it in Blockbench itself, or in any image editor you prefer, like Photoshop, Aseprite, GIMP, or Paint.NET.</p>
+        <p>Texture it in Blockbench itself, or in any image editor you prefer, like <a href="https://www.adobe.com/products/photoshop.html" target="_blank">Photoshop</a>, <a href="https://aseprite.org/" target="_blank">Aseprite</a>, <a href="https://www.gimp.org/" target="_blank">GIMP</a>, or <a href="https://paint.net/" target="_blank">Paint.NET</a>.</p>
       </div>
       <span class="icon home-process-arrow">arrow_forward</span>
       <div class="home-process-step">
-        <span class="icon">photo_camera</span>
+        <div class="home-process-tools pyramid">
+          <a class="tool-logo" href="https://www.blender.org/" target="_blank" title="Blender"><img src="/assets/images/logos/blender.svg" alt="Blender"></a>
+          <a class="tool-logo" href="https://lighttracer.org/" target="_blank" title="Lighttracer"><img src="/assets/images/logos/lighttracer.svg" alt="Lighttracer"></a>
+          <a class="tool-logo" href="https://sketchfab.com/" target="_blank" title="Sketchfab"><img src="/assets/images/logos/sketchfab.svg" alt="Sketchfab"></a>
+        </div>
         <h3>Render</h3>
-        <p>Render the final shot in Blender, Cinema 4D, Sketchfab, or similar programs. Touching it up in post, like contrast or backgrounds, is allowed.</p>
+        <p>Render the final shot in <a href="https://www.blender.org/" target="_blank">Blender</a>, <a href="https://lighttracer.org/" target="_blank">Lighttracer</a>, <a href="https://sketchfab.com/" target="_blank">Sketchfab</a>, or similar. Touch-ups in post, like contrast or backgrounds, are allowed.</p>
       </div>
     </div>
     <a class="button secondary" href="https://www.blockbench.net/wiki/guides/model-rendering" target="_blank">Model rendering guide<span class="icon">open_in_new</span></a>
   </div>
-  <div class="home-section">
-    <h2>The story so far</h2>
-    <div id="home-stats">
-      <div class="subpanel">
-        <span>{{ stats.contests.toLocaleString() }}</span>
-        <span>Contests</span>
-      </div>
-      <div class="subpanel">
-        <span>{{ stats.artists.toLocaleString() }}</span>
-        <span>Artists</span>
-      </div>
-      <div class="subpanel">
-        <span>{{ stats.submissions.toLocaleString() }}</span>
-        <span>Submissions</span>
-      </div>
-      <div class="subpanel">
-        <span>{{ stats.votes.toLocaleString() }}</span>
-        <span>Votes cast</span>
-      </div>
-    </div>
-  </div>
   <div v-if="winners.length" class="home-section">
-    <h2>Recent winners</h2>
-    <div id="home-winners">
-      <a v-for="winner of winners" class="home-winner panel" :href="'/contests/' + winner.id">
-        <div class="home-winner-banner">
-          <img :src="`/assets/images/submissions/${winner.id}/${winner.image}_thumbnail_small.webp`" :alt="'Winning splash art from contest ' + winner.id" loading="lazy">
-          <img class="home-winner-trophy" src="/assets/images/icons/trophy_0.png" width="32" height="32" alt="1st place trophy">
-        </div>
+    <h2>Hall of fame</h2>
+    <div id="home-bento">
+      <a v-for="[i, winner] of winners.entries()" class="home-winner panel" :class="{ featured: !i }" :href="'/contests/' + winner.id">
+        <img :src="`/assets/images/submissions/${winner.id}/${winner.image}_thumbnail_${i ? 'small' : 'large'}.webp`" :alt="'Winning splash art from contest ' + winner.id" loading="lazy">
+        <img class="home-winner-trophy" src="/assets/images/icons/trophy_0.png" width="32" height="32" alt="1st place trophy">
         <div class="home-winner-info">
           <span class="home-winner-title">Contest {{ winner.id }} · {{ winner.theme }}</span>
           <span class="home-winner-artists">By {{ winner.artists.map(e => e.name).join(" & ") }}</span>
         </div>
       </a>
-    </div>
-  </div>
-  <div v-if="topArtists.length" class="home-section">
-    <h2>Leading artists</h2>
-    <div id="home-artists">
-      <a v-for="artist of topArtists" class="home-artist panel" :href="'/artists/' + artist.id">
-        <div class="home-artist-avatar">
-          <img :src="artist.avatar ?? '/assets/images/branding/default_avatar.webp'" width="80" height="80" alt="">
+      <div v-if="topArtists.length" id="home-artists" class="panel">
+        <div id="home-artists-header">
+          <h3>Leading artists</h3>
+          <a href="/artists">View all</a>
         </div>
-        <span class="home-artist-name">{{ artist.name }}</span>
-        <span class="home-artist-stats">
-          <span><img src="/assets/images/icons/like.png" width="16" height="16" alt="Votes">{{ artist.votes.toLocaleString() }}</span>
-          <span v-if="artist.golds"><img src="/assets/images/icons/trophy_0.png" width="16" height="16" alt="1st place trophy">{{ artist.golds.toLocaleString() }}</span>
-        </span>
-      </a>
+        <a v-for="[i, artist] of topArtists.entries()" class="home-artist" :href="'/artists/' + artist.id">
+          <span class="home-artist-rank" :class="'rank-' + (i + 1)">{{ i + 1 }}</span>
+          <div class="home-artist-avatar">
+            <img :src="artist.avatar ?? '/assets/images/branding/default_avatar.webp'" width="44" height="44" alt="">
+          </div>
+          <span class="home-artist-name">{{ artist.name }}</span>
+          <span class="home-artist-stats">
+            <span><img src="/assets/images/icons/like.png" width="16" height="16" alt="Votes">{{ artist.votes.toLocaleString() }}</span>
+            <span v-if="artist.golds"><img src="/assets/images/icons/trophy_0.png" width="16" height="16" alt="1st place trophy">{{ artist.golds.toLocaleString() }}</span>
+          </span>
+        </a>
+      </div>
     </div>
-    <a class="button secondary" id="home-artists-button" href="/artists">View all artists</a>
   </div>
   <div class="home-section" id="home-cta">
     <div class="panel">
       <h2>Think you could make the next splash?</h2>
-      <p>Contests are announced in the Blockbench Discord server, so join and keep an eye out for when the next one begins. Your art could be the first thing every Blockbench user sees.</p>
+      <p>Contests are announced in the Blockbench Discord server, so join to catch the next one when it starts. The winning art ends up in front of everyone who opens Blockbench.</p>
       <div class="button-row">
         <a class="button" href="http://discord.blockbench.net/" target="_blank"><span class="fa fa-discord"></span>Join the Discord</a>
         <a class="button secondary" :href="'/contests/' + contest.id">View the latest contest</a>

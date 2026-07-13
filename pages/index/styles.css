@@ -388,6 +388,18 @@ body.model-fullscreen-open {
         background-color: #000;
       }
     }
+
+    @media screen and (width >= 768px) {
+      padding-top: 0;
+
+      > #model-tabs {
+        position: absolute;
+        top: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+      }
+    }
   }
 }
 

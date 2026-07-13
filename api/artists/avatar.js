@@ -36,10 +36,11 @@ export default {
       if (Math.max(...size) > 8192) {
         return res.status(400).send({ error: "Image too large. The maximum size is 8192x8192" })
       }
-      if (!await avatars.convert(req.file.buffer, req.user.id)) {
+      const hash = await avatars.convert(req.file.buffer, req.user.id)
+      if (!hash) {
         return res.status(500).send({ error: "An error occurred while processing the avatar" })
       }
-      res.send(avatars.url(req.user.id))
+      res.send(avatars.url(req.user.id, hash))
     }
   },
   delete: {

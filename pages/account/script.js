@@ -73,7 +73,7 @@ if (register) {
       setTimeout(() => uploadAvatar.classList.remove("shake-error"), 500)
       return showAPIError(r)
     }
-    avatarImage.src = await r.text() + "?t=" + Date.now()
+    avatarImage.src = await r.text()
     removeAvatar.disabled = false
     showNotification("Avatar updated!")
   })
@@ -87,7 +87,7 @@ if (register) {
     syncAvatar.classList.remove("loading")
     processing = false
     if (!r.ok) return showAPIError(r)
-    avatarImage.src = await r.text() + "?t=" + Date.now()
+    avatarImage.src = await r.text()
     removeAvatar.disabled = false
     showNotification("Avatar synced from Discord!")
   })

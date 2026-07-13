@@ -103,7 +103,7 @@ export default {
         },
         banner: `/assets/images/submissions/${banner.contest.id}/${banner.image}_thumbnail_large.webp`,
         artist,
-        avatar: artist.avatar ? avatars.url(artist.id) : null,
+        avatar: artist.avatarHash ? avatars.url(artist.id, artist.avatarHash) : null,
         submissions,
         votes,
         trophies,

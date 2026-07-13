@@ -16,7 +16,7 @@ export default {
     }
     return {
       artist,
-      artistAvatar: artist?.avatar ? avatars.url(artist.id) : null,
+      artistAvatar: artist?.avatarHash ? avatars.url(artist.id, artist.avatarHash) : null,
       finishedSubmissions,
       hasProfile
     }

@@ -79,8 +79,10 @@ app.use("/src", (req, res, next) => {
     basename === "config.js"
   ) return send404(req, res)
   next()
-}, express.static("pages"))
-app.use("/assets", express.static("assets"))
+}, express.static("pages", { maxAge: "1h" }))
+app.use("/assets/images/submissions", express.static("assets/images/submissions", { maxAge: "365d", immutable: true }))
+app.use("/assets/images/avatars", express.static("assets/images/avatars", { maxAge: "365d", immutable: true }))
+app.use("/assets", express.static("assets", { maxAge: "30d" }))
 
 async function loadPage(dir, parent) {
   const files = fs.readdirSync(dir)

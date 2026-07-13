@@ -5,14 +5,15 @@ database.exec(`
     socialMedia TEXT,
     bio TEXT,
     featured TEXT,
-    avatar INTEGER DEFAULT 0
+    avatarHash TEXT
   )
 `)
 
 const artistColumns = database.prepare("SELECT name FROM pragma_table_info('artists')").all().map(e => e.name)
 if (!artistColumns.includes("bio")) database.exec("ALTER TABLE artists ADD COLUMN bio TEXT")
 if (!artistColumns.includes("featured")) database.exec("ALTER TABLE artists ADD COLUMN featured TEXT")
-if (!artistColumns.includes("avatar")) database.exec("ALTER TABLE artists ADD COLUMN avatar INTEGER DEFAULT 0")
+if (!artistColumns.includes("avatarHash")) database.exec("ALTER TABLE artists ADD COLUMN avatarHash TEXT")
+if (artistColumns.includes("avatar")) database.exec("ALTER TABLE artists DROP COLUMN avatar")
 
 const listQuery = order => `
   WITH finished AS (
@@ -32,7 +33,7 @@ const listQuery = order => `
   SELECT
     a.id,
     a.name,
-    a.avatar,
+    a.avatarHash,
     COUNT(*) AS submissions,
     SUM(f.votes) AS votes,
     SUM(f.position = 1) AS golds,
@@ -120,25 +121,29 @@ export default {
   `, "run", (id, featured) => [featured ?? null, id]),
   setAvatar: prepareDBAction(`
     UPDATE artists
-    SET avatar = ?
+    SET avatarHash = ?
     WHERE id = ?
-  `, "run", (id, has) => [has ? 1 : 0, id]),
-  reconcileAvatars(fileIds) {
+  `, "run", (id, hash) => [hash ?? null, id]),
+  reconcileAvatars(fileMap) {
+    const ids = Object.keys(fileMap)
     const present = new Set()
-    if (fileIds.length) {
-      const ph = fileIds.map(() => "?").join(",")
-      for (const row of database.prepare(`SELECT id FROM artists WHERE id IN (${ph})`).all(...fileIds)) {
+    if (ids.length) {
+      const ph = ids.map(() => "?").join(",")
+      for (const row of database.prepare(`SELECT id FROM artists WHERE id IN (${ph})`).all(...ids)) {
         present.add(row.id)
       }
     }
+    const update = database.prepare("UPDATE artists SET avatarHash = ? WHERE id = ? AND (avatarHash IS NULL OR avatarHash != ?)")
+    for (const id of present) {
+      update.run(fileMap[id], id, fileMap[id])
+    }
     if (present.size) {
       const ph = [...present].map(() => "?").join(",")
-      database.prepare(`UPDATE artists SET avatar = 1 WHERE avatar = 0 AND id IN (${ph})`).run(...present)
-      database.prepare(`UPDATE artists SET avatar = 0 WHERE avatar = 1 AND id NOT IN (${ph})`).run(...present)
+      database.prepare(`UPDATE artists SET avatarHash = NULL WHERE avatarHash IS NOT NULL AND id NOT IN (${ph})`).run(...present)
     } else {
-      database.prepare("UPDATE artists SET avatar = 0 WHERE avatar = 1").run()
+      database.prepare("UPDATE artists SET avatarHash = NULL WHERE avatarHash IS NOT NULL").run()
     }
-    return fileIds.filter(id => !present.has(id))
+    return ids.filter(id => !present.has(id))
   },
   all(sort = "votes", direction = "desc", limit = 48, offset = 0, search = "") {
     const stmt = listStatements[sort]?.[direction] ?? listStatements.votes.desc
@@ -149,7 +154,8 @@ export default {
         e.contest = Number(contest)
       }
       delete e.preview
-      e.avatar = e.avatar ? `/assets/images/avatars/${e.id}.webp` : null
+      e.avatar = e.avatarHash ? avatars.url(e.id, e.avatarHash) : null
+      delete e.avatarHash
       return e
     })
   },
